@@ -1,0 +1,192 @@
+<!--
+  Copyright 2021 Picovoice Inc.
+
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="node_modules/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
+  <script type="application/javascript">
+    var audioContext = new (window.AudioContext || window.webKitAudioContext)(
+      { sampleRate: 16000 }
+    );
+
+    function writeStatus(status) {
+      console.log(status);
+      document.getElementById("status").innerHTML = status;
+    }
+
+    function readAudioFile(selectedFile, callback) {
+      let reader = new FileReader();
+      reader.onload = function (ev) {
+        let wavBytes = reader.result;
+        audioContext.decodeAudioData(wavBytes, callback);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+
+    let octopusMetadata = undefined;
+
+    function octopusIndexCallback(metadata) {
+      writeStatus("Audio indexed!");
+      octopusMetadata = metadata;
+      document.getElementById("search").style.display = "block";
+    }
+
+    function octopusSearchCallback(matches) {
+      document.getElementById(
+        "result"
+      ).innerHTML = `Search results (${matches.length}):<br>`;
+      document.getElementById("result-table").style.display = "block";
+      const table = document.getElementById("result-table");
+      const rowCount = table.rows.length;
+      for (let i = 1; i < rowCount; i++) {
+        table.deleteRow(1);
+      }
+      matches.forEach((match) => {
+        const row = table.insertRow(-1);
+        const start = row.insertCell(0);
+        const end = row.insertCell(1);
+        const probability = row.insertCell(2);
+
+        start.innerHTML = `${match.startSec.toFixed(2)}`;
+        end.innerHTML = `${match.endSec.toFixed(2)}`;
+        probability.innerHTML = `${match.probability.toFixed(2)}`;
+      });
+    }
+
+    async function startOctopus(appId) {
+      document.getElementById("dashboard").style.display = "block";
+      writeStatus("Octopus is loading. Please wait...");
+      const engineHandle =
+        await OctopusWebEnWorker.OctopusWorkerFactory.create(
+          appId,
+          octopusIndexCallback,
+          octopusSearchCallback
+        );
+      writeStatus("Octopus worker ready!");
+
+      const fileSelector = document.getElementById("file-selector");
+      fileSelector.addEventListener("change", (event) => {
+        writeStatus("Indexing audio. Please wait...");
+        const fileList = event.target.files;
+        readAudioFile(fileList[0], (audioBuffer) => {
+          const f32PCM = audioBuffer.getChannelData(0);
+          const i16PCM = new Int16Array(f32PCM.length);
+
+          const INT16_MAX = 32767;
+          const INT16_MIN = -32768;
+          i16PCM.set(
+            f32PCM.map((f) => {
+              let i = Math.trunc(f * INT16_MAX);
+              if (f > INT16_MAX) i = INT16_MAX;
+              if (f < INT16_MIN) i = INT16_MIN;
+              return i;
+            })
+          );
+          engineHandle.postMessage({
+            command: "index",
+            input: i16PCM,
+          });
+        });
+      });
+
+      const searchForm = document.getElementById("search-form");
+      searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const searchText = document.getElementById("search-phrase").value;
+        if (searchText === "") {
+          writeStatus("Search phrase is empty");
+        } else if (octopusMetadata) {
+          writeStatus(`Searching for ${searchText}...`);
+          engineHandle.postMessage({
+            command: "search",
+            metadata: octopusMetadata,
+            searchPhrase: searchText,
+          });
+        } else {
+          writeStatus("Please index an audio file first");
+        }
+      });
+    }
+  </script>
+  <style>
+    table {
+      margin-top: 20px;
+      display: inline-block;
+      overflow: auto;
+    }
+
+    th div {
+      margin-top: -20px;
+      position: absolute;
+    }
+
+    table {
+      border-collapse: separate;
+    }
+
+    td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) {
+      background: #EEE;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Octopus Web Demo - Worker</h1>
+  <p>
+    This demo uses Octopus for Web to create an instance of Octopus that can
+    index and search.
+  </p>
+  <label for="appId">AppID string provided by
+    <a href="https://picovoice.ai/console/">Picovoice Console</a>:</label>
+  <input type="text" id="appId" name="appId" />
+  <input type="button" id="sumbit" value="Start Octopus"
+    onclick="startOctopus(document.getElementById('appId').value)" />
+  <hr />
+
+  <div id="dashboard" style="display: none">
+    <div>
+      <p>Select audio file:</p>
+      <input type="file" id="file-selector" />
+    </div>
+    <div id="search" , style="display: none">
+      <form id="search-form">
+        <p>Enter search phrase:</p>
+        <input type="text" id="search-phrase" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <br />
+    <div id="status"></div>
+    <br />
+    <div id="result"></div>
+  </div>
+
+  <table id="result-table" style="height: 150px; display: none">
+    <colgroup>
+      <col span="1" style="width: 20%;">
+      <col span="1" style="width: 20%;">
+      <col span="1" style="width: 20%;">
+    </colgroup>
+    <tr>
+      <th> Start time (second) </th>
+      <th> End time (second) </th>
+      <th> Probability </th>
+  </table>
+</body>
+
+</html>

@@ -1,0 +1,253 @@
+#
+# Copyright 2021 Picovoice Inc.
+#
+# You may not use this file except in compliance with the license.
+# A copy of the license is located in the "LICENSE" file accompanying this
+# source.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+import os
+from collections import namedtuple
+from ctypes import *
+from ctypes.util import find_library
+from enum import Enum
+from util import *
+
+
+class OctopusMetadata(object):
+    """
+    Python representation of the metadata object.
+    """
+
+    _libc = CDLL(find_library('c'))
+
+    def __init__(self, handle, size):
+        self._inner = (handle, size)
+
+    @property
+    def handle(self):
+        return self._inner[0]
+
+    @property
+    def size(self):
+        return self._inner[1]
+
+    @staticmethod
+    def from_bytes(metadata_bytes):
+        size = len(metadata_bytes)
+        byte_ptr = (c_byte * size).from_buffer_copy(metadata_bytes)
+        handle = cast(byte_ptr, c_void_p)
+        return OctopusMetadata(handle=handle, size=size)
+
+    def to_bytes(self):
+        byte_array = cast(self.handle, POINTER(c_byte * self.size.value))
+        return bytes(byte_array.contents)
+
+    def delete(self):
+        self._libc.free(self.handle)
+
+
+class Octopus(object):
+    """
+    Python binding for Octopus Speech-to-Index engine.
+    """
+
+    class PicovoiceStatuses(Enum):
+        SUCCESS = 0
+        OUT_OF_MEMORY = 1
+        IO_ERROR = 2
+        INVALID_ARGUMENT = 3
+        STOP_ITERATION = 4
+        KEY_ERROR = 5
+        INVALID_STATE = 6
+
+    _PICOVOICE_STATUS_TO_EXCEPTION = {
+        PicovoiceStatuses.OUT_OF_MEMORY: MemoryError,
+        PicovoiceStatuses.IO_ERROR: IOError,
+        PicovoiceStatuses.INVALID_ARGUMENT: ValueError,
+        PicovoiceStatuses.STOP_ITERATION: StopIteration,
+        PicovoiceStatuses.KEY_ERROR: KeyError,
+        PicovoiceStatuses.INVALID_STATE: RuntimeError
+    }
+
+    class COctopus(Structure):
+        pass
+
+    def __init__(self, app_id, library_path, model_path):
+        """
+        Constructor.
+
+        :param library_path: Absolute path to Octopus' dynamic library.
+        :param app_id: AppID provided by Picovoice Console (https://picovoice.ai/console/)
+        :param model_path: Absolute path to file containing model parameters.
+        """
+
+        if not os.path.exists(library_path):
+            raise IOError(
+                f"Couldn't find Octopus' dynamic library at '{library_path}'.")
+
+        library = cdll.LoadLibrary(library_path)
+
+        if not os.path.exists(model_path):
+            raise IOError(f"Couldn't find model file at '{model_path}'.")
+
+        init_func = library.pv_octopus_init
+        init_func.argtypes = [c_char_p, c_char_p, POINTER(POINTER(self.COctopus))]
+        init_func.restype = self.PicovoiceStatuses
+
+        self._handle = POINTER(self.COctopus)()
+
+        status = init_func(
+            app_id.encode('utf-8'),
+            model_path.encode('utf-8'),
+            byref(self._handle))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+
+        self._delete_func = library.pv_octopus_delete
+        self._delete_func.argtypes = [POINTER(self.COctopus)]
+        self._delete_func.restype = None
+
+        self._index_func = library.pv_octopus_index
+        self._index_func.argtypes = [
+            POINTER(self.COctopus),
+            POINTER(c_short),
+            c_int32,
+            POINTER(c_void_p),
+            POINTER(c_int32)]
+        self._index_func.restype = self.PicovoiceStatuses
+
+        self._index_file_func = library.pv_octopus_index_file
+        self._index_file_func.argtypes = [
+            POINTER(self.COctopus),
+            c_char_p, POINTER(c_void_p),
+            POINTER(c_int32)]
+        self._index_file_func.restype = self.PicovoiceStatuses
+
+        self._search_func = library.pv_octopus_search
+        self._search_func.argtypes = [
+            POINTER(self.COctopus),
+            c_void_p,
+            c_int32,
+            c_char_p,
+            POINTER(POINTER(self.CMatch)),
+            POINTER(c_int32)]
+        self._search_func.restype = self.PicovoiceStatuses
+
+        version_func = library.pv_octopus_version
+        version_func.argtypes = []
+        version_func.restype = c_char_p
+        self._version = version_func().decode('utf-8')
+
+        self._sample_rate = library.pv_sample_rate()
+
+    def delete(self):
+        """Releases resources acquired."""
+
+        self._delete_func(self._handle)
+
+    def index_audio_data(self, pcm):
+        """
+        Indexes audio data.
+
+        :param pcm: Audio data. The audio needs to have a sample rate equal to
+                    'pcm_sample_rate()' and be 16-bit linearly-encoded.
+                    Octopus operates on single-channel audio.
+        :return metadata: An immutable metadata object.
+        """
+
+        metadata = c_void_p()
+        metadata_size = c_int32()
+
+        status = self._index_func(
+            self._handle,
+            (c_short * len(pcm))(*pcm),
+            c_int32(len(pcm)),
+            byref(metadata),
+            byref(metadata_size))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+
+        return OctopusMetadata(handle=metadata, size=metadata_size)
+
+    def index_audio_file(self, path):
+        """
+        Indexes audio file.
+
+        :param path: Absolute path to the audio file.
+        :return metadata: An immutable metadata object.
+        """
+
+        if not os.path.exists(path):
+            raise IOError(f"Couldn't find input file at '{path}'.")
+
+        metadata = c_void_p()
+        metadata_size = c_int32()
+
+        status = self._index_file_func(
+            self._handle,
+            path.encode('utf-8'),
+            byref(metadata),
+            byref(metadata_size))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+
+        return OctopusMetadata(handle=metadata, size=metadata_size)
+
+    Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
+
+    class CMatch(Structure):
+        _fields_ = [
+            ("start_sec", c_float),
+            ("end_sec", c_float),
+            ("probability", c_float)]
+
+    def search(self, metadata, phrases):
+        """
+        Searches metadata for occurrences of a given phrase.
+
+        :param metadata: Metadata object
+        :param phrases: An iterable of phrases to search the index for
+        :return matches: A dictionary map of found matches
+        """
+
+        phrases_set = set(phrases)
+        matches = dict()
+
+        for phrase in phrases_set:
+            c_phrase_matches = POINTER(self.CMatch)()
+            num_phrase_matches = c_int32()
+            status = self._search_func(
+                self._handle,
+                metadata.handle,
+                metadata.size,
+                phrase.encode('utf-8'),
+                byref(c_phrase_matches),
+                byref(num_phrase_matches))
+            if num_phrase_matches.value > 0:
+                phrase_matches = []
+                for i in range(0, num_phrase_matches.value):
+                    phrase_matches.append(self.Match(start_sec=c_phrase_matches[i].start_sec,
+                                                     end_sec=c_phrase_matches[i].end_sec,
+                                                     probability=c_phrase_matches[i].probability))
+                matches[phrase] = phrase_matches
+
+        return matches
+
+    @property
+    def version(self):
+        """Version."""
+
+        return self._version
+
+    @property
+    def pcm_sample_rate(self):
+        """Audio sample rate accepted by Ocotopus when processing PCM audio data."""
+
+        return self._sample_rate

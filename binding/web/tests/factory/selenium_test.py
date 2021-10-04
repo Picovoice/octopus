@@ -47,7 +47,7 @@ class SimpleHttpServer(threading.Thread):
         print(f'stopping server on port {self._server.server_port}')
 
 
-def run_unit_test_selenium(url, access_key, audio_file):
+def run_unit_test_selenium(url, access_key, absolute_audio_file):
     desired_capabilities = DesiredCapabilities.CHROME
     desired_capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
     opts = Options()
@@ -58,7 +58,7 @@ def run_unit_test_selenium(url, access_key, audio_file):
     driver.get(url)
     assert "unit test" in driver.title
 
-    driver.find_element_by_id("audioFile").send_keys(os.path.abspath(audio_file))
+    driver.find_element_by_id("audioFile").send_keys(absolute_audio_file)
 
     if not check_audio_resource_loaded(driver):
         raise Exception("Failed to load audio file.")
@@ -84,13 +84,15 @@ def main():
     parser = ArgumentParser()
 
     parser.add_argument(
-        '--access-key',
+        '--access_key',
         required=True)
     parser.add_argument(
         '--audio_file',
         required=True)
 
     args = parser.parse_args()
+
+    absolute_audio_file = os.path.abspath(args.audio_file)
 
     simple_server = SimpleHttpServer(port=4005, path=os.path.join(os.path.dirname(__file__), '..', '..'))
     test_url = f'{simple_server.base_url}/octopus-web-en-factory/test/index.html'
@@ -99,7 +101,7 @@ def main():
 
     result = 0
     try:
-        result = run_unit_test_selenium(test_url, args.access_key, args.audio_file)
+        result = run_unit_test_selenium(test_url, args.access_key, absolute_audio_file)
     except WebDriverException as e:
         print(e)
         result = 1

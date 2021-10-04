@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>unit test - OctopusWebFactory</title>
+  <script src="../dist/iife/index.js"></script>
+  <script type="application/javascript">
+    let pcm = null;
+
+    window.onload = function() {
+      const audioContext = new (window.AudioContext || window.webKitAudioContext)(
+        { sampleRate: 16000 }
+      );
+
+      function readAudioFile(selectedFile, callback) {
+        let reader = new FileReader();
+        reader.onload = function (ev) {
+          let wavBytes = reader.result;
+          audioContext.decodeAudioData(wavBytes, callback);
+        };
+        reader.readAsArrayBuffer(selectedFile);
+      }
+
+      const fileSelector = document.getElementById("audioFile");
+      fileSelector.addEventListener("change", (event) => {
+        writeMessage("Loading audio file...");
+        const fileList = event.target.files;
+        readAudioFile(fileList[0], (audioBuffer) => {
+          const f32PCM = audioBuffer.getChannelData(0);
+          const i16PCM = new Int16Array(f32PCM.length);
+
+          const INT16_MAX = 32767;
+          const INT16_MIN = -32768;
+          i16PCM.set(
+            f32PCM.map((f) => {
+              let i = Math.trunc(f * INT16_MAX);
+              if (f > INT16_MAX) i = INT16_MAX;
+              if (f < INT16_MIN) i = INT16_MIN;
+              return i;
+            })
+          );
+          pcm = i16PCM;
+          writeMessage("Loading audio file... done!")
+        });
+      });
+    }
+
+    function writeMessage(message) {
+      console.log(message);
+      let p = document.createElement("p");
+      let text = document.createTextNode(message);
+      p.appendChild(text);
+      document.body.appendChild(p);
+    }
+
+    function assertEquals(expected, actual, eps, failureMessage) {
+      if (Math.abs(expected - actual) > eps) {
+        throw new Error(failureMessage);
+      }
+    }
+
+    async function startTest() {
+      writeMessage("Starting test...");
+
+      const accessKey = document.getElementById("accessKey").value;
+
+      if (!pcm) {
+        writeMessage("Audio file not provided...");
+        return
+      }
+
+      try {
+        const handle = await OctopusWebEnFactory.Octopus.create(accessKey);
+
+        writeMessage("Indexing audio files...");
+        const metadata = await handle.index(pcm);
+        writeMessage("Indexing audio files... done!");
+
+        writeMessage("Checking metadata...");
+        assertEquals(13168272, metadata.metadataAddress, 0, "Received incorrect metadata address.");
+        assertEquals(227360, metadata.metadataLength, 0, "Received incorrect metadata length.");
+        writeMessage("Checking metadata... done!");
+
+        writeMessage("Checking keyword: alexa...");
+        const [alexa] = await handle.search(metadata, "alexa");
+        
+        assertEquals(7.648000240325928, alexa.startSec, 0.01, "Alexa start did not match.");
+        assertEquals(8.35200023651123, alexa.endSec, 0.01, "Alexa end did not match.");
+        assertEquals(1, alexa.probability, 0, "Alexa probability did not match.");
+        writeMessage("Checking keyword: alexa... done!");
+
+        writeMessage("Checking keyword: porcupine...");
+        const [ppn1, ppn2] = await handle.search(metadata, "porcupine");
+        
+        assertEquals(5.727999687194824, ppn1.startSec, 0.01, "Ppn1 start did not match.");
+        assertEquals(6.751999855041504, ppn1.endSec, 0.01, "Ppn1 end did not match.");
+        assertEquals(1, ppn1.probability, 0, "Ppn1 probability did not match.");
+
+        assertEquals(35.36000061035156, ppn2.startSec, 0.01, "Ppn2 start did not match.");
+        assertEquals(36.41600036621094, ppn2.endSec, 0.01, "Ppn2 end did not match.");
+        assertEquals(1, ppn2.probability, 0, "Ppn2 probability did not match.");
+        writeMessage("Checking keyword: porcupine... done!");
+
+        writeMessage("Checking keyword: hello...");
+        const hello = await handle.search(metadata, "hello");
+        assertEquals(0, hello.length, 0, "Hello should not be detected.");
+        writeMessage("Checking keyword: hello... done!");
+
+        writeMessage("Test passed!")
+
+      } catch (error) {
+        writeMessage(error);
+        writeMessage("Test failed!")
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Octopus web binding test</h1>
+  <p>After entering the AccessKey and audio file, click the "Test Octopus" button. For the result, refer to the browser console.</p>
+
+  <p>
+    <label for="accessKey">AccessKey string provided by
+      <a href="https://picovoice.ai/console/">Picovoice Console</a>:</label>
+    <input type="text" id="accessKey" name="accessKey" />
+  </p>
+
+  <p>
+    <label for="audioFile">Select audio file located on {PROJECT_ROOT}/res/audio/multiple_keywords.wav:</label>
+    <input type="file" id="audioFile" name="audioFile" accept="audio/*" />
+  </p>
+
+  <input type="button" id="sumbit" value="Test Octopus" onclick="startTest()" />
+  <hr />
+</body>
+
+</html>

@@ -11,16 +11,9 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-
-def check_audio_resource_loaded(driver):
-    for i in range(10):
-        for entry in driver.get_log('browser'):
-            print(entry['message'])
-            if 'Loading audio file... done!' in entry['message']:
-                return True
-        time.sleep(1)
-    return False
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class SimpleHttpServer(threading.Thread):
@@ -53,19 +46,18 @@ def run_unit_test_selenium(url, access_key, absolute_audio_file):
     opts = Options()
     opts.headless = True
     driver = webdriver.Chrome(desired_capabilities=desired_capabilities, options=opts)
-    driver.set_script_timeout(10)
 
     driver.get(url)
     assert "unit test" in driver.title
 
-    driver.find_element_by_id("audioFile").send_keys(absolute_audio_file)
+    wait = WebDriverWait(driver, 10)
 
-    if not check_audio_resource_loaded(driver):
-        raise Exception("Failed to load audio file.")
+    driver.find_element_by_id("audioFile").send_keys(absolute_audio_file)
+    wait.until(EC.visibility_of_element_located((By.ID, "audioLoaded")))
 
     driver.find_element_by_id("accessKey").send_keys(access_key)
     driver.find_element_by_id("sumbit").click()
-    time.sleep(5)
+    wait.until(EC.visibility_of_element_located((By.ID, "testComplete")))
 
     test_result = 1
     test_message = "Tests failed"
@@ -102,9 +94,6 @@ def main():
     result = 0
     try:
         result = run_unit_test_selenium(test_url, args.access_key, absolute_audio_file)
-    except WebDriverException as e:
-        print(e)
-        result = 1
     except Exception as e:
         print(e)
         result = 1

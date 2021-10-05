@@ -23,6 +23,8 @@
 
       const fileSelector = document.getElementById("audioFile");
       fileSelector.addEventListener("change", (event) => {
+        document.getElementById("audioLoaded").style.display = "none";
+
         writeMessage("Loading audio file...");
         const fileList = event.target.files;
         readAudioFile(fileList[0], (audioBuffer) => {
@@ -40,7 +42,8 @@
             })
           );
           pcm = i16PCM;
-          writeMessage("Loading audio file... done!")
+          document.getElementById("audioLoaded").style.display = "block";
+          writeMessage("Loading audio file... done!");
         });
       });
     }
@@ -60,6 +63,8 @@
     }
 
     async function startTest() {
+      document.getElementById("testComplete").style.display = "none";
+
       writeMessage("Starting test...");
 
       const accessKey = document.getElementById("accessKey").value;
@@ -111,6 +116,8 @@
       } catch (error) {
         writeMessage(error);
         writeMessage("Test failed!")
+      } finally {
+        document.getElementById("testComplete").style.display = "block";
       }
     }
   </script>
@@ -132,6 +139,11 @@
   </p>
 
   <input type="button" id="sumbit" value="Test Octopus" onclick="startTest()" />
+
+  <br>
+
+  <h4 id="audioLoaded" style="display: none;">Audio file loaded!</h4>
+  <h4 id="testComplete" style="display: none;">Test Complete!</h4>
   <hr />
 </body>
 

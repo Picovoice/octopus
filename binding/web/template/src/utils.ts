@@ -52,11 +52,11 @@ export function base64ToUint8Array(base64String: string): Uint8Array {
  * @return retrieved object
  */
 
-export function stringHeaderToObject(stringHeader: string): object {
-  let objectHeader: Record<string, string> = {};
-  for (let property of stringHeader.split("\r\n")) {
-    const keyValuePair = property.split(": ");
-    if (keyValuePair[0] !== "") {
+export function stringHeaderToObject(stringHeader: string): Record<string, string> {
+  const objectHeader: Record<string, string> = {};
+  for (const property of stringHeader.split('\r\n')) {
+    const keyValuePair = property.split(': ');
+    if (keyValuePair[0] !== '') {
       objectHeader[keyValuePair[0]] = keyValuePair[1];
     }
   }
@@ -89,10 +89,9 @@ export async function fetchWithTimeout(uri: string, options = {}, time = 5000): 
  * @return a string containing the envirorment name
  */
 
-export function getRuntimeEnvironment() {
-  if (typeof window == "object" && typeof document == "object") {
-    return "browser";
-  } else {
-    return "worker";
+export function getRuntimeEnvironment(): 'browser' | 'worker' {
+  if (typeof window === 'object' && typeof document === 'object') {
+    return 'browser';
   }
+  return 'worker';
 }

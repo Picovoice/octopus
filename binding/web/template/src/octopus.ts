@@ -8,8 +8,11 @@
     an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
     specific language governing permissions and limitations under the License.
 */
+
+/* eslint camelcase: 0 */
+
 // @ts-ignore
-import * as Asyncify from "asyncify-wasm";
+import * as Asyncify from 'asyncify-wasm';
 
 import type { OctopusEngine, OctopusMetadata, OctopusMatch } from './octopus_types';
 import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
@@ -21,8 +24,6 @@ import {
   fetchWithTimeout,
   stringHeaderToObject,
 } from './utils';
-
-type EmptyPromise = (value: any) => void;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Octopus Speech-To-Index engine.
@@ -49,9 +50,6 @@ type OctopusWasmOutput = {
   octopusMatchAddressAddress: number;
   octopusMatchLengthAddress: number;
 };
-
-let resolvePromise: EmptyPromise;
-let rejectPromise: EmptyPromise;
 
 const PV_STATUS_SUCCESS = 10000;
 
@@ -167,7 +165,7 @@ export class Octopus implements OctopusEngine {
     );
 
     if (phraseAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const memoryBuffer = new Uint8Array(this._wasmMemory.buffer);
@@ -242,6 +240,7 @@ export class Octopus implements OctopusEngine {
 
     const pvConsoleLogWasm = function (index: number): void {
       const memoryBufferUint8 = new Uint8Array(memory.buffer);
+      // eslint-disable-next-line no-console
       console.log(arrayBufferToStringAtIndex(memoryBufferUint8, index));
     };
 
@@ -296,7 +295,7 @@ export class Octopus implements OctopusEngine {
       const headerObject = stringHeaderToObject(header);
 
       let response: Response | undefined = undefined;
-      let responseText: String = "";
+      let responseText = '';
       let statusCode: number;
 
       try {
@@ -311,6 +310,7 @@ export class Octopus implements OctopusEngine {
         );
         statusCode = response.status;
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         statusCode = 0;
       }
@@ -319,6 +319,7 @@ export class Octopus implements OctopusEngine {
         try {
           responseText = await response.text();
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error(error);
           statusCode = 1;
         }
@@ -394,7 +395,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (metadataAddressAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const metadataLengthAddress = await aligned_alloc(
@@ -402,7 +403,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (metadataLengthAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const octopusMatchAddressAddress = await aligned_alloc(
@@ -410,7 +411,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchAddressAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const octopusMatchLengthAddress = await aligned_alloc(
@@ -418,7 +419,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchLengthAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const objectAddressAddress = await aligned_alloc(
@@ -441,7 +442,7 @@ export class Octopus implements OctopusEngine {
     }
     memoryBufferUint8[accessKeyAddress + accessKey.length] = 0;
 
-    let status = await pv_octopus_init(accessKeyAddress, objectAddressAddress);
+    const status = await pv_octopus_init(accessKeyAddress, objectAddressAddress);
     if (status !== PV_STATUS_SUCCESS) {
       throw new Error(
         `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(

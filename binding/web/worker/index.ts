@@ -9,6 +9,4 @@
     specific language governing permissions and limitations under the License.
 */
 
-import OctopusWorkerFactory from './octopus_worker_factory';
-
-export { OctopusWorkerFactory };
+export { OctopusWorkerFactory } from './octopus_worker_factory';

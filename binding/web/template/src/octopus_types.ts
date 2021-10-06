@@ -17,17 +17,17 @@ export type OctopusMetadata = {
 };
 
 export type OctopusMatch = {
-  /** Start of the matched audio in seconds. Float */
+  /** Start of the matched audio in seconds. (Float32) */
   startSec: number;
-  /** End of the matched audio in seconds. Float */
+  /** End of the matched audio in seconds. (Float32) */
   endSec: number;
-  /** Probability that match matches search phrase. Float from 0 -> 1 (1 max) */
+  /** Probability (confidence) that this matches the search phrase. (Float32 in [0,1]) */
   probability: number;
 };
 
 export type OctopusWorkerRequestInit = {
   command: 'init';
-  appId: string;
+  accessKey: string;
 };
 
 export type OctopusWorkerRequestIndex = {
@@ -75,17 +75,20 @@ export type OctopusWorkerResponse =
   | OctopusWorkerResponseFailed
   | OctopusWorkerResponseIndex
   | OctopusWorkerResponseSearch
-  | any;
 
 export interface OctopusEngine {
   /** Release all resources acquired by Octopus */
   release(): Promise<void>;
   /** Process frames of 16-bit 16kHz PCM audio */
   index(pcm: Int16Array): Promise<OctopusMetadata>;
-  /** Seaches metadata for instances of a search phrase */
+  /** Seaches index for instances of a search phrase */
   search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch[]>;
   /** The version of the Octopus engine */
   readonly version: string;
   /** The sampling rate of audio expected by the Octopus engine */
   readonly sampleRate: number;
+}
+
+export interface OctopusWorker extends Omit<Worker, 'postMessage'> {
+  postMessage(command: OctopusWorkerRequest): void;
 }

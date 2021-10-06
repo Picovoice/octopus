@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
     DESC
     s.homepage = 'https://github.com/Picovoice/octopus/tree/master/binding/ios'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
-    s.source = { :git => "https://github.com/Picovoice/octopus.git"}
+    s.source = { :git => "https://github.com/Picovoice/octopus.git", :tag => "Octopus-iOS-v1.0.0" }
     s.ios.deployment_target = '9.0'
     s.swift_version = '5.0'
     s.vendored_frameworks = 'lib/ios/PvOctopus.xcframework'

@@ -22,8 +22,8 @@ import { Octopus } from './octopus';
 
 let octopusEngine: OctopusEngine | null = null;
 
-async function init(appId: string): Promise<void> {
-  octopusEngine = await Octopus.create(appId);
+async function init(accessKey: string): Promise<void> {
+  octopusEngine = await Octopus.create(accessKey);
   const octopusReadyMessage: OctopusWorkerResponseReady = {
     command: 'octopus-ready',
   };
@@ -69,7 +69,7 @@ onmessage = function (
 ): void {
   switch (event.data.command) {
     case 'init':
-      init(event.data.appId);
+      init(event.data.accessKey);
       break;
     case 'index':
       index(event.data.input);

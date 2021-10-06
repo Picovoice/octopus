@@ -65,9 +65,9 @@ function octopusSearchCallback(matches) {
 async function startOctopus() {
   // Create an Octopus Worker
   // Note: you receive a Worker object, _not_ an individual Octopus instance
-  const appId = ... // .. AppID string provided by Picovoice Console (https://picovoice.ai/console/)
+  const accessKey = ... // .. AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
   const OctopusWorker = await OctopusWorkerFactory.create(
-    appId,
+    accessKey,
     octopusIndexCallback,
     octopusSearchCallback
   );
@@ -111,8 +111,8 @@ E.g.:
 import { Octopus } from "@picovoice/octopus-web-en-factory";
 
 async function startOctopus() {
-  const appId = ""; // .. AppID string provided by Picovoice Console (https://picovoice.ai/console/)
-  const handle = await Octopus.create(appId);
+  const accessKey = ""; // .. AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
+  const handle = await Octopus.create(accessKey);
 }
 
 startOctopus();

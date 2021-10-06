@@ -81,7 +81,7 @@ onmessage = function (
       release();
       break;
     default:
-      // @ts-ignore
-      console.warn('Unhandled command in octopus_worker: ' + event.data.command);
+      // eslint-disable-next-line no-console
+      console.warn('Unhandled command in octopus_worker: ' + event.data);
   }
 };

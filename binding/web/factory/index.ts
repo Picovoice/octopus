@@ -9,6 +9,6 @@
     specific language governing permissions and limitations under the License.
 */
 
-import Octopus from "./octopus"
+import Octopus from './octopus';
 
-export { Octopus }
+export { Octopus };

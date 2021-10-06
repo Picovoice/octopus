@@ -23,7 +23,7 @@ for (const language of LANGUAGES) {
 
   const wasmFile = readFileSync(join(sourceDirectory, language, "pv_octopus.wasm"));
   const strBase64 = Buffer.from(wasmFile).toString("base64");
-  const jsSourceFileOutput = `export const OCTOPUS_WASM_BASE64 = '${strBase64}'\n`;
+  const jsSourceFileOutput = `export const OCTOPUS_WASM_BASE64 = '${strBase64}';\n`;
 
   writeFileSync(
     join(outputDirectory, "octopus_b64.ts"),

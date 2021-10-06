@@ -8,8 +8,11 @@
     an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
     specific language governing permissions and limitations under the License.
 */
+
+/* eslint camelcase: 0 */
+
 // @ts-ignore
-import * as Asyncify from "asyncify-wasm";
+import * as Asyncify from 'asyncify-wasm';
 
 import type { OctopusEngine, OctopusMetadata, OctopusMatch } from './octopus_types';
 import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
@@ -21,8 +24,6 @@ import {
   fetchWithTimeout,
   stringHeaderToObject,
 } from './utils';
-
-type EmptyPromise = (value: any) => void;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Octopus Speech-To-Index engine.
@@ -49,9 +50,6 @@ type OctopusWasmOutput = {
   octopusMatchAddressAddress: number;
   octopusMatchLengthAddress: number;
 };
-
-let resolvePromise: EmptyPromise;
-let rejectPromise: EmptyPromise;
 
 const PV_STATUS_SUCCESS = 10000;
 
@@ -120,8 +118,8 @@ export class Octopus implements OctopusEngine {
       (pcm.length) * Int16Array.BYTES_PER_ELEMENT
     );
 
-    const memoryBuffer = new Int16Array(this._wasmMemory.buffer);
-    memoryBuffer.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
+    const memoryBufferInt16 = new Int16Array(this._wasmMemory.buffer);
+    memoryBufferInt16.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
 
     const status = await this._pvOctopusIndex(
       this._objectAddress,
@@ -131,10 +129,10 @@ export class Octopus implements OctopusEngine {
       this._metadataLengthAddress
     );
     if (status !== PV_STATUS_SUCCESS) {
-      const memoryBuffer = new Uint8Array(this._wasmMemory.buffer);
+      const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
       throw new Error(
         `index failed with status ${arrayBufferToStringAtIndex(
-          memoryBuffer,
+          memoryBufferUint8,
           await this._pvStatusToString(status)
         )}`
       );
@@ -167,14 +165,14 @@ export class Octopus implements OctopusEngine {
     );
 
     if (phraseAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
-    const memoryBuffer = new Uint8Array(this._wasmMemory.buffer);
+    const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
     for (let i = 0; i < searchPhrase.length; i++) {
-      memoryBuffer[phraseAddress + i] = searchPhrase.charCodeAt(i);
+      memoryBufferUint8[phraseAddress + i] = searchPhrase.charCodeAt(i);
     }
-    memoryBuffer[phraseAddress + searchPhrase.length] = 0;
+    memoryBufferUint8[phraseAddress + searchPhrase.length] = 0;
 
     const status = await this._pvOctopusSearch(
       this._objectAddress,
@@ -185,10 +183,9 @@ export class Octopus implements OctopusEngine {
       this._octopusMatchLengthAddress
     );
     if (status !== PV_STATUS_SUCCESS) {
-      const memoryBuffer = new Uint8Array(this._wasmMemory.buffer);
       throw new Error(
         `search failed with status ${arrayBufferToStringAtIndex(
-          memoryBuffer,
+          memoryBufferUint8,
           await this._pvStatusToString(status)
         )}`
       );
@@ -199,11 +196,11 @@ export class Octopus implements OctopusEngine {
     const octopusMatchLength = this._memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
 
     for (let i = 0; i < octopusMatchLength; i++) {
-      const octopusMatch = octopusMatchAddress + i * (3 * Float32Array.BYTES_PER_ELEMENT);
+      const octopusMatch = octopusMatchAddress + i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
 
       const startSec = this._memoryBufferView.getFloat32(octopusMatch, true);
-      const endSec = this._memoryBufferView.getFloat32(octopusMatch + 1 * Float32Array.BYTES_PER_ELEMENT, true);
-      const probability = this._memoryBufferView.getFloat32(octopusMatch + 2 * Float32Array.BYTES_PER_ELEMENT, true);
+      const endSec = this._memoryBufferView.getFloat32(octopusMatch + 1 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+      const probability = this._memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
 
       matches.push({
         startSec,
@@ -240,8 +237,11 @@ export class Octopus implements OctopusEngine {
   private static async initWasm(accessKey: string): Promise<OctopusWasmOutput> {
     const memory = new WebAssembly.Memory({ initial: 100, maximum: 2000 });
 
+    const memoryBufferUint8 = new Uint8Array(memory.buffer);
+    const memoryBufferInt32 = new Int32Array(memory.buffer);
+
     const pvConsoleLogWasm = function (index: number): void {
-      const memoryBufferUint8 = new Uint8Array(memory.buffer);
+      // eslint-disable-next-line no-console
       console.log(arrayBufferToStringAtIndex(memoryBufferUint8, index));
     };
 
@@ -251,7 +251,6 @@ export class Octopus implements OctopusEngine {
       fileNameAddress: number
     ): void {
       if (expr === 0) {
-        const memoryBufferUint8 = new Uint8Array(memory.buffer);
         const fileName = arrayBufferToStringAtIndex(
           memoryBufferUint8,
           fileNameAddress
@@ -296,7 +295,7 @@ export class Octopus implements OctopusEngine {
       const headerObject = stringHeaderToObject(header);
 
       let response: Response | undefined = undefined;
-      let responseText: String = "";
+      let responseText = '';
       let statusCode: number;
 
       try {
@@ -311,6 +310,7 @@ export class Octopus implements OctopusEngine {
         );
         statusCode = response.status;
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error);
         statusCode = 0;
       }
@@ -319,10 +319,12 @@ export class Octopus implements OctopusEngine {
         try {
           responseText = await response.text();
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error(error);
           statusCode = 1;
         }
 
+        // eslint-disable-next-line
         const responseAddress = await aligned_alloc(
           Int8Array.BYTES_PER_ELEMENT,
           (responseText.length + 1) * Int8Array.BYTES_PER_ELEMENT
@@ -386,15 +388,12 @@ export class Octopus implements OctopusEngine {
       .pv_status_to_string as CallableFunction;
     const pv_sample_rate = instance.exports.pv_sample_rate as CallableFunction;
 
-    const memoryBufferUint8 = new Uint8Array(memory.buffer);
-    const memoryBufferInt32 = new Int32Array(memory.buffer);
-
     const metadataAddressAddress = await aligned_alloc(
       Int32Array.BYTES_PER_ELEMENT,
       Int32Array.BYTES_PER_ELEMENT
     );
     if (metadataAddressAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const metadataLengthAddress = await aligned_alloc(
@@ -402,7 +401,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (metadataLengthAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const octopusMatchAddressAddress = await aligned_alloc(
@@ -410,7 +409,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchAddressAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const octopusMatchLengthAddress = await aligned_alloc(
@@ -418,7 +417,7 @@ export class Octopus implements OctopusEngine {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchLengthAddress === 0) {
-      throw new Error("malloc failed: Cannot allocate memory");
+      throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const objectAddressAddress = await aligned_alloc(
@@ -441,7 +440,7 @@ export class Octopus implements OctopusEngine {
     }
     memoryBufferUint8[accessKeyAddress + accessKey.length] = 0;
 
-    let status = await pv_octopus_init(accessKeyAddress, objectAddressAddress);
+    const status = await pv_octopus_init(accessKeyAddress, objectAddressAddress);
     if (status !== PV_STATUS_SUCCESS) {
       throw new Error(
         `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(

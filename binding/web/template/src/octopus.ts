@@ -324,6 +324,7 @@ export class Octopus implements OctopusEngine {
           statusCode = 1;
         }
 
+        // eslint-disable-next-line
         const responseAddress = await aligned_alloc(
           Int8Array.BYTES_PER_ELEMENT,
           (responseText.length + 1) * Int8Array.BYTES_PER_ELEMENT

@@ -25,9 +25,9 @@ Create an instance of the engine:
 ```swift
 import Octopus
 
-let appID : String = // .. AppID provided by Picovoice Console (https://picovoice.ai/console/)
+let accessKey : String = // .. AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
 do {
-    let handle = try Octopus(appID: appID)
+    let handle = try Octopus(accessKey: accessKey)
 } catch { }
 ```
 

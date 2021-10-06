@@ -7,8 +7,8 @@
 //  specific language governing permissions and limitations under the License.
 //
 
-import PvOctopus
 import Foundation
+import PvOctopus
 
 public struct OctopusMatch {
     public let startSec: Float
@@ -47,10 +47,10 @@ public class Octopus {
     /// Constructor.
     ///
     /// - Parameters:
-    ///   - appID: AppID obtained from the Picvoice Console (https://picovoice.ai/console/)
+    ///   - accessKey: AccessKey obtained from the Picvoice Console (https://picovoice.ai/console/)
     ///   - modelPath: Absolute path to file containing model parameters.
     /// - Throws: OctopusError
-    public init(appID:String, modelPath:String? = nil) throws {
+    public init(accessKey:String, modelPath:String? = nil) throws {
         
         var modelPathArg = modelPath
         
@@ -68,7 +68,7 @@ public class Octopus {
         }
             
         let status = pv_octopus_init(
-            appID,
+            accessKey,
             modelPathArg,
             &handle)
         try checkStatus(status)

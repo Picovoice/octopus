@@ -32,14 +32,14 @@ typedef struct pv_octopus pv_octopus_t;
 /**
  * Constructor.
  *
- * @param app_id AppID provided by Picovoice Console (https://picovoice.ai/console/)
+ * @param access_id AppID provided by Picovoice Console (https://picovoice.ai/console/)
  * @param object Constructed instance of Octopus.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' 'PV_STATUS_OUT_OF_MEMORY',
  * 'PV_STATUS_RUNTIME_ERROR', 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED',
  * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
  */
 PV_API pv_status_t pv_octopus_init(
-        const char* app_id,
+        const char* access_id,
         pv_octopus_t **object);
 
 #else
@@ -47,7 +47,7 @@ PV_API pv_status_t pv_octopus_init(
 /**
  * Constructor.
  *
- * @param app_id AppID provided by Picovoice Console (https://picovoice.ai/console/)
+ * @param access_key AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
  * @param model_path Absolute path to the file containing model parameters.
  * @param[out] object Constructed instance of Octopus.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', 'PV_STATUS_OUT_OF_MEMORY',
@@ -55,7 +55,7 @@ PV_API pv_status_t pv_octopus_init(
  * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
  */
 PV_API pv_status_t pv_octopus_init(
-        const char* app_id,
+        const char* access_key,
         const char *model_path,
         pv_octopus_t **object);
 

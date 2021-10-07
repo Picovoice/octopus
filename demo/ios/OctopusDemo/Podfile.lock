@@ -2,15 +2,15 @@ PODS:
   - Octopus-iOS (1.0.0)
 
 DEPENDENCIES:
-  - Octopus-iOS (from `../../../binding/ios`)
+  - Octopus-iOS (from `../../../`)
 
 EXTERNAL SOURCES:
   Octopus-iOS:
-    :path: "../../../binding/ios"
+    :path: "../../../"
 
 SPEC CHECKSUMS:
-  Octopus-iOS: d51e69dbe1f91b70d5ff6fbeb9a4163d5cc6a5a5
+  Octopus-iOS: addd6e93df04a7b82686b18cefff28f1f3c7a7b6
 
-PODFILE CHECKSUM: d0bb9863681758fcad07d4177a170912a7ca315a
+PODFILE CHECKSUM: 7e828ddf6a11915a4180d11510569c5945d74c3b
 
 COCOAPODS: 1.11.2

@@ -11,13 +11,13 @@ hypothesis (e.g. homophones)
 - [Octopus](#octopus)
   - [Table of Contents](#table-of-contents)
   - [Demos](#demos)
-    - [Python](#python-demos) 
-    - [C](#c-demos)
-    - [Android](#android-demos)
-    - [iOS](#ios-demos)
+    - [Python Demos](#python-demos)
+    - [C Demos](#c-demos)
+    - [Android Demos](#android-demos)
+    - [iOS Demos](#ios-demos)
     - [Web Demos](#web-demos)
   - [SDKs](#sdks)
-    - [Python](#python) 
+    - [Python](#python)
     - [C](#c)
     - [Android](#android)
     - [iOS](#ios)
@@ -25,6 +25,7 @@ hypothesis (e.g. homophones)
       - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
   - [Releases](#releases)
+    - [v1.0.0 Oct 8th, 2021](#v100-oct-8th-2021)
 
 ## Demos
 
@@ -150,9 +151,9 @@ Octopus is available on modern web browsers (i.e., not Internet Explorer) via [W
     async function startOctopus() {
       // Create an Octopus Worker
       // Note: you receive a Worker object, _not_ an individual Octopus instance
-      const appId = ... // .. AppID string provided by Picovoice Console (https://picovoice.ai/console/)
+      const accessKey = ... // .. AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
       const OctopusWorker = await OctopusWorkerFactory.create(
-        appId,
+        accessKey,
         octopusIndexCallback,
         octopusSearchCallback
       )
@@ -213,9 +214,9 @@ function octopusSearchCallback(matches) {
 async function startOctopus() {
   // Create an Octopus Worker
   // Note: you receive a Worker object, _not_ an individual Octopus instance
-  const appId = // .. AppID string provided by Picovoice Console (https://picovoice.ai/console/)
+  const accessKey = // .. AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
   const OctopusWorker = await OctopusWorkerFactory.create(
-    appId,
+    accessKey,
     octopusIndexCallback,
     octopusSearchCallback
   );

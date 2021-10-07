@@ -40,13 +40,13 @@ public class Octopus {
     /**
      * Constructor.
      *
-     * @param appID AppID obtained from Picovoice Console
+     * @param accessKey AccessKey obtained from Picovoice Console
      * @param modelPath Absolute path to the file containing Octopus model parameters.*
      * @throws OctopusException if there is an error while initializing Octopus.
      */
-    public Octopus(String appID, String modelPath) throws OctopusException {
+    public Octopus(String accessKey, String modelPath) throws OctopusException {
         try {
-            handle = init(appID, modelPath);
+            handle = init(accessKey, modelPath);
         } catch (Exception e) {
             throw new OctopusException(e);
         }
@@ -165,7 +165,7 @@ public class Octopus {
      */
     public native String getVersion();
 
-    private native long init(String appID, String modelPath);
+    private native long init(String accessKey, String modelPath);
 
     private native void delete(long object);
 
@@ -186,15 +186,15 @@ public class Octopus {
 
     public static class Builder {
 
-        private String appID = null;
+        private String accessKey = null;
         private String modelPath = null;
 
-        public Builder(String appID) {
-            this.appID = appID;
+        public Builder(String accessKey) {
+            this.accessKey = accessKey;
         }
 
-        public Builder setAppID(String appID) {
-            this.appID = appID;
+        public Builder setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
             return this;
         }
 
@@ -224,11 +224,11 @@ public class Octopus {
                 }
             }
 
-            if (appID == null) {
-                throw new OctopusException("AppID must not be null");
+            if (accessKey == null) {
+                throw new OctopusException("AccessKey must not be null");
             }
 
-            return new Octopus(appID, modelPath);
+            return new Octopus(accessKey, modelPath);
         }
     }
 }

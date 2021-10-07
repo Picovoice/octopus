@@ -59,7 +59,7 @@ public class OctopusTest {
     AssetManager assetManager;
     String testResourcesPath;
 
-    String appID = "";
+    String accessKey = "";
 
     private final HashSet<String> testPhrases = new HashSet<>(Arrays.asList("gorilla", "terminator"));
     private final OctopusMatch expectedMatch = new OctopusMatch(39.168f, 40.128f, 1.0f);
@@ -77,13 +77,13 @@ public class OctopusTest {
         extractAssetsRecursively("test_resources");
         testResourcesPath = new File(appContext.getFilesDir(), "test_resources").getAbsolutePath();
 
-        appID = appContext.getString(R.string.pvTestingAppID);
+        accessKey = appContext.getString(R.string.pvTestingAccessKey);
     }
 
     @Test
     public void testIndexAndSearchAudioFile() throws OctopusException {
 
-        Octopus octopus = new Octopus.Builder(appID).build(appContext);
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -105,7 +105,7 @@ public class OctopusTest {
 
     @Test
     public void testIndexAndSearchAudioData() throws Exception {
-        Octopus octopus = new Octopus.Builder(appID).build(appContext);
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
 
         File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
         byte[] rawData = Files.readAllBytes(audioFile.toPath());
@@ -133,7 +133,7 @@ public class OctopusTest {
 
     @Test
     public void testMetadataMarshalling() throws Exception {
-        Octopus octopus = new Octopus.Builder(appID).build(appContext);
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 

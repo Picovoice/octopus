@@ -51,12 +51,12 @@ import ai.picovoice.octopus.OctopusMetadata;
 
 public class MainActivity extends AppCompatActivity {
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
-    private ArrayList<Short> pcmData = new ArrayList();
+    final private ArrayList<Short> pcmData = new ArrayList();
     private OctopusMetadata metadata = null;
 
     public Octopus octopus;
 
-    private static final String appID = "AppID provided by Picovoice Console (https://picovoice.ai/console/)";
+    private static final String accessKey = "YOUR_ACCESS_KEY_HERE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.octopus_demo);
 
         try {
-            octopus = new Octopus.Builder(appID).build(getApplicationContext());
+            octopus = new Octopus.Builder(accessKey).build(getApplicationContext());
         } catch (OctopusException ex) {
             displayError(ex.toString());
         }
@@ -104,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
     public void displayMatches(OctopusMatch[] matches) {
         RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
 
-        for (int i = 0; i < matches.length; ++i) {
-            System.out.println(String.format("%f -> %f (%f)", matches[i].getStartSec(), matches[i].getEndSec(), matches[i].getProbability()));
+        for (OctopusMatch match : matches) {
+            System.out.printf("%f -> %f (%f)%n", match.getStartSec(), match.getEndSec(), match.getProbability());
         }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        HashSet<String> searchSet = new HashSet();
+        HashSet<String> searchSet = new HashSet<>();
         searchSet.add(searchPhrase);
         try {
             HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, searchSet);
@@ -181,17 +181,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class SearchResultsViewAdaptor extends RecyclerView.Adapter<SearchResultsViewAdaptor.ViewHolder> {
-        private List<OctopusMatch> data;
-        private LayoutInflater inflator;
+        final private List<OctopusMatch> data;
+        final private LayoutInflater inflater;
 
         SearchResultsViewAdaptor(Context context, List<OctopusMatch> data) {
-            this.inflator = LayoutInflater.from(context);
+            this.inflater = LayoutInflater.from(context);
             this.data = data;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflator.inflate(R.layout.recyclerview_row, parent, false);
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
             return new ViewHolder(view);
         }
 
@@ -279,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
                 while (!stop.get()) {
                     if (audioRecord.read(buffer, 0, buffer.length) == buffer.length) {
-                        for (int i = 0; i < buffer.length; ++i) {
-                            pcmData.add(buffer[i]);
+                        for (short value : buffer) {
+                            pcmData.add(value);
                         }
                     }
                 }

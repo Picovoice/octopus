@@ -15,7 +15,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        resValue 'string', 'pvTestingAppID', pvTestingAppID
+        resValue 'string', 'pvTestingAccessKey', pvTestingAccessKey
     }
 
     buildTypes {

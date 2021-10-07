@@ -12,7 +12,9 @@ hypothesis (e.g. homophones)
 
 ## Installation
 
-Octopus is hosted on Maven Central. To include the package in your Android project, ensure you have included `mavenCentral()` in your top-level `build.gradle` file and then add the following to your app's `build.gradle`:
+Octopus is hosted on Maven Central. To include the package in your Android project, ensure you have
+included `mavenCentral()` in your top-level `build.gradle` file and then add the following to your
+app's `build.gradle`:
 
 ```groovy
 dependencies {
@@ -28,9 +30,9 @@ Create an instance of the engine with the Octopus Builder class by passing in th
 ```java
 import ai.picovoice.octopus.*;
 
-String appID = "..."; // AppID provided by Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
 try {
-    Octopus handle = new Octopus.Builder(appID).build(appContext);
+    Octopus handle = new Octopus.Builder(accessKey).build(appContext);
 } catch (OctopusException ex) { }
 ```
 

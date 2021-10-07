@@ -17,16 +17,16 @@ LIBRARY_PATH = pv_library_path('')
 MODEL_PATH = pv_model_path('')
 
 
-def create(app_id, library_path=None, model_path=None):
+def create(access_key, library_path=None, model_path=None):
     """
     Factory method for Octopus Speech-to-Index engine.
 
-    :param app_id: AppID provided by Picovoice Console (https://picovoice.ai/console/)
+    :param access_key: AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
     :param library_path: Absolute path to Octopus' dynamic library. If not set it will be set to the default
     location.
     :param model_path: Absolute path to the file containing model parameters. If not set it will be set to the default
     location.
-    :return An instance of Ocotopus Speech-to-Index engine.
+    :return An instance of Octopus Speech-to-Index engine.
     """
 
     if library_path is None:
@@ -35,4 +35,4 @@ def create(app_id, library_path=None, model_path=None):
     if model_path is None:
         model_path = MODEL_PATH
 
-    return Octopus(app_id=app_id, library_path=library_path, model_path=model_path)
+    return Octopus(access_key=access_key, library_path=library_path, model_path=model_path)

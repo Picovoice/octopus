@@ -17,6 +17,7 @@ import subprocess
 log = logging.getLogger('OCT')
 log.setLevel(logging.WARNING)
 
+
 def _pv_platform():
     pv_system = platform.system()
     if pv_system not in {'Darwin', 'Linux', 'Windows'}:
@@ -28,6 +29,7 @@ def _pv_platform():
 
 
 _PV_SYSTEM, _PV_MACHINE = _pv_platform()
+
 
 def pv_library_path(relative_path):
     if _PV_SYSTEM == 'Darwin':

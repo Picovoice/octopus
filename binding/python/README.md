@@ -24,12 +24,12 @@ Create an instance of the engine:
 ```python
 import pvoctopus
 
-app_id = ""  # AppID provided by Picovoice Console (https://picovoice.ai/console/)
-handle = pvoctopus.create(app_id=app_id)
+access_key = ""  # AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+handle = pvoctopus.create(access_key=access_key)
 ```
 
-Octpus consists of two steps: Indexing and Searching.
-Indexing transforms audio data into a `Metadata` object that searches caan be run against.
+Octopus consists of two steps: Indexing and Searching. Indexing transforms audio data into a `Metadata` object that
+searches can be run against.
 
 Octopus indexing has two modes of operation: indexing PCM audio data, or indexing an audio file.
 
@@ -53,18 +53,19 @@ Once the `Metadata` object has been created, it can be used for searching:
 
 ```python
 search_term = 'picovoice'
-matches = self.octopus.search(metadata, [search_term])
+matches = octopus.search(metadata, [search_term])
 ```
 
 Multiple search terms can be given:
 ```python
-matches = self.octopus.search(metadata, ['picovoice', 'Octopus', 'rhino'])
+matches = octopus.search(metadata, ['picovoice', 'Octopus', 'rhino'])
 ```
 
-The `matches` object is a dictionary where the `key` is the `phrase`, and the `value` is a `list` of `Match` objects. The `Match` object contains the `start_sec`, `end_sec` and `probablity` of each match:
+The `matches` object is a dictionary where the `key` is the `phrase`, and the `value` is a `list` of `Match` objects.
+The `Match` object contains the `start_sec`, `end_sec` and `probablity` of each match:
 
 ```python
-matches = self.octopus.search(metadata, ['avocado'])
+matches = octopus.search(metadata, ['avocado'])
 
 avocado_matches = matches['avocado']
 for match in avocado_matches:
@@ -89,11 +90,3 @@ When done both the metadata and handle resources have to be released explicitly:
 metadata.delete()
 handle.delete()
 ```
-
-## Non-English Contexts
-
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
-
-## Demos
-
-[pvoctopusdemo](https://pypi.org/project/pvoctopusdemo/) provides command-line utilities for processing real-time audio (i.e. microphone) and files using Octopus.

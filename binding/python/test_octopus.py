@@ -12,28 +12,29 @@
 # limitations under the License.
 #
 
-import soundfile
 import sys
 import unittest
+
+import soundfile
 
 from octopus import Octopus, OctopusMetadata
 from util import *
 
 
-class OcotopusTestCase(unittest.TestCase):
+class OctopusTestCase(unittest.TestCase):
     octopus = None
     search_term = 'avocado'
+    path = None
 
     @classmethod
     def setUpClass(cls):
         app_id = sys.argv[1]
         cls.octopus = Octopus(
-            app_id=app_id,
+            access_key=app_id,
             library_path=pv_library_path('../..'),
             model_path=pv_model_path('../..'))
 
-        cls.path = os.path.join(os.path.dirname(__file__),
-                                '../../res/audio/multiple_keywords.wav')
+        cls.path = os.path.join(os.path.dirname(__file__), '../../res/audio/multiple_keywords.wav')
         cls.audio, sample_rate = soundfile.read(cls.path, dtype='int16')
         assert sample_rate == cls.octopus.pcm_sample_rate
 
@@ -47,19 +48,10 @@ class OcotopusTestCase(unittest.TestCase):
         self.assertEqual(len(matches[self.search_term]), 1)
 
         match = matches[self.search_term][0]
-        expected_match = Octopus.Match(
-            start_sec=11.519995,
-            end_sec=12.383999,
-            probability=1.0)
-        self.assertAlmostEqual(match.start_sec,
-                               expected_match.start_sec,
-                               places=5)
-        self.assertAlmostEqual(match.end_sec,
-                               expected_match.end_sec,
-                               places=5)
-        self.assertAlmostEqual(match.probability,
-                               expected_match.probability,
-                               places=5)
+        expected_match = Octopus.Match(start_sec=11.519995, end_sec=12.383999, probability=1.0)
+        self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=5)
+        self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=5)
+        self.assertAlmostEqual(match.probability, expected_match.probability, places=5)
 
     def test_index(self):
         metadata = self.octopus.index_audio_data(self.audio)
@@ -80,10 +72,13 @@ class OcotopusTestCase(unittest.TestCase):
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
 
+    def test_version(self):
+        self.assertIsInstance(self.octopus.version, str)
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print("usage: test_octopus.py ${APP_ID}")
+        print("usage: test_octopus.py ${ACCESS_KEY}")
         exit(1)
 
     unittest.main(argv=sys.argv[:1])

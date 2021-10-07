@@ -23,8 +23,8 @@ cmake -S demo/c -B demo/c/build -G "MinGW Makefiles" && cmake --build demo/c/bui
 
 ## Run Index Demo
 
-Indexes a given audio file and saves the metadata. In the following, replace `${APP_ID}` with
-the AppID provided by [Picovoice Console](https://picovoice.ai/console/),
+Indexes a given audio file and saves the metadata. In the following, replace `${ACCESS_KEY}` with
+the AccessKey provided by [Picovoice Console](https://picovoice.ai/console/),
 replace `${AUDIO_PATH}` with the path to a given audio file and replace `${INDEX_PATH}` with the path to cached index file.
 
 ### Ubuntu
@@ -33,7 +33,7 @@ replace `${AUDIO_PATH}` with the path to a given audio file and replace `${INDEX
 ./demo/c/build/octopus_index_demo \
 lib/linux/x86_64/libpv_octopus.so \
 lib/common/octopus_params.pv \
-${APP_ID} \
+${ACCESS_KEY} \
 ${AUDIO_PATH} \
 ${INDEX_PATH}
 ```
@@ -44,7 +44,7 @@ ${INDEX_PATH}
 ./demo/c/build/octopus_index_demo \
 lib/mac/x86_64/libpv_octopus.dylib \
 lib/common/octopus_params.pv \
-${APP_ID} \
+${ACCESS_KEY} \
 ${AUDIO_PATH} \
 ${INDEX_PATH}
 ```
@@ -55,15 +55,15 @@ ${INDEX_PATH}
 demo\\c\\build\\octopus_index_demo ^
 lib\\windows\\amd64\\libpv_octopus.dll ^
 lib\\common\\octopus_params.pv ^
-${APP_ID} ^
+${ACCESS_KEY} ^
 ${AUDIO_PATH} ^
 ${INDEX_PATH}
 ```
 
 ## Run Search Demo
 
-Searches cached metadata for utterances of a given search phrase. In the following, replace `${APP_ID}` with
-the AppID provided by [Picovoice Console](https://picovoice.ai/console/),
+Searches cached metadata for utterances of a given search phrase. In the following, replace `${ACCESS_KEY}` with
+the AccessKey provided by [Picovoice Console](https://picovoice.ai/console/),
 replace `${INDEX_PATH}` with the path to a given index file and replace `${PHRASE}` to a search phrase.
 
 ### Ubuntu
@@ -72,7 +72,7 @@ replace `${INDEX_PATH}` with the path to a given index file and replace `${PHRAS
 ./demo/c/build/octopus_search_demo \
 lib/linux/x86_64/libpv_octopus.so \
 lib/common/octopus_params.pv \
-${APP_ID} \
+${ACCESS_KEY} \
 ${INDEX_PATH} \
 ${PHRASE}
 ```
@@ -83,7 +83,7 @@ ${PHRASE}
 ./demo/c/build/octopus_search_demo \
 lib/mac/x86_64/libpv_octopus.dylib \
 lib/common/octopus_params.pv \
-${APP_ID} \
+${ACCESS_KEY} \
 ${INDEX_PATH} \
 ${PHRASE}
 ```
@@ -94,7 +94,7 @@ ${PHRASE}
 demo\\c\\build\\octopus_search_demo ^
 lib\\windows\\amd64\\libpv_octopus.dll ^
 lib\\common\\octopus_params.pv ^
-${APP_ID} ^
+${ACCESS_KEY} ^
 ${INDEX_PATH} ^
 ${PHRASE}
 ```

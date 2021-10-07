@@ -11,10 +11,16 @@ hypothesis (e.g. homophones)
 - [Octopus](#octopus)
   - [Table of Contents](#table-of-contents)
   - [Demos](#demos)
-    - [C](#c)
+    - [Python](#python-demos) 
+    - [C](#c-demos)
+    - [Android](#android-demos)
+    - [iOS](#ios-demos)
     - [Web Demos](#web-demos)
   - [SDKs](#sdks)
-    - [C](#c-1)
+    - [Python](#python) 
+    - [C](#c)
+    - [Android](#android)
+    - [iOS](#ios)
     - [Web](#web)
       - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
@@ -22,9 +28,23 @@ hypothesis (e.g. homophones)
 
 ## Demos
 
-### C
+### Python Demos
+
+TODO @laves
+
+### C Demos
+
+TODO @ksyeo1010
 
 For more information about C demos go to [demo/c](/demo/c).
+
+### Android Demos
+
+TODO @ErisMik
+
+### iOS Demos
+
+TODO @ErisMik
 
 ### Web Demos
 
@@ -45,6 +65,10 @@ npm run start
 Open http://localhost:5000 in your browser to try the demo.
 
 ## SDKs
+
+### Python
+
+TODO @laves
 
 ### C
 
@@ -89,6 +113,14 @@ When done be sure to release the acquired resources:
 ```c
 pv_octopus_delete(handle);
 ```
+
+### Android
+
+TODO @ErisMik
+
+### iOS
+
+TODO @ErisMik
 
 ### Web
 
@@ -212,5 +244,5 @@ OctopusWorker.postMessage({
 
 ## Releases
 
-### v1.0.0 August 25th, 2021
+### v1.0.0 Oct 8th, 2021
 - Initial release.

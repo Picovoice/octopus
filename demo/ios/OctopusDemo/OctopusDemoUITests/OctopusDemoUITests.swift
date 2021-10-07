@@ -8,10 +8,10 @@
 //
 
 import XCTest
-import OctopusDemo
+import Octopus
 
 class OctopusDemoUITests: XCTestCase {
-    let appId: String = ""
+    let accessKey: String = "{YOUR_ACCESS_KEY_HERE}"
     
     let phrases: Set<String> = ["gorilla", "terminator"]
     let expectedMatch = OctopusMatch(
@@ -31,7 +31,7 @@ class OctopusDemoUITests: XCTestCase {
         let bundle = Bundle(for: type(of: self))
         let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
         
-        let octopus = try Octopus(appID: appId)
+        let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
         let matches = try octopus.search(metadata: metadata, phrases: phrases)
         XCTAssert(matches["gorilla"]!.count == 0)
@@ -55,7 +55,7 @@ class OctopusDemoUITests: XCTestCase {
             audioData.copyBytes(to: $0, from: 44..<audioData.count)
         }
         
-        let octopus = try Octopus(appID: appId)
+        let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioData(pcm: pcm)
         let matches = try octopus.search(metadata: metadata, phrases: phrases)
         XCTAssert(matches["gorilla"]!.count == 0)
@@ -74,7 +74,7 @@ class OctopusDemoUITests: XCTestCase {
         let bundle = Bundle(for: type(of: self))
         let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
         
-        let octopus = try Octopus(appID: appId)
+        let octopus = try Octopus(accessKey: accessKey)
         var metadata:OctopusMetadata? = try octopus.indexAudioFile(path: audioFilePath)
         
         let metadataBytes = try metadata!.getBytes()

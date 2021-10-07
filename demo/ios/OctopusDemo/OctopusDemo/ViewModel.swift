@@ -9,10 +9,11 @@
 
 import AVFoundation
 import Foundation
+import Octopus
 
 class ViewModel: ObservableObject {
     
-    private let APP_ID = "{YOUR_APP_ID HERE}"
+    private let ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}"
     
     private var octopus:Octopus!
     private var metadata:OctopusMetadata!
@@ -28,17 +29,17 @@ class ViewModel: ObservableObject {
     
     init() {
         do {
-            try octopus = Octopus(appID: APP_ID)
+            try octopus = Octopus(accessKey: ACCESS_KEY)
         } catch OctopusError.invalidArgument {
-            errorMessage = "APP_ID provided is invalid."
+            errorMessage = "ACCESS_KEY provided is invalid."
         } catch OctopusError.activationError {
-            errorMessage = "APP_ID activation error."
+            errorMessage = "ACCESS_KEY activation error."
         } catch OctopusError.activationRefused {
-            errorMessage = "APP_ID activation refused."
+            errorMessage = "ACCESS_KEY activation refused."
         } catch OctopusError.activationLimitReached {
-            errorMessage = "APP_ID reached its limit."
+            errorMessage = "ACCESS_KEY reached its limit."
         } catch OctopusError.activationThrottled {
-            errorMessage = "APP_ID is throttled."
+            errorMessage = "ACCESS_KEY is throttled."
         } catch {
             errorMessage = "\(error)"
         }

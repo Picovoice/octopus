@@ -2,15 +2,15 @@ PODS:
   - Octopus-iOS (1.0.0)
 
 DEPENDENCIES:
-  - Octopus-iOS (from `../../../`)
+  - Octopus-iOS (~> 1.0.0)
 
-EXTERNAL SOURCES:
-  Octopus-iOS:
-    :path: "../../../"
+SPEC REPOS:
+  trunk:
+    - Octopus-iOS
 
 SPEC CHECKSUMS:
   Octopus-iOS: addd6e93df04a7b82686b18cefff28f1f3c7a7b6
 
-PODFILE CHECKSUM: 7e828ddf6a11915a4180d11510569c5945d74c3b
+PODFILE CHECKSUM: 82a46476d0052a072ed7e91aaf7b628826f1b259
 
 COCOAPODS: 1.11.2

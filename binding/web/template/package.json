@@ -16,10 +16,7 @@
     "recognition",
     "ai",
     "speech-to-index",
-    "offline",
-    "hooks",
-    "react",
-    "dom"
+    "offline"
   ],
   "scripts": {
     "build:all": "rollup --config",

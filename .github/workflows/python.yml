@@ -3,17 +3,15 @@ name: Python
 on:
   workflow_dispatch:
   push:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'binding/python/**'
       - '!binding/python/README.md'
       - 'lib/**'
       - 'res/**'
   pull_request:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'binding/python/**'
       - '!binding/python/README.md'
       - 'lib/**'

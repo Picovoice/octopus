@@ -3,15 +3,13 @@ name: C Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'demo/c/**'
       - '!demo/c/README.md'
   pull_request:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'demo/c/**'
       - '!demo/c/README.md'
 

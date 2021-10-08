@@ -3,16 +3,14 @@ name: Web
 on:
   workflow_dispatch:
   push:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
   pull_request:
-    branches: [ github-actions ]
+    branches: [ main ]
     paths:
-      - 'DELETEME.txt'
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'

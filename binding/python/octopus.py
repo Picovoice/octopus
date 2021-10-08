@@ -25,7 +25,7 @@ class OctopusMetadata(object):
     Python representation of the metadata object.
     """
 
-    _libc = CDLL(find_library('c'))
+    _libc = cdll.msvcrt if platform.system() == 'Windows' else CDLL(find_library('c'))
 
     def __init__(self, handle, size):
         self._inner = (handle, size)

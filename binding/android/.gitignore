@@ -1,6 +1,12 @@
 *.iml
 .gradle
 /local.properties
+/.idea/
 .DS_Store
-.idea
-build
+/build
+/captures
+test_resources
+.settings
+.classpath
+.project
+publish-mavencentral.gradle

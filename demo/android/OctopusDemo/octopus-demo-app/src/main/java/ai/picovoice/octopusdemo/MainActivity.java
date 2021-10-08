@@ -50,13 +50,12 @@ import ai.picovoice.octopus.OctopusMatch;
 import ai.picovoice.octopus.OctopusMetadata;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String accessKey = "${YOUR_ACCESS_KEY_HERE}";
+
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
     final private ArrayList<Short> pcmData = new ArrayList();
-    private OctopusMetadata metadata = null;
-
     public Octopus octopus;
-
-    private static final String accessKey = "YOUR_ACCESS_KEY_HERE";
+    private OctopusMetadata metadata = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class SearchResultsViewAdaptor extends RecyclerView.Adapter<SearchResultsViewAdaptor.ViewHolder> {
+    public static class SearchResultsViewAdaptor extends RecyclerView.Adapter<SearchResultsViewAdaptor.ViewHolder> {
         final private List<OctopusMatch> data;
         final private LayoutInflater inflater;
 
@@ -208,17 +207,17 @@ public class MainActivity extends AppCompatActivity {
             return data.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public static class ViewHolder extends RecyclerView.ViewHolder {
             TextView startSec;
             TextView endSec;
             TextView probability;
 
-             ViewHolder(View itemView) {
-                 super(itemView);
-                 startSec = itemView.findViewById(R.id.startSec);
-                 endSec = itemView.findViewById(R.id.endSec);
-                 probability = itemView.findViewById(R.id.probability);
-             }
+            ViewHolder(View itemView) {
+                super(itemView);
+                startSec = itemView.findViewById(R.id.startSec);
+                endSec = itemView.findViewById(R.id.endSec);
+                probability = itemView.findViewById(R.id.probability);
+            }
         }
     }
 

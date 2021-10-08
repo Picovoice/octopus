@@ -81,6 +81,7 @@ class ViewModel: ObservableObject {
             return
         }
         
+        searchPhraseText = searchPhraseText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchPhraseText.isEmpty else {
             messageText = "Please enter a search phrase"
             return

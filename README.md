@@ -44,7 +44,26 @@ TODO @laves
 
 ### C Demos
 
-TODO @ksyeo1010
+
+Build the demo:
+
+```console
+cmake -S demo/c/ -B demo/c/build && cmake --build demo/c/build
+
+First run the index demo:
+
+```console
+./demo/c/build/octopus_index_demo ${LIBRARY_PATH} ${ACCESS_KEY} ${AUDIO_PATH} ${INDEX_PATH}
+```
+
+Then search for indexes using `${INDEX_PATH}` file generated above:
+
+```console
+./demo/c/build/octopus_search_demo ${LIBRARY_PATH} ${MODEL_PATH} ${ACCESS_KEY} ${INDEX_PATH} ${SEARCH_PHRASE}
+```
+
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with 
+AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given audio file and format, `${INDEX_PATH}` with the path to cached index file and `${PHRASE}` to a search phrase.
 
 For more information about C demos go to [demo/c](/demo/c).
 

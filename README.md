@@ -49,6 +49,7 @@ Build the demo:
 
 ```console
 cmake -S demo/c/ -B demo/c/build && cmake --build demo/c/build
+```
 
 First run the index demo:
 

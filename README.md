@@ -1,6 +1,15 @@
 # Octopus
 
+[![GitHub](https://img.shields.io/github/license/Picovoice/octopus)](https://github.com/Picovoice/octopus/)
+
+[![PyPI](https://img.shields.io/pypi/v/pvoctopus)](https://pypi.org/project/pvoctopus/)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/octopus-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/octopus-android/)
+[![Cocoapods](https://img.shields.io/cocoapods/v/Octopus-iOS)](https://github.com/Picovoice/octopus/tree/master/binding/ios)
+
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
+
+[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)
+[![YouTube Channel Views](https://img.shields.io/youtube/channel/views/UCAdi9sTCXLosG1XeqDwLx7w?label=YouTube&style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
 
 Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech without relying on a text representation. This
 acoustic-only approach boosts accuracy by removing out-of-vocabulary limitation and eliminating the problem of competing

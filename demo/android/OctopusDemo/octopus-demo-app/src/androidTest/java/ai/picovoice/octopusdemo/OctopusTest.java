@@ -84,7 +84,7 @@ public class OctopusTest {
     public void testIndexAndSearchAudioFile() throws OctopusException {
 
         Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
-        File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
         HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, testPhrases);
@@ -107,7 +107,7 @@ public class OctopusTest {
     public void testIndexAndSearchAudioData() throws Exception {
         Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
 
-        File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         byte[] rawData = Files.readAllBytes(audioFile.toPath());
         short[] samples = new short[rawData.length / 2];
         ByteBuffer pcmBuff = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
@@ -134,7 +134,7 @@ public class OctopusTest {
     @Test
     public void testMetadataMarshalling() throws Exception {
         Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
-        File audioFile = new File(testResourcesPath, "audio_samples/multiple_keywords.wav");
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
         byte[] metadataBytes = metadata.getBytes();

@@ -33,7 +33,10 @@ _PV_SYSTEM, _PV_MACHINE = _pv_platform()
 
 def pv_library_path(relative_path):
     if _PV_SYSTEM == 'Darwin':
-        return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_octopus.dylib')
+        if _PV_MACHINE == 'x86_64':
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_octopus.dylib')
+        elif _PV_MACHINE == "arm64":
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/arm64/libpv_octopus.dylib')
     elif _PV_SYSTEM == 'Linux':
         if _PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/linux/x86_64/libpv_octopus.so')

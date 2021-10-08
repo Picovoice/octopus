@@ -41,8 +41,17 @@ ${INDEX_PATH}
 ### macOS
 
 ```console
+# Macos with Intel Chip
 ./demo/c/build/octopus_index_demo \
 lib/mac/x86_64/libpv_octopus.dylib \
+lib/common/octopus_params.pv \
+${ACCESS_KEY} \
+${AUDIO_PATH} \
+${INDEX_PATH}
+
+# Macos with Apple Chip
+./demo/c/build/octopus_index_demo \
+lib/mac/arm64/libpv_octopus.dylib \
 lib/common/octopus_params.pv \
 ${ACCESS_KEY} \
 ${AUDIO_PATH} \
@@ -80,8 +89,17 @@ ${PHRASE}
 ### macOS
 
 ```console
+# Macos with Intel Chip
 ./demo/c/build/octopus_search_demo \
 lib/mac/x86_64/libpv_octopus.dylib \
+lib/common/octopus_params.pv \
+${ACCESS_KEY} \
+${INDEX_PATH} \
+${PHRASE}
+
+# Macos with Apple Chip
+./demo/c/build/octopus_search_demo \
+lib/mac/arm64/libpv_octopus.dylib \
 lib/common/octopus_params.pv \
 ${ACCESS_KEY} \
 ${INDEX_PATH} \

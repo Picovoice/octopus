@@ -11,7 +11,7 @@ import XCTest
 import Octopus
 
 class OctopusDemoUITests: XCTestCase {
-    let accessKey: String = "{YOUR_ACCESS_KEY_HERE}"
+    let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
     
     let phrases: Set<String> = ["gorilla", "terminator"]
     let expectedMatch = OctopusMatch(

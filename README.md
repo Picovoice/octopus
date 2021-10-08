@@ -64,7 +64,7 @@ Then search for indexes using `${INDEX_PATH}` file generated above:
 ```
 
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with 
-AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given audio file and format, `${INDEX_PATH}` with the path to cached index file and `${PHRASE}` to a search phrase.
+AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given audio file and format, `${INDEX_PATH}` with the path to cached index file and `${SEARCH_PHRASE}` to a search phrase.
 
 For more information about C demos go to [demo/c](/demo/c).
 

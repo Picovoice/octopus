@@ -45,7 +45,6 @@ import ai.picovoice.octopus.OctopusMatch;
 import ai.picovoice.octopus.OctopusMetadata;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 

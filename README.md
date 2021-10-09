@@ -162,11 +162,88 @@ pv_octopus_delete(handle);
 
 ### Android
 
-TODO @ErisMik
+Create an instance of the engine:
+
+```java
+import ai.picovoice.octopus.*;
+
+final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+try {
+    Octopus handle = new Octopus.Builder(accessKey).build(appContext);
+} catch (OctopusException ex) { }
+```
+
+Index audio data using constructed object:
+
+```java
+String audioFilePath = "/path/to/my/audiofile.wav"
+try {
+    OctopusMetadata metadata = handle.indexAudioFile(audioFilePath);
+} catch (OctopusException ex) { }
+```
+
+Search the indexed data:
+
+```java
+HashMap <String, OctopusMatch[]> matches = handle.search(metadata, phrases);
+
+for (Map.Entry<String, OctopusMatch[]> entry : map.entrySet()) {
+    String phrase = entry.getKey();
+    for (OctopusMatch phraseMatch : entry.getValue()){
+        float startSec = phraseMatch.getStartSec();
+        float endSec = phraseMatch.getEndSec();
+        float probability = phraseMatch.getProbability();
+    }
+}
+```
+
+When done be sure to release the acquired resources:
+
+```java
+metadata.delete();
+handle.delete();
+```
 
 ### iOS
 
-TODO @ErisMik
+Create an instance of the engine:
+
+```swift
+import Octopus
+
+let accessKey : String = // .. AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+do {
+    let handle = try Octopus(accessKey: accessKey)
+} catch { }
+```
+
+Index audio data using constructed object:
+
+```swift
+let audioFilePath = "/path/to/my/audiofile.wav"
+do {
+    let metadata = try handle.indexAudioFile(path: audioFilePath)
+} catch { }
+```
+
+Search the indexed data:
+
+```swift
+let matches: Dictionary<String, [OctopusMatch]> = try octopus.search(metadata: metadata, phrases: phrases)
+for (phrase, phraseMatches) in matches {
+    for phraseMatch in phraseMatches {
+        var startSec = phraseMatch.startSec;
+        var endSec = phraseMatch.endSec;
+        var probability = phraseMatch.probability;
+    }
+}
+```
+
+When done be sure to release the acquired resources:
+
+```swift
+handle.delete();
+```
 
 ### Web
 

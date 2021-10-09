@@ -42,7 +42,7 @@ The engine accepts 16-bit linearly-encoded PCM and operates on single-channel au
 ```swift
 audioData: [Int16] = // .. get audio
 do {
-    let octopus = try handle.indexAudioData(pcm: audioData)
+    let metadata = try handle.indexAudioData(pcm: audioData)
 } catch { }
 ```
 
@@ -93,7 +93,7 @@ for (phrase, phraseMatches) in matches {
 
 When done resources have to be released explicitly:
 
-```java
+```swift
 metadata.delete();
 handle.delete();
 ```

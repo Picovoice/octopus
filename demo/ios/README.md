@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Before building the demo app, run the following from this directory to install the Cobra Cocoapod:
+1. Before building the demo app, run the following from this directory to install the Octopus Cocoapod:
 ```console
 pod install
 ```

@@ -36,7 +36,7 @@ try {
 } catch (OctopusException ex) { }
 ```
 
-Octpus consists of two steps: Indexing and Searching.
+Octopus consists of two steps: Indexing and Searching.
 Indexing transforms audio data into searchable `OctopusMetadata` object. Since indexing is computationally expensive,
 `OctopusMetadata` can be cached or stored to skip the indexing step on subsequent search queries.
 To retrieve the binary data for saving:

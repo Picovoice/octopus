@@ -120,9 +120,9 @@ TODO @laves
 
 ```c
     const char *model_path = "..."; // absolute path to the model file available at `lib/common/octopus_params.pv`
-    const char *app_id = "..." // AppID provided by Picovoice Console (https://picovoice.ai/console/)
+    const char *access_key = "..." // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
     pv_octopus_t *handle = NULL;
-    pv_status_t status = pv_octopus_init(app_id, model_path, &handle);
+    pv_status_t status = pv_octopus_init(access_key, model_path, &handle);
     if (status != PV_STATUS_SUCCESS) {
         // error handling logic
     }
@@ -174,7 +174,7 @@ try {
 Index audio data using constructed object:
 
 ```java
-String audioFilePath = "/path/to/my/audiofile.wav"
+final String audioFilePath = "/path/to/my/audiofile.wav"
 try {
     OctopusMetadata metadata = handle.indexAudioFile(audioFilePath);
 } catch (OctopusException ex) { }
@@ -186,11 +186,11 @@ Search the indexed data:
 HashMap <String, OctopusMatch[]> matches = handle.search(metadata, phrases);
 
 for (Map.Entry<String, OctopusMatch[]> entry : map.entrySet()) {
-    String phrase = entry.getKey();
+    final String phrase = entry.getKey();
     for (OctopusMatch phraseMatch : entry.getValue()){
-        float startSec = phraseMatch.getStartSec();
-        float endSec = phraseMatch.getEndSec();
-        float probability = phraseMatch.getProbability();
+        final float startSec = phraseMatch.getStartSec();
+        final float endSec = phraseMatch.getEndSec();
+        final float probability = phraseMatch.getProbability();
     }
 }
 ```
@@ -245,7 +245,9 @@ handle.delete();
 
 ### Web
 
-Octopus is available on modern web browsers (i.e., not Internet Explorer) via [WebAssembly](https://webassembly.org/). Octopus is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) to allow it to perform processing off the main thread.
+Octopus is available on modern web browsers (i.e., not Internet Explorer) via [WebAssembly](https://webassembly.org/).
+Octopus is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
+to allow it to perform processing off the main thread.
 
 #### Vanilla JavaScript and HTML (CDN Script Tag)
 

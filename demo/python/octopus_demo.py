@@ -77,6 +77,9 @@ def main():
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
         except OSError as e:
             print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))
+            indexing_animation.stop()
+            exit(1)
+
     indexing_animation.stop()
 
     try:

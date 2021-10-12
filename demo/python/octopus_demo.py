@@ -13,6 +13,8 @@ import argparse
 
 import pvoctopus
 import soundfile
+import os
+from tabulate import tabulate
 
 
 def main():
@@ -20,11 +22,11 @@ def main():
 
     parser.add_argument('--input_audio_path', nargs='+', help='Absolute path to input audio files', required=True)
 
-    parser.add_argument('--library_path', help='Absolute path to dynamic library.', default=pvoctopus.LIBRARY_PATH)
+    parser.add_argument('--library_path', help='Absolute path to dynamic library', default=pvoctopus.LIBRARY_PATH)
 
     parser.add_argument(
         '--model_path',
-        help='Absolute path to to the file containing model parameters.',
+        help='Absolute path to the file containing model parameters',
         default=pvoctopus.MODEL_PATH)
 
     parser.add_argument(
@@ -37,21 +39,38 @@ def main():
     octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
     print("Octopus version: %s" % octopus.version)
 
-    # audio, sample_rate = soundfile.read(args.input_audio_path, dtype='int16')
-    # if audio.ndim == 2:
-    #     print("Cobra processes single-channel audio, but stereo file was provided. Processing left channel only.")
-    #     audio = audio[0, :]
-    # if sample_rate != cobra.sample_rate:
-    #     raise ValueError("Audio file should have a sample rate of %d. got %d" % (cobra.sample_rate, sample_rate))
-    #
-    # num_frames = len(audio) // cobra.frame_length
-    # for i in range(num_frames):
-    #     frame = audio[i * cobra.frame_length:(i + 1) * cobra.frame_length]
-    #     result = cobra.process(frame)
-    #     if result >= args.threshold:
-    #         print("Detected voice activity at %0.1f sec" % (float(i * cobra.frame_length) / float(cobra.sample_rate)))
-    #
-    # cobra.delete()
+    metadata_list = list()
+    for audio_file in args.input_audio_path:
+        print("indexing '%s'..." % os.path.basename(audio_file))
+        audio, sample_rate = soundfile.read(audio_file, dtype='int16')
+        if audio.ndim == 2:
+            print('Octopus processes single-channel audio, but stereo file was provided. Processing left channel only.')
+            audio = audio[0, :]
+        if sample_rate != octopus.pcm_sample_rate:
+            raise ValueError(
+                "Audio file should have a sample rate of %d. got %d" % (octopus.pcm_sample_rate, sample_rate))
+        metadata_list.append(octopus.index_audio_data(audio))
+
+    try:
+        while True:
+            search_phrase = input("Enter search phrase (Ctrl+c to exit): ")
+            for i, metadata in enumerate(metadata_list):
+                print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
+                matches = octopus.search(metadata, [str(search_phrase)])
+                if len(matches) != 0:
+                    results = matches[str(search_phrase)]
+                    result_row = list()
+                    for result in results:
+                        result_row.append([result.start_sec, result.end_sec, result.probability])
+                    print(tabulate(result_row, headers=['Start time (s)', 'End time (s)', 'Probability']))
+                else:
+                    print("nothing found!")
+            print("\n")
+
+    except KeyboardInterrupt:
+        print('Stopping ...')
+    finally:
+        octopus.delete()
 
 
 if __name__ == '__main__':

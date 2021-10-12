@@ -14,6 +14,7 @@
 package ai.picovoice.octopusdemo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String accessKey = "${YOUR_ACCESS_KEY_HERE}";
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
-    final private ArrayList<Short> pcmData = new ArrayList();
+    final private ArrayList<Short> pcmData = new ArrayList<>();
     public Octopus octopus;
     private OctopusMetadata metadata = null;
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -135,13 +137,16 @@ public class MainActivity extends AppCompatActivity {
 
             if (matches.containsKey(searchPhrase)) {
                 OctopusMatch[] phraseMatches = matches.get(searchPhrase);
-                displayMatches(phraseMatches);
+                if (phraseMatches != null) {
+                    displayMatches(phraseMatches);
+                }
             }
         } catch (OctopusException e) {
             displayError("Octopus search failed\n" + e.toString());
         }
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void onRecordClick(View view) {
         ToggleButton recordButton = findViewById(R.id.recordButton);
         TextView recordingTextView = findViewById(R.id.recordingTextView);
@@ -166,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
                 short[] pcmDataArray = new short[pcmData.size()];
                 for (int i = 0; i < pcmData.size(); ++i) {
-                    pcmDataArray[i] = pcmData.get(i).shortValue();
+                    pcmDataArray[i] = pcmData.get(i);
                 }
 
                 metadata = octopus.indexAudioData(pcmDataArray);
@@ -188,12 +193,14 @@ public class MainActivity extends AppCompatActivity {
             this.data = data;
         }
 
+        @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
             return new ViewHolder(view);
         }
 
+        @SuppressLint("DefaultLocale")
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             OctopusMatch match = data.get(position);
@@ -247,8 +254,10 @@ public class MainActivity extends AppCompatActivity {
 
             stop.set(true);
 
-            while (!stopped.get()) {
-                Thread.sleep(10);
+            synchronized (stopped) {
+                while (!stopped.get()) {
+                    stopped.wait(500);
+                }
             }
 
             started.set(false);
@@ -285,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 audioRecord.stop();
-            } catch (IllegalArgumentException | IllegalStateException e) {
+            } catch (IllegalArgumentException | IllegalStateException | SecurityException e) {
                 throw new OctopusException(e);
             } finally {
                 if (audioRecord != null) {
@@ -293,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 stopped.set(true);
+                stopped.notifyAll();
             }
         }
     }

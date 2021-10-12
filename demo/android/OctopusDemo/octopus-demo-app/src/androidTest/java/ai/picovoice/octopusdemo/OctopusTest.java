@@ -38,6 +38,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 
 import ai.picovoice.octopus.Octopus;
 import ai.picovoice.octopus.OctopusException;
@@ -89,10 +90,10 @@ public class OctopusTest {
         HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, testPhrases);
 
         assertTrue(matches.containsKey("gorilla"));
-        assertEquals(0, matches.get("gorilla").length);
+        assertEquals(0, Objects.requireNonNull(matches.get("gorilla")).length);
         assertTrue(matches.containsKey("terminator"));
 
-        OctopusMatch[] terminatorMatches = matches.get("terminator");
+        OctopusMatch[] terminatorMatches = Objects.requireNonNull(matches.get("terminator"));
         assertEquals(1, terminatorMatches.length);
         assertEquals(expectedMatch.getStartSec(), terminatorMatches[0].getStartSec(), 0.0);
         assertEquals(expectedMatch.getEndSec(), terminatorMatches[0].getEndSec(), 0.0);
@@ -117,10 +118,10 @@ public class OctopusTest {
 
         HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, testPhrases);
         assertTrue(matches.containsKey("gorilla"));
-        assertEquals(0, matches.get("gorilla").length);
+        assertEquals(0, Objects.requireNonNull(matches.get("gorilla")).length);
         assertTrue(matches.containsKey("terminator"));
 
-        OctopusMatch[] terminatorMatches = matches.get("terminator");
+        OctopusMatch[] terminatorMatches = Objects.requireNonNull(matches.get("terminator"));
         assertEquals(1, terminatorMatches.length);
         assertEquals(expectedMatch.getStartSec(), terminatorMatches[0].getStartSec(), 0.0);
         assertEquals(expectedMatch.getEndSec(), terminatorMatches[0].getEndSec(), 0.0);
@@ -146,10 +147,10 @@ public class OctopusTest {
 
         HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, testPhrases);
         assertTrue(matches.containsKey("gorilla"));
-        assertEquals(0, matches.get("gorilla").length);
+        assertEquals(0, Objects.requireNonNull(matches.get("gorilla")).length);
         assertTrue(matches.containsKey("terminator"));
 
-        OctopusMatch[] terminatorMatches = matches.get("terminator");
+        OctopusMatch[] terminatorMatches = Objects.requireNonNull(matches.get("terminator"));
         assertEquals(1, terminatorMatches.length);
         assertEquals(expectedMatch.getStartSec(), terminatorMatches[0].getStartSec(), 0.0);
         assertEquals(expectedMatch.getEndSec(), terminatorMatches[0].getEndSec(), 0.0);

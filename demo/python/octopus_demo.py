@@ -74,7 +74,6 @@ def main():
     for audio_file in args.input_audio_path:
         try:
             print("\rindexing '%s'" % os.path.basename(audio_file))
-            print(os.path.abspath(audio_file))
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
         except OSError as e:
             print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))

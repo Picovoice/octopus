@@ -22,15 +22,17 @@ sudo pip3 install pvoctopusdemo
 
 ## Usage
 
-This demo allows testing Octopus interactively through commandline. It accepts MP3, WAV, FLAC, and OPUS audio files with sample rates higher than 16kHz. The following command processes all files in the `{AUDIO_PATH}` list.
+This demo allows testing Octopus interactively through commandline. It accepts MP3, WAV, FLAC, and OPUS audio files with sample rates higher than 16kHz. The following command processes all files in the `{AUDIO_PATH}` list:
 
 ```console
 octopus_demo  --access_key {AccessKey} --input_audio_path ${AUDIO_PATH}
 ```
 where `{AccessKey}` is an AccessKey which should be obtained from [Picovoice Console](https://picovoice.ai/console/).
 
-After processing audio files, you are asks for a search phrase:
+After processing audio files, you are asked for a search phrase:
 
 ```console
 Enter search phrase (Ctrl+c to exit):
 ```
+
+The search phrase can have several words separated by space, but each word should only consist of alphabetic characters. As shown in the prompt above, press `Ctrl` and `C` keys at the same time to exit the program.

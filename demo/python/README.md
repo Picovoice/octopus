@@ -22,7 +22,7 @@ sudo pip3 install pvoctopusdemo
 
 ## Usage
 
-This demo allows testing Octopus interactively through commandline. It accepts 16kHz audio files. Octopus processes a single-channel audio stream if a stereo file is provided it only processes the first (left) channel. The following command processes all files in the `{AUDIO_PATH}` list and then asks for a search phrase:
+This demo allows testing Octopus interactively through commandline. It accepts MP3, WAV, FLAC, and OPUS audio files with sample rates higher than 16kHz. The following command processes all files in the `{AUDIO_PATH}` list and then asks for a search phrase:
 
 ```console
 octopus_demo  --access_key {AccessKey} --input_audio_path ${AUDIO_PATH}

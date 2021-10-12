@@ -16,7 +16,6 @@ import threading
 import time
 
 import pvoctopus
-import soundfile
 from tabulate import tabulate
 
 
@@ -73,15 +72,12 @@ def main():
     metadata_list = list()
     indexing_animation.start()
     for audio_file in args.input_audio_path:
-        print("\rindexing '%s'" % os.path.basename(audio_file))
-        audio, sample_rate = soundfile.read(audio_file, dtype='int16')
-        if audio.ndim == 2:
-            print('Octopus processes single-channel audio, but stereo file was provided. Processing left channel only.')
-            audio = audio[0, :]
-        if sample_rate != octopus.pcm_sample_rate:
-            raise ValueError(
-                "Audio file should have a sample rate of %d. got %d" % (octopus.pcm_sample_rate, sample_rate))
-        metadata_list.append(octopus.index_audio_data(audio))
+        try:
+            print("\rindexing '%s'" % os.path.basename(audio_file))
+            print(os.path.abspath(audio_file))
+            metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
+        except OSError as e:
+            print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))
     indexing_animation.stop()
 
     try:

@@ -11,11 +11,11 @@ os.mkdir(package_folder)
 shutil.copy(os.path.join(os.path.dirname(__file__), '../../LICENSE'), package_folder)
 
 shutil.copy(
-    os.path.join(os.path.dirname(__file__), 'otcopus_demo.py'),
-    os.path.join(package_folder, 'otcopus_demo.py'))
+    os.path.join(os.path.dirname(__file__), 'octopus_demo.py'),
+    os.path.join(package_folder, 'octopus_demo.py'))
 
 with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
-    f.write('include pvcobrademo/LICENSE\n')
+    f.write('include pvoctopusdemo/LICENSE\n')
     f.write('include pvoctopusdemo/otcopus_demo.py\n')
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:

@@ -100,7 +100,7 @@ def main():
                         result_row.append([result.start_sec, result.end_sec, result.probability])
                     print(tabulate(result_row, headers=['Start time (s)', 'End time (s)', 'Probability']))
                 else:
-                    print("nothing found!")
+                    print("Nothing found!")
             print("\n")
 
     except KeyboardInterrupt:

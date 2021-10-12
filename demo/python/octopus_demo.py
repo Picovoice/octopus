@@ -10,11 +10,41 @@
 #
 
 import argparse
+import os
+import sys
+import threading
+import time
 
 import pvoctopus
 import soundfile
-import os
 from tabulate import tabulate
+
+
+class Animation(threading.Thread):
+    def __init__(self, sleep_time=0.1):
+        self._sleep_time_sec = sleep_time
+        self._frames = [
+            ".  ",
+            ".. ",
+            "...",
+            " ..",
+            "  .",
+            "   "
+        ]
+        self._done = False
+        super().__init__()
+
+    def run(self):
+        self._done = False
+        while not self._done:
+            for frame in self._frames:
+                if self._done:
+                    break
+                sys.stdout.write('\r' + frame)
+                time.sleep(self._sleep_time_sec)
+
+    def stop(self):
+        self._done = True
 
 
 def main():
@@ -39,9 +69,11 @@ def main():
     octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
     print("Octopus version: %s" % octopus.version)
 
+    indexing_animation = Animation()
     metadata_list = list()
+    indexing_animation.start()
     for audio_file in args.input_audio_path:
-        print("indexing '%s'..." % os.path.basename(audio_file))
+        print("\rindexing '%s'" % os.path.basename(audio_file))
         audio, sample_rate = soundfile.read(audio_file, dtype='int16')
         if audio.ndim == 2:
             print('Octopus processes single-channel audio, but stereo file was provided. Processing left channel only.')
@@ -50,10 +82,14 @@ def main():
             raise ValueError(
                 "Audio file should have a sample rate of %d. got %d" % (octopus.pcm_sample_rate, sample_rate))
         metadata_list.append(octopus.index_audio_data(audio))
+    indexing_animation.stop()
 
     try:
         while True:
-            search_phrase = input("Enter search phrase (Ctrl+c to exit): ")
+            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
+            if not search_phrase.isalpha():
+                print("The search phrase should only consist of alphabetic characters.")
+                continue
             for i, metadata in enumerate(metadata_list):
                 print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
                 matches = octopus.search(metadata, [str(search_phrase)])
@@ -71,6 +107,8 @@ def main():
         print('Stopping ...')
     finally:
         octopus.delete()
+        for metadata in metadata_list:
+            metadata.delete()
 
 
 if __name__ == '__main__':

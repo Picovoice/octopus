@@ -83,12 +83,12 @@ def main():
     try:
         while True:
             search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
-            if not search_phrase.isalpha():
+            if not search_phrase.replace(" ", "").isalpha():
                 print("The search phrase should only consist of alphabetic characters.")
                 continue
             for i, metadata in enumerate(metadata_list):
                 print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
-                matches = octopus.search(metadata, [str(search_phrase)])
+                matches = octopus.search(metadata, [str(search_phrase.strip())])
                 if len(matches) != 0:
                     results = matches[str(search_phrase)]
                     result_table = list()

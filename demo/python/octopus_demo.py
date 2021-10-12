@@ -20,7 +20,7 @@ import soundfile
 from tabulate import tabulate
 
 
-class Animation(threading.Thread):
+class LoadingAnimation(threading.Thread):
     def __init__(self, sleep_time=0.1):
         self._sleep_time_sec = sleep_time
         self._frames = [
@@ -69,7 +69,7 @@ def main():
     octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
     print("Octopus version: %s" % octopus.version)
 
-    indexing_animation = Animation()
+    indexing_animation = LoadingAnimation()
     metadata_list = list()
     indexing_animation.start()
     for audio_file in args.input_audio_path:
@@ -95,10 +95,10 @@ def main():
                 matches = octopus.search(metadata, [str(search_phrase)])
                 if len(matches) != 0:
                     results = matches[str(search_phrase)]
-                    result_row = list()
+                    result_table = list()
                     for result in results:
-                        result_row.append([result.start_sec, result.end_sec, result.probability])
-                    print(tabulate(result_row, headers=['Start time (s)', 'End time (s)', 'Probability']))
+                        result_table.append([result.start_sec, result.end_sec, result.probability])
+                    print(tabulate(result_table, headers=['Start time (s)', 'End time (s)', 'Probability']))
                 else:
                     print("Nothing found!")
             print("\n")

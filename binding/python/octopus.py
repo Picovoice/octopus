@@ -12,12 +12,12 @@
 # limitations under the License.
 #
 
+import os
+import platform
 from collections import namedtuple
 from ctypes import *
 from ctypes.util import find_library
 from enum import Enum
-
-from .util import *
 
 
 class OctopusMetadata(object):

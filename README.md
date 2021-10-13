@@ -18,20 +18,20 @@ hypothesis (e.g. homophones)
 ## Table of Contents
 
 - [Octopus](#octopus)
-  - [Table of Contents](#table-of-contents)
-  - [Demos](#demos)
-    - [Python](#python-demos)
-    - [C](#c-demos)
-    - [Android](#android-demos)
-    - [iOS](#ios-demos)
-    - [Web](#web-demos)
-  - [SDKs](#sdks)
-    - [Python](#python)
-    - [C](#c)
-    - [Android](#android)
-    - [iOS](#ios)
-    - [Web](#web)
-  - [Releases](#releases)
+    - [Table of Contents](#table-of-contents)
+    - [Demos](#demos)
+        - [Python](#python-demos)
+        - [C](#c-demos)
+        - [Android](#android-demos)
+        - [iOS](#ios-demos)
+        - [Web](#web-demos)
+    - [SDKs](#sdks)
+        - [Python](#python)
+        - [C](#c)
+        - [Android](#android)
+        - [iOS](#ios)
+        - [Web](#web)
+    - [Releases](#releases)
 
 ## Demos
 
@@ -49,12 +49,12 @@ run the following in the terminal:
 octopus_demo  --access_key {AccessKey} --input_audio_path ${AUDIO_PATH}
 ```
 
-Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/).
-Octopus starts processing the audio files and asks you for search phrases and shows results interactively.
+Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/). Octopus
+starts processing the audio files and asks you for search phrases and shows results interactively.
 
 For more information about the Python demos go to [demo/python](/demo/python).
-### C Demos
 
+### C Demos
 
 Build the demo:
 
@@ -74,18 +74,20 @@ Then search the index for a given phrase:
 ./demo/c/build/octopus_search_demo ${LIBRARY_PATH} ${MODEL_PATH} ${ACCESS_KEY} ${INDEX_PATH} ${SEARCH_PHRASE}
 ```
 
-Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with 
-AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given
-audio file and format, `${INDEX_PATH}` with the path to cached index file and `${SEARCH_PHRASE}` to a search phrase.
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with AccessKey
+obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given audio file
+and format, `${INDEX_PATH}` with the path to cached index file and `${SEARCH_PHRASE}` to a search phrase.
 
 For more information about C demos go to [demo/c](/demo/c).
 
 ### Android Demos
 
-Using [Android Studio](https://developer.android.com/studio/index.html), open [demo/android/OctopusDemo](/demo/android/OctopusDemo)
+Using [Android Studio](https://developer.android.com/studio/index.html),
+open [demo/android/OctopusDemo](/demo/android/OctopusDemo)
 as an Android project.
 
-Replace `"${YOUR_ACCESS_KEY_HERE}"` inside [MainActivity.java](/demo/android/OctopusDemo/octopus-demo-app/src/main/java/ai/picovoice/octopusdemo/MainActivity.java)
+Replace `"${YOUR_ACCESS_KEY_HERE}"`
+inside [MainActivity.java](/demo/android/OctopusDemo/octopus-demo-app/src/main/java/ai/picovoice/octopusdemo/MainActivity.java)
 with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/). Then run the demo.
 
 For more information about Android demos go to [demo/android](/demo/android).
@@ -98,9 +100,9 @@ From the [demo/ios/OctopusDemo](demo/ios/OctopusDemo), run the following to inst
 pod install
 ```
 
-Replace `"{YOUR_ACCESS_KEY_HERE}"` inside [`ViewModel.swift`](/demo/ios/OctopusDemo/OctopusDemo/ViewModel.swift) with your
-AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/).  Then, using [Xcode](https://developer.apple.com/xcode/),
-open the generated `OctopusDemo.xcworkspace` and run the application.
+Replace `"{YOUR_ACCESS_KEY_HERE}"` inside [`ViewModel.swift`](/demo/ios/OctopusDemo/OctopusDemo/ViewModel.swift) with
+your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/). Then,
+using [Xcode](https://developer.apple.com/xcode/), open the generated `OctopusDemo.xcworkspace` and run the application.
 
 For more information about iOS demos go to [demo/ios](/demo/ios).
 
@@ -260,7 +262,8 @@ handle.delete();
 ### Web
 
 Octopus is available on modern web browsers (i.e., not Internet Explorer) via [WebAssembly](https://webassembly.org/).
-Octopus is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
+Octopus is provided pre-packaged as
+a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
 to allow it to perform processing off the main thread.
 
 #### Vanilla JavaScript and HTML (CDN Script Tag)
@@ -270,8 +273,8 @@ to allow it to perform processing off the main thread.
 <html lang="en">
 
 <head>
-  <script src="https://unpkg.com/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
-  <script type="application/javascript">
+    <script src="https://unpkg.com/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
+    <script type="application/javascript">
     // The metadata object to save the result of indexing for later searches
     let octopusMetadata = undefined
 
@@ -311,7 +314,8 @@ to allow it to perform processing off the main thread.
       metadata: octopusMetadata,
       searchPhrase: searchText,
     });
-  </script>
+  
+    </script>
 </head>
 
 <body></body>
@@ -382,4 +386,5 @@ OctopusWorker.postMessage({
 ## Releases
 
 ### v1.0.0 Oct 8th, 2021
+
 - Initial release.

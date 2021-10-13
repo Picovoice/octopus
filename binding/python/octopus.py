@@ -99,12 +99,12 @@ class Octopus(object):
         """
 
         if not os.path.exists(library_path):
-            raise IOError(f"Couldn't find Octopus' dynamic library at '{library_path}'.")
+            raise IOError("Couldn't find Octopus' dynamic library at '%s'." % library_path)
 
         library = cdll.LoadLibrary(library_path)
 
         if not os.path.exists(model_path):
-            raise IOError(f"Couldn't find model file at '{model_path}'.")
+            raise IOError("Couldn't find model file at '%s'." % model_path)
 
         init_func = library.pv_octopus_init
         init_func.argtypes = [c_char_p, c_char_p, POINTER(POINTER(self.COctopus))]
@@ -180,7 +180,7 @@ class Octopus(object):
             byref(metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
         return OctopusMetadata(handle=metadata, size=metadata_size)
 
@@ -193,7 +193,7 @@ class Octopus(object):
         """
 
         if not os.path.exists(path):
-            raise IOError(f"Couldn't find input file at '{path}'.")
+            raise IOError("Couldn't find input file at '%s'." % path)
 
         metadata = c_void_p()
         metadata_size = c_int32()
@@ -204,7 +204,7 @@ class Octopus(object):
             byref(metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
         return OctopusMetadata(handle=metadata, size=metadata_size)
 

@@ -67,9 +67,12 @@ def main():
     args = parser.parse_args()
 
     try:
-        octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
+        octopus = pvoctopus.create(
+            access_key=args.access_key,
+            library_path=args.library_path,
+            model_path=args.model_path)
         print("Octopus version: %s" % octopus.version)
-    except IOError as e:
+    except (MemoryError, ValueError, RuntimeError, PermissionError) as e:
         print(e)
         exit(1)
 
@@ -80,7 +83,7 @@ def main():
         try:
             print("\rindexing '%s'" % os.path.basename(audio_file))
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
-        except IOError as e:
+        except (MemoryError, ValueError, RuntimeError, PermissionError, IOError) as e:
             print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))
             octopus.delete()
             exit(1)

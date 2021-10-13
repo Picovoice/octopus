@@ -20,8 +20,8 @@ from tabulate import tabulate
 
 
 class LoadingAnimation(threading.Thread):
-    def __init__(self, sleep_time=0.1):
-        self._sleep_time_sec = sleep_time
+    def __init__(self, sleep_time_sec=0.1):
+        self._sleep_time_sec = sleep_time_sec
         self._frames = [
             ".  ",
             ".. ",
@@ -38,6 +38,7 @@ class LoadingAnimation(threading.Thread):
         while not self._done:
             for frame in self._frames:
                 if self._done:
+                    sys.stdout.write('\r')
                     break
                 sys.stdout.write('\r' + frame)
                 time.sleep(self._sleep_time_sec)
@@ -65,8 +66,12 @@ def main():
 
     args = parser.parse_args()
 
-    octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
-    print("Octopus version: %s" % octopus.version)
+    try:
+        octopus = pvoctopus.create(access_key=args.access_key, library_path=args.library_path, model_path=args.model_path)
+        print("Octopus version: %s" % octopus.version)
+    except IOError as e:
+        print(e)
+        exit(1)
 
     indexing_animation = LoadingAnimation()
     metadata_list = list()
@@ -75,23 +80,23 @@ def main():
         try:
             print("\rindexing '%s'" % os.path.basename(audio_file))
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
-        except OSError as e:
+        except IOError as e:
             print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))
-            indexing_animation.stop()
+            octopus.delete()
             exit(1)
-
-    indexing_animation.stop()
+        finally:
+            indexing_animation.stop()
 
     try:
         while True:
-            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
+            search_phrase = input("Enter search phrase (Ctrl+c to exit): ")
             if not search_phrase.replace(" ", "").isalpha():
                 print("The search phrase should only consist of alphabetic characters.")
                 continue
             for i, metadata in enumerate(metadata_list):
-                print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
                 matches = octopus.search(metadata, [str(search_phrase.strip())])
                 if len(matches) != 0:
+                    print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
                     results = matches[str(search_phrase)]
                     result_table = list()
                     for result in results:

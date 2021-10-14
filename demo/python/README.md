@@ -11,7 +11,7 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 ## Compatibility
 
 - Python 3
-- Runs on Linux (x86_64), Mac (x86_64), Windows (x86_64), Raspberry Pi (all variants), NVIDIA Jetson (Nano), and BeagleBone.
+- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64).
 
 ## Installation
 
@@ -22,10 +22,10 @@ sudo pip3 install pvoctopusdemo
 
 ## Usage
 
-This demo allows testing Octopus interactively through commandline. It accepts MP3, WAV, FLAC, and OPUS audio files with sample rates higher than 16kHz. The following command processes all files in the `{AUDIO_PATH}` list:
+This demo allows testing Octopus interactively through commandline. It accepts MP3, WAV, FLAC, and OPUS audio files with sample rates higher than 16kHz. The following command processes all files in the space-separated `{AUDIO_PATHS}` list:
 
 ```console
-octopus_demo  --access_key {AccessKey} --input_audio_path ${AUDIO_PATH}
+octopus_demo  --access_key {AccessKey} --audio_paths ${AUDIO_PATHS}
 ```
 where `{AccessKey}` is an AccessKey which should be obtained from [Picovoice Console](https://picovoice.ai/console/).
 

@@ -9,7 +9,7 @@ hypothesis (e.g. homophones)
 ## Compatibility
 
 - Python 3
-- Runs on Linux (x86_64), Mac (x86_64), Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64)
 
 ## Installation
 

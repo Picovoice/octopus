@@ -50,7 +50,7 @@ class LoadingAnimation(threading.Thread):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--input_audio_path', nargs='+', help='Absolute path to input audio files', required=True)
+    parser.add_argument('--audio_paths', nargs='+', help='Absolute paths to input audio files', required=True)
 
     parser.add_argument('--library_path', help='Absolute path to dynamic library', default=pvoctopus.LIBRARY_PATH)
 
@@ -79,12 +79,12 @@ def main():
     indexing_animation = LoadingAnimation()
     metadata_list = list()
     indexing_animation.start()
-    for audio_file in args.input_audio_path:
+    for audio_file in args.audio_paths:
         try:
             print("\rindexing '%s'" % os.path.basename(audio_file))
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
         except (MemoryError, ValueError, RuntimeError, PermissionError, IOError) as e:
-            print("Failed to process '%s' with %s" % (os.path.basename(audio_file), e))
+            print("Failed to process '%s' with '%s'" % (os.path.basename(audio_file), e))
             octopus.delete()
             exit(1)
         finally:
@@ -92,14 +92,14 @@ def main():
 
     try:
         while True:
-            search_phrase = input("Enter search phrase (Ctrl+c to exit): ")
+            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
             if not search_phrase.replace(" ", "").isalpha():
                 print("The search phrase should only consist of alphabetic characters.")
                 continue
             for i, metadata in enumerate(metadata_list):
                 matches = octopus.search(metadata, [str(search_phrase.strip())])
                 if len(matches) != 0:
-                    print("Matches in '%s':" % (os.path.basename(args.input_audio_path[i])))
+                    print("Matches in '%s':" % (os.path.basename(args.audio_paths[i])))
                     results = matches[str(search_phrase)]
                     result_table = list()
                     for result in results:

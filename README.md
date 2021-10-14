@@ -49,9 +49,8 @@ Run the following in the terminal:
 octopus_demo  --access_key {AccessKey} --audio_paths ${AUDIO_PATHS}
 ```
 
-Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/) and `${AUDIO_PATHS}` with a list of audio files separated by space.
-Octopus
-starts processing the audio files and asks you for search phrases and shows results interactively.
+Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/) and `${AUDIO_PATHS}` with a space-separated list of audio files.
+Octopus starts processing the audio files and asks you for search phrases and shows results interactively.
 
 For more information about the Python demos go to [demo/python](/demo/python).
 

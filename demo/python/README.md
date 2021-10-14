@@ -15,7 +15,6 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 
 ## Installation
 
-
 ```console
 sudo pip3 install pvoctopusdemo
 ```

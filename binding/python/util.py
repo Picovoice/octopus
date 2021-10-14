@@ -12,7 +12,6 @@
 import logging
 import os
 import platform
-import subprocess
 
 log = logging.getLogger('OCT')
 log.setLevel(logging.WARNING)

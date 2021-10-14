@@ -37,10 +37,24 @@ hypothesis (e.g. homophones)
 
 ### Python Demos
 
-TODO @mrrostam
+Install the demo package:
+
+```console
+sudo pip3 install pvoctopusdemo
+```
+
+Run the following in the terminal:
+
+```console
+octopus_demo  --access_key {AccessKey} --audio_paths ${AUDIO_PATHS}
+```
+
+Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/) and `${AUDIO_PATHS}` with a space-separated list of audio files.
+Octopus starts processing the audio files and asks you for search phrases and shows results interactively.
+
+For more information about the Python demos go to [demo/python](/demo/python).
 
 ### C Demos
-
 
 Build the demo:
 

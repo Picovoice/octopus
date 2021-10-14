@@ -126,7 +126,38 @@ Open `http://localhost:5000` in your browser to try the demo.
 
 ### Python
 
-TODO @laves
+Create an instance of the engine:
+
+```python
+import pvoctopus
+access_key = ""  # AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+handle = pvoctopus.create(access_key=access_key)
+```
+
+Index your raw audio data or file:
+
+```python
+audio_data = [..]
+metadata = handle.index(audio_data)
+# or 
+audio_file_path = "/path/to/my/audiofile.wav"
+metadata = handle.index_file(audio_file_path)
+```
+
+Then search the metadata for phrases:
+
+```python
+avocado_matches = matches['avocado']
+for match in avocado_matches:
+    print(f"Match for `avocado`: {match.start_sec} -> {match.end_sec} ({match.probablity})")
+```
+
+When done both the metadata and handle resources have to be released explicitly:
+
+```python
+metadata.delete()
+handle.delete()
+```
 
 ### C
 

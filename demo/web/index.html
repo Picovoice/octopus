@@ -11,60 +11,61 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="node_modules/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
-    <script type="application/javascript">
-      var audioContext = new (window.AudioContext || window.webKitAudioContext)(
-        { sampleRate: 16000 }
-      );
 
-      function writeStatus(status) {
-        console.log(status);
-        document.getElementById("status").innerHTML = status;
+<head>
+  <script src="node_modules/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
+  <script type="application/javascript">
+    var audioContext = new (window.AudioContext || window.webKitAudioContext)(
+      { sampleRate: 16000 }
+    );
+
+    function writeStatus(status) {
+      console.log(status);
+      document.getElementById("status").innerHTML = status;
+    }
+
+    function readAudioFile(selectedFile, callback) {
+      let reader = new FileReader();
+      reader.onload = function (ev) {
+        let wavBytes = reader.result;
+        audioContext.decodeAudioData(wavBytes, callback);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+
+    let octopusMetadata = undefined;
+
+    function octopusIndexCallback(metadata) {
+      writeStatus("Audio indexed! Enter a phrase to search the index.");
+      octopusMetadata = metadata;
+      document.getElementById("search").style.display = "block";
+    }
+
+    function octopusSearchCallback(matches) {
+      document.getElementById(
+        "result"
+      ).innerHTML = `Search results (${matches.length}):<br>`;
+      document.getElementById("result-table").style.display = "block";
+      const table = document.getElementById("result-table");
+      const rowCount = table.rows.length;
+      for (let i = 1; i < rowCount; i++) {
+        table.deleteRow(1);
       }
+      matches.forEach((match) => {
+        const row = table.insertRow(-1);
+        const start = row.insertCell(0);
+        const end = row.insertCell(1);
+        const probability = row.insertCell(2);
 
-      function readAudioFile(selectedFile, callback) {
-        let reader = new FileReader();
-        reader.onload = function (ev) {
-          let wavBytes = reader.result;
-          audioContext.decodeAudioData(wavBytes, callback);
-        };
-        reader.readAsArrayBuffer(selectedFile);
-      }
+        start.innerHTML = `${match.startSec.toFixed(2)}`;
+        end.innerHTML = `${match.endSec.toFixed(2)}`;
+        probability.innerHTML = `${match.probability.toFixed(2)}`;
+      });
+    }
 
-      let octopusMetadata = undefined;
-
-      function octopusIndexCallback(metadata) {
-        writeStatus("Audio indexed! Enter a phrase to search the index.");
-        octopusMetadata = metadata;
-        document.getElementById("search").style.display = "block";
-      }
-
-      function octopusSearchCallback(matches) {
-        document.getElementById(
-          "result"
-        ).innerHTML = `Search results (${matches.length}):<br>`;
-        document.getElementById("result-table").style.display = "block";
-        const table = document.getElementById("result-table");
-        const rowCount = table.rows.length;
-        for (let i = 1; i < rowCount; i++) {
-          table.deleteRow(1);
-        }
-        matches.forEach((match) => {
-          const row = table.insertRow(-1);
-          const start = row.insertCell(0);
-          const end = row.insertCell(1);
-          const probability = row.insertCell(2);
-
-          start.innerHTML = `${match.startSec.toFixed(2)}`;
-          end.innerHTML = `${match.endSec.toFixed(2)}`;
-          probability.innerHTML = `${match.probability.toFixed(2)}`;
-        });
-      }
-
-      async function startOctopus(accessKey) {
-        document.getElementById("dashboard").style.display = "block";
-        writeStatus("Octopus is loading. Please wait...");
+    async function startOctopus(accessKey) {
+      writeStatus("Octopus is loading. Please wait...");
+      try {
         const engineHandle =
           await OctopusWebEnWorker.OctopusWorkerFactory.create(
             accessKey,
@@ -72,6 +73,7 @@
             octopusSearchCallback
           );
         writeStatus("Octopus worker ready! Select a .wav file to index.");
+        document.getElementById("dashboard").style.display = "block";
 
         const fileSelector = document.getElementById("file-selector");
         fileSelector.addEventListener("change", (event) => {
@@ -115,78 +117,79 @@
             writeStatus("Please index an audio file first");
           }
         });
-      }
-    </script>
-    <style>
-      table {
-        margin-top: 2rem;
-        display: inline-block;
-        overflow: auto;
-      }
 
-      table {
-        border-collapse: separate;
       }
-
-      td {
-        text-align: right;
-        vertical-align: middle;
+      catch (err) {
+        writeStatus(err);
       }
+    }
+  </script>
+  <style>
+    table {
+      margin-top: 2rem;
+      display: inline-block;
+      overflow: auto;
+    }
 
-      tr:nth-child(even) {
-        background: #eee;
-      }
-    </style>
-  </head>
+    table {
+      border-collapse: separate;
+    }
 
-  <body>
-    <h1>Octopus Web Demo - Worker</h1>
-    <p>
-      This demo uses Octopus for Web to create an Octopus Web Worker that can
-      index and search audio files.
-    </p>
-    <label for="accessKey"
-      >AccessKey provided by
-      <a href="https://picovoice.ai/console/">Picovoice Console</a>:</label
-    >
-    <input type="text" id="accessKey" name="accessKey" />
-    <input
-      type="button"
-      id="submit"
-      value="Start Octopus"
-      onclick="startOctopus(document.getElementById('accessKey').value)"
-    />
-    <hr />
+    td {
+      text-align: right;
+      vertical-align: middle;
+    }
 
-    <div id="dashboard" style="display: none">
-      <div>
-        <p>Select audio file:</p>
-        <input type="file" id="file-selector" />
-      </div>
-      <div id="search" style="display: none">
-        <form id="search-form">
-          <p>Enter search phrase:</p>
-          <input type="text" id="search-phrase" />
-          <button type="submit">Search</button>
-        </form>
-      </div>
-      <br />
-      <div id="status"></div>
-      <br />
-      <div id="result"></div>
+    tr:nth-child(even) {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Octopus Web Demo - Worker</h1>
+  <p>
+    This demo uses Octopus for Web to create an Octopus Web Worker that can
+    index and search audio files. For details, look at your browser's console.
+  </p>
+  <label for="accessKey">AccessKey provided by
+    <a href="https://picovoice.ai/console/">Picovoice Console</a>:</label>
+  <input type="text" id="accessKey" name="accessKey" />
+  <input type="button" id="submit" value="Start Octopus"
+    onclick="startOctopus(document.getElementById('accessKey').value)" />
+  <hr />
+
+  <div id="dashboard" style="display: none">
+    <div>
+      <p>Select audio file:</p>
+      <input type="file" id="file-selector" />
     </div>
+    <div id="search" style="display: none">
+      <form id="search-form">
+        <p>Enter search phrase:</p>
+        <input type="text" id="search-phrase" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <br />
+  </div>
 
-    <table id="result-table" style="height: 150px; display: none">
-      <colgroup>
-        <col span="1" style="width: 20%" />
-        <col span="1" style="width: 20%" />
-        <col span="1" style="width: 20%" />
-      </colgroup>
-      <tr>
-        <th>Start time (s)</th>
-        <th>End time (s)</th>
-        <th>Probability</th>
-      </tr>
-    </table>
-  </body>
+  <div id="status"></div>
+  <br />
+  <div id="result"></div>
+
+  <table id="result-table" style="height: 150px; display: none">
+    <colgroup>
+      <col span="1" style="width: 20%" />
+      <col span="1" style="width: 20%" />
+      <col span="1" style="width: 20%" />
+    </colgroup>
+    <tr>
+      <th>Start time (s)</th>
+      <th>End time (s)</th>
+      <th>Probability</th>
+    </tr>
+  </table>
+</body>
+
 </html>

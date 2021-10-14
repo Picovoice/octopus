@@ -13,6 +13,7 @@ import {
   OctopusEngine,
   OctopusWorkerRequest,
   OctopusWorkerResponseReady,
+  OctopusWorkerResponseFailed,
   OctopusWorkerResponseIndex,
   OctopusWorkerResponseSearch,
   OctopusMetadata
@@ -23,12 +24,21 @@ import { Octopus } from './octopus';
 let octopusEngine: OctopusEngine | null = null;
 
 async function init(accessKey: string): Promise<void> {
-  octopusEngine = await Octopus.create(accessKey);
-  const octopusReadyMessage: OctopusWorkerResponseReady = {
-    command: 'octopus-ready',
-  };
-  // @ts-ignore
-  postMessage(octopusReadyMessage, undefined);
+  try {
+    octopusEngine = await Octopus.create(accessKey);
+    const octopusReadyMessage: OctopusWorkerResponseReady = {
+      command: 'octopus-ready',
+    };
+    // @ts-ignore
+    postMessage(octopusReadyMessage, undefined);
+  } catch (error) {
+    const octopusReadyMessage: OctopusWorkerResponseFailed = {
+      command: 'octopus-failed',
+      message: error,
+    };
+    // @ts-ignore
+    postMessage(octopusReadyMessage, undefined);
+  }
 }
 
 async function index(input: Int16Array): Promise<void> {

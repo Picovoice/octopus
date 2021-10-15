@@ -25,6 +25,7 @@ export class OctopusWorkerFactory {
     accessKey: string,
     indexCallback?: CallableFunction,
     searchCallback?: CallableFunction,
+    errorCallback?: CallableFunction,
   ): Promise<Worker> {
     // n.b. The *worker* creation is itself synchronous. But, inside the worker is an async
     // method of OctopusFactory which is initializing. This means the worker is not actually ready
@@ -60,6 +61,11 @@ export class OctopusWorkerFactory {
               searchCallback(event.data.matches);
             }
             break;
+          case 'octopus-error':
+            if (errorCallback !== undefined) {
+              errorCallback(event.data.message);
+            }
+            break
           default:
             // eslint-disable-next-line no-console
             console.warn(`Unhandled message in main.js: ${event.data}`);

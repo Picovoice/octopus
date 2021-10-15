@@ -16,6 +16,7 @@ import {
   OctopusWorkerResponseFailed,
   OctopusWorkerResponseIndex,
   OctopusWorkerResponseSearch,
+  OctopusWorkerResponseError,
   OctopusMetadata
 } from './octopus_types';
 
@@ -42,26 +43,44 @@ async function init(accessKey: string): Promise<void> {
 }
 
 async function index(input: Int16Array): Promise<void> {
-  if (octopusEngine !== null) {
-    const metadata = await octopusEngine.index(input);
-    const octopusIndexMessage: OctopusWorkerResponseIndex = {
-      command: 'octopus-index',
-      metadata: metadata,
+  try {
+    if (octopusEngine !== null) {
+      const metadata = await octopusEngine.index(input);
+      const octopusIndexMessage: OctopusWorkerResponseIndex = {
+        command: 'octopus-index',
+        metadata: metadata,
+      };
+      // @ts-ignore
+      postMessage(octopusIndexMessage, undefined);
+    }
+  } catch (error) {
+    const octopusReadyMessage: OctopusWorkerResponseError = {
+      command: 'octopus-error',
+      message: error,
     };
     // @ts-ignore
-    postMessage(octopusIndexMessage, undefined);
+    postMessage(octopusReadyMessage, undefined);
   }
 }
 
 async function search(metadata: OctopusMetadata, searchPhrase: string): Promise<void> {
-  if (octopusEngine !== null) {
-    const matches = await octopusEngine.search(metadata, searchPhrase);
-    const octopusSearchMessage: OctopusWorkerResponseSearch = {
-      command: 'octopus-search',
-      matches: matches,
+  try {
+    if (octopusEngine !== null) {
+      const matches = await octopusEngine.search(metadata, searchPhrase);
+      const octopusSearchMessage: OctopusWorkerResponseSearch = {
+        command: 'octopus-search',
+        matches: matches,
+      };
+      // @ts-ignore
+      postMessage(octopusSearchMessage, undefined);
+    }
+  } catch (error) {
+    const octopusReadyMessage: OctopusWorkerResponseError = {
+      command: 'octopus-error',
+      message: error,
     };
     // @ts-ignore
-    postMessage(octopusSearchMessage, undefined);
+    postMessage(octopusReadyMessage, undefined);
   }
 }
 
@@ -85,7 +104,7 @@ onmessage = function (
       index(event.data.input);
       break;
     case 'search':
-      search(event.data.metadata, event.data.searchPhrase);
+      search(event.data.metadata, event.data.searchPhrase.trim());
       break;
     case 'release':
       release();

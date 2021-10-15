@@ -95,3 +95,19 @@ export function getRuntimeEnvironment(): 'browser' | 'worker' {
   }
   return 'worker';
 }
+
+/**
+ * Checking whether the given AccessKey is valid
+ *
+ * @return true if the AccessKey is valid, false if not 
+ */
+
+export function isAccessKeyValid(accessKey: string) {
+  accessKey = accessKey.trim()
+  if (accessKey === '' || accessKey.length !== 56) { return false; }
+  try {
+    return btoa(atob(accessKey)) == accessKey;
+  } catch (err) {
+    return false;
+  }
+}

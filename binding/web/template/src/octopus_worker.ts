@@ -33,12 +33,12 @@ async function init(accessKey: string): Promise<void> {
     // @ts-ignore
     postMessage(octopusReadyMessage, undefined);
   } catch (error) {
-    const octopusReadyMessage: OctopusWorkerResponseFailed = {
+    const octopusFailedMessage: OctopusWorkerResponseFailed = {
       command: 'octopus-failed',
       message: error,
     };
     // @ts-ignore
-    postMessage(octopusReadyMessage, undefined);
+    postMessage(octopusFailedMessage, undefined);
   }
 }
 
@@ -54,12 +54,12 @@ async function index(input: Int16Array): Promise<void> {
       postMessage(octopusIndexMessage, undefined);
     }
   } catch (error) {
-    const octopusReadyMessage: OctopusWorkerResponseError = {
+    const octopusErrorMessage: OctopusWorkerResponseError = {
       command: 'octopus-error',
       message: error,
     };
     // @ts-ignore
-    postMessage(octopusReadyMessage, undefined);
+    postMessage(octopusErrorMessage, undefined);
   }
 }
 
@@ -75,12 +75,12 @@ async function search(metadata: OctopusMetadata, searchPhrase: string): Promise<
       postMessage(octopusSearchMessage, undefined);
     }
   } catch (error) {
-    const octopusReadyMessage: OctopusWorkerResponseError = {
+    const octopusErrorMessage: OctopusWorkerResponseError = {
       command: 'octopus-error',
       message: error,
     };
     // @ts-ignore
-    postMessage(octopusReadyMessage, undefined);
+    postMessage(octopusErrorMessage, undefined);
   }
 }
 
@@ -104,7 +104,7 @@ onmessage = function (
       index(event.data.input);
       break;
     case 'search':
-      search(event.data.metadata, event.data.searchPhrase.trim());
+      search(event.data.metadata, event.data.searchPhrase);
       break;
     case 'release':
       release();

@@ -57,7 +57,7 @@ export type OctopusWorkerResponseReady = {
 
 export type OctopusWorkerResponseFailed = {
   command: 'octopus-failed';
-  message: string;
+  message: any;
 };
 
 export type OctopusWorkerResponseIndex = {

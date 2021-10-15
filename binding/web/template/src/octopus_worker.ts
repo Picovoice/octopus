@@ -33,9 +33,10 @@ async function init(accessKey: string): Promise<void> {
     // @ts-ignore
     postMessage(octopusReadyMessage, undefined);
   } catch (error) {
+    const errorMessage = String(error);
     const octopusFailedMessage: OctopusWorkerResponseFailed = {
       command: 'octopus-failed',
-      message: error,
+      message: errorMessage,
     };
     // @ts-ignore
     postMessage(octopusFailedMessage, undefined);
@@ -54,9 +55,10 @@ async function index(input: Int16Array): Promise<void> {
       postMessage(octopusIndexMessage, undefined);
     }
   } catch (error) {
+    const errorMessage = String(error);
     const octopusErrorMessage: OctopusWorkerResponseError = {
       command: 'octopus-error',
-      message: error,
+      message: errorMessage,
     };
     // @ts-ignore
     postMessage(octopusErrorMessage, undefined);
@@ -75,9 +77,10 @@ async function search(metadata: OctopusMetadata, searchPhrase: string): Promise<
       postMessage(octopusSearchMessage, undefined);
     }
   } catch (error) {
+    const errorMessage = String(error);
     const octopusErrorMessage: OctopusWorkerResponseError = {
       command: 'octopus-error',
-      message: error,
+      message: errorMessage,
     };
     // @ts-ignore
     postMessage(octopusErrorMessage, undefined);

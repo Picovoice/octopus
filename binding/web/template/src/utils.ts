@@ -104,7 +104,7 @@ export function getRuntimeEnvironment(): 'browser' | 'worker' {
 
 export function isAccessKeyValid(accessKey: string): boolean {
   const accessKeyCleaned = accessKey.trim();
-  if (accessKeyCleaned === '' || accessKeyCleaned.length !== 56) { return false; }
+  if (accessKeyCleaned.length !== 56) { return false; }
   try {
     return btoa(atob(accessKeyCleaned)) === accessKeyCleaned;
   } catch (err) {

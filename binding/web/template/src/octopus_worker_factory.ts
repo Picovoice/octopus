@@ -65,7 +65,7 @@ export class OctopusWorkerFactory {
             if (errorCallback !== undefined) {
               errorCallback(event.data.message);
             }
-            break
+            break;
           default:
             // eslint-disable-next-line no-console
             console.warn(`Unhandled message in main.js: ${event.data}`);

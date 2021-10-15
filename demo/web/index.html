@@ -74,70 +74,72 @@
         document.getElementById("result").style.display = "none";
         document.getElementById("result-table").style.display = "none";
         writeStatus("Octopus is loading. Please wait...");
+        let engineHandle = undefined;
         try {
-          const engineHandle =
+          engineHandle =
             await OctopusWebEnWorker.OctopusWorkerFactory.create(
               accessKey,
               octopusIndexCallback,
               octopusSearchCallback,
               octopusErrorCallback
             );
-          document.getElementById("accessKey").style.border = "";
-          writeStatus("Octopus worker ready! Select a .wav file to index.");
-          document.getElementById("dashboard").style.display = "block";
-
-          const fileSelector = document.getElementById("file-selector");
-          fileSelector.addEventListener("change", (event) => {
-            document.getElementById("search").style.display = "none";
-            document.getElementById("result").style.display = "none";
-            document.getElementById("result-table").style.display = "none";
-            writeStatus("Indexing audio; please wait...");
-            const fileList = event.target.files;
-            readAudioFile(fileList[0], (audioBuffer) => {
-              const f32PCM = audioBuffer.getChannelData(0);
-              const i16PCM = new Int16Array(f32PCM.length);
-
-              const INT16_MAX = 32767;
-              const INT16_MIN = -32768;
-              i16PCM.set(
-                f32PCM.map((f) => {
-                  let i = Math.trunc(f * INT16_MAX);
-                  if (f > INT16_MAX) i = INT16_MAX;
-                  if (f < INT16_MIN) i = INT16_MIN;
-                  return i;
-                })
-              );
-              engineHandle.postMessage({
-                command: "index",
-                input: i16PCM,
-              });
-            });
-          });
-
-          const searchForm = document.getElementById("search-form");
-          searchForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const searchText = document.getElementById("search-phrase").value;
-            if (searchText.trim() === "") {
-              document.getElementById("search-phrase").style.border =
-                "1px solid red";
-              writeStatus("Search phrase is empty");
-            } else if (octopusMetadata) {
-              document.getElementById("search-phrase").style.border = "";
-              writeStatus(`Searching for ${searchText}...`);
-              engineHandle.postMessage({
-                command: "search",
-                metadata: octopusMetadata,
-                searchPhrase: searchText.trim(),
-              });
-            } else {
-              writeStatus("Please index an audio file first");
-            }
-          });
         } catch (err) {
           document.getElementById("accessKey").style.border = "1px solid red";
-          writeStatus(err);
+          octopusErrorCallback(err);
+          return;
         }
+        document.getElementById("accessKey").style.border = "";
+        writeStatus("Octopus worker ready! Select a .wav file to index.");
+        document.getElementById("dashboard").style.display = "block";
+
+        const fileSelector = document.getElementById("file-selector");
+        fileSelector.addEventListener("change", (event) => {
+          document.getElementById("search").style.display = "none";
+          document.getElementById("result").style.display = "none";
+          document.getElementById("result-table").style.display = "none";
+          writeStatus("Indexing audio; please wait...");
+          const fileList = event.target.files;
+          readAudioFile(fileList[0], (audioBuffer) => {
+            const f32PCM = audioBuffer.getChannelData(0);
+            const i16PCM = new Int16Array(f32PCM.length);
+
+            const INT16_MAX = 32767;
+            const INT16_MIN = -32768;
+            i16PCM.set(
+              f32PCM.map((f) => {
+                let i = Math.trunc(f * INT16_MAX);
+                if (f > INT16_MAX) i = INT16_MAX;
+                if (f < INT16_MIN) i = INT16_MIN;
+                return i;
+              })
+            );
+            engineHandle.postMessage({
+              command: "index",
+              input: i16PCM,
+            });
+          });
+        });
+
+        const searchForm = document.getElementById("search-form");
+        searchForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const searchText = document.getElementById("search-phrase").value;
+          if (searchText.trim() === "") {
+            document.getElementById("search-phrase").style.border =
+              "1px solid red";
+            writeStatus("Search phrase is empty");
+          } else if (octopusMetadata) {
+            document.getElementById("search-phrase").style.border = "";
+            writeStatus(`Searching for ${searchText}...`);
+            engineHandle.postMessage({
+              command: "search",
+              metadata: octopusMetadata,
+              searchPhrase: searchText.trim(),
+            });
+          } else {
+            writeStatus("Please index an audio file first");
+          }
+        });
       }
     </script>
     <style>

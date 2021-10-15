@@ -165,7 +165,7 @@ export class Octopus implements OctopusEngine {
     if (searchPhrase === '') {
       throw new Error('The search phrase cannot be empty');
     } else if (searchPhrase.replace(/\s/g,'').search(/[^A-Za-z\s]/) != -1) {
-      throw new Error('The search phrase should only consist of alphabetic characters. Try using words instead of numbers (e.g., "thirty one" instead of "31"');
+      throw new Error('The search phrase should only consist of alphabetic characters. Try using words instead of numbers (e.g., "thirty one" instead of "31"'.);
     }
 
     const phraseAddress = await this._allignedAlloc(

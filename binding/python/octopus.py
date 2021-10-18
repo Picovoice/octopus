@@ -265,7 +265,7 @@ class Octopus(object):
             ("end_sec", c_float),
             ("probability", c_float)]
 
-    _PHRASE_REGEX = re.compile(r"^[a-zA-Z']+$")
+    _PHRASE_REGEX = re.compile(r"^[a-zA-Z' ]+$")
 
     def search(self, metadata, phrases):
         """

@@ -17,7 +17,7 @@ import unittest
 
 import soundfile
 
-from octopus import Octopus, OctopusMetadata
+from octopus import *
 from util import *
 
 
@@ -62,6 +62,31 @@ class OctopusTestCase(unittest.TestCase):
         metadata = self.octopus.index_audio_file(self.path)
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
+
+    def test_empty_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, [''])
+
+    def test_whitespace_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['   '])
+
+    def test_numeric_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['12'])
+
+    def test_hyphen_in_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['real-time'])
+
+    def test_invalid_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['@@!%$'])
 
     def test_to_from_bytes(self):
         original_metadata = self.octopus.index_audio_file(self.path)

@@ -20,6 +20,54 @@ from ctypes.util import find_library
 from enum import Enum
 
 
+class OctopusError(Exception):
+    pass
+
+
+class OctopusMemoryError(OctopusError):
+    pass
+
+
+class OctopusIOError(OctopusError):
+    pass
+
+
+class OctopusInvalidArgumentError(OctopusError):
+    pass
+
+
+class OctopusStopIterationError(OctopusError):
+    pass
+
+
+class OctopusKeyError(OctopusError):
+    pass
+
+
+class OctopusInvalidStateError(OctopusError):
+    pass
+
+
+class OctopusRuntimeError(OctopusError):
+    pass
+
+
+class OctopusActivationError(OctopusError):
+    pass
+
+
+class OctopusActivationLimitError(OctopusError):
+    pass
+
+
+class OctopusActivationThrottledError(OctopusError):
+    pass
+
+
+class OctopusActivationRefusedError(OctopusError):
+    pass
+
+
 class OctopusMetadata(object):
     """
     Python representation of the metadata object.
@@ -73,17 +121,17 @@ class Octopus(object):
         ACTIVATION_REFUSED = 11
 
     _PICOVOICE_STATUS_TO_EXCEPTION = {
-        PicovoiceStatuses.OUT_OF_MEMORY: MemoryError,
-        PicovoiceStatuses.IO_ERROR: IOError,
-        PicovoiceStatuses.INVALID_ARGUMENT: ValueError,
-        PicovoiceStatuses.STOP_ITERATION: StopIteration,
-        PicovoiceStatuses.KEY_ERROR: KeyError,
-        PicovoiceStatuses.INVALID_STATE: ValueError,
-        PicovoiceStatuses.RUNTIME_ERROR: RuntimeError,
-        PicovoiceStatuses.ACTIVATION_ERROR: RuntimeError,
-        PicovoiceStatuses.ACTIVATION_LIMIT_REACHED: PermissionError,
-        PicovoiceStatuses.ACTIVATION_THROTTLED: PermissionError,
-        PicovoiceStatuses.ACTIVATION_REFUSED: PermissionError
+        PicovoiceStatuses.OUT_OF_MEMORY: OctopusMemoryError,
+        PicovoiceStatuses.IO_ERROR: OctopusIOError,
+        PicovoiceStatuses.INVALID_ARGUMENT: OctopusInvalidArgumentError,
+        PicovoiceStatuses.STOP_ITERATION: OctopusStopIterationError,
+        PicovoiceStatuses.KEY_ERROR: OctopusKeyError,
+        PicovoiceStatuses.INVALID_STATE: OctopusInvalidStateError,
+        PicovoiceStatuses.RUNTIME_ERROR: OctopusRuntimeError,
+        PicovoiceStatuses.ACTIVATION_ERROR: OctopusActivationError,
+        PicovoiceStatuses.ACTIVATION_LIMIT_REACHED: OctopusActivationLimitError,
+        PicovoiceStatuses.ACTIVATION_THROTTLED: OctopusActivationThrottledError,
+        PicovoiceStatuses.ACTIVATION_REFUSED: OctopusActivationRefusedError
     }
 
     class COctopus(Structure):

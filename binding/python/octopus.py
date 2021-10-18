@@ -14,7 +14,6 @@
 
 import os
 import platform
-import re
 from collections import namedtuple
 from ctypes import *
 from ctypes.util import find_library
@@ -265,8 +264,6 @@ class Octopus(object):
             ("end_sec", c_float),
             ("probability", c_float)]
 
-    _PHRASE_REGEX = re.compile(r"^[a-zA-Z' ]+$")
-
     def search(self, metadata, phrases):
         """
         Searches metadata for occurrences of a given phrase.
@@ -276,20 +273,7 @@ class Octopus(object):
         :return matches: A dictionary map of found matches
         """
 
-        phrases_set = set([x.strip() for x in phrases])
-
-        if any(len(x) == 0 for x in phrases_set):
-            raise OctopusInvalidArgumentError("Search phrase cannot be empty")
-
-        if any(not bool(self._PHRASE_REGEX.match(x)) for x in phrases_set):
-            raise OctopusInvalidArgumentError(
-                "Search phrases should be normalized:\n"
-                "\t12 >>> twelve\n"
-                "\t2021 >>> twenty twenty one\n"
-                "\tmother-in-law >>> mother in law"
-                "\t5-minute meeting >>> five minute meeting"
-            )
-
+        phrases_set = set(phrases)
         matches = dict()
 
         for phrase in phrases_set:

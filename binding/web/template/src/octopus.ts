@@ -21,6 +21,7 @@ import { wasiSnapshotPreview1Emulator } from './wasi_snapshot';
 import {
   arrayBufferToStringAtIndex,
   base64ToUint8Array,
+  isAccessKeyValid,
   fetchWithTimeout,
   stringHeaderToObject,
 } from './utils';
@@ -159,9 +160,16 @@ export class Octopus implements OctopusEngine {
    * @return An array of OctopusMatch objects.
    */
   public async search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch[]> {
+    const searchPhraseCleaned = searchPhrase.trim();
+    if (searchPhraseCleaned === '') {
+      throw new Error('The search phrase cannot be empty');
+    } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z\s]/) !== -1) {
+      throw new Error('The search phrase should only consist of alphabetic characters. Try using words instead of numbers (e.g., "thirty one" instead of "31".');
+    }
+
     const phraseAddress = await this._allignedAlloc(
       Uint8Array.BYTES_PER_ELEMENT,
-      (searchPhrase.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+      (searchPhraseCleaned.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
 
     if (phraseAddress === 0) {
@@ -169,10 +177,10 @@ export class Octopus implements OctopusEngine {
     }
 
     const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-    for (let i = 0; i < searchPhrase.length; i++) {
-      memoryBufferUint8[phraseAddress + i] = searchPhrase.charCodeAt(i);
+    for (let i = 0; i < searchPhraseCleaned.length; i++) {
+      memoryBufferUint8[phraseAddress + i] = searchPhraseCleaned.charCodeAt(i);
     }
-    memoryBufferUint8[phraseAddress + searchPhrase.length] = 0;
+    memoryBufferUint8[phraseAddress + searchPhraseCleaned.length] = 0;
 
     const status = await this._pvOctopusSearch(
       this._objectAddress,
@@ -230,7 +238,10 @@ export class Octopus implements OctopusEngine {
    * @returns An instance of the Octopus engine.
    */
   public static async create(accessKey: string): Promise<Octopus> {
-    const wasmOutput = await Octopus.initWasm(accessKey);
+    if (!isAccessKeyValid(accessKey)) {
+      throw new Error('Invalid AccessKey');
+    }
+    const wasmOutput = await Octopus.initWasm(accessKey.trim());
     return new Octopus(wasmOutput);
   }
 

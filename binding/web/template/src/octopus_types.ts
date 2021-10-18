@@ -70,11 +70,17 @@ export type OctopusWorkerResponseSearch = {
   matches: OctopusMatch[];
 };
 
+export type OctopusWorkerResponseError = {
+  command: 'octopus-error';
+  message: string;
+};
+
 export type OctopusWorkerResponse =
   | OctopusWorkerResponseReady
   | OctopusWorkerResponseFailed
   | OctopusWorkerResponseIndex
   | OctopusWorkerResponseSearch
+  | OctopusWorkerResponseError
 
 export interface OctopusEngine {
   /** Release all resources acquired by Octopus */

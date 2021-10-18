@@ -13,8 +13,10 @@ import {
   OctopusEngine,
   OctopusWorkerRequest,
   OctopusWorkerResponseReady,
+  OctopusWorkerResponseFailed,
   OctopusWorkerResponseIndex,
   OctopusWorkerResponseSearch,
+  OctopusWorkerResponseError,
   OctopusMetadata
 } from './octopus_types';
 
@@ -23,35 +25,65 @@ import { Octopus } from './octopus';
 let octopusEngine: OctopusEngine | null = null;
 
 async function init(accessKey: string): Promise<void> {
-  octopusEngine = await Octopus.create(accessKey);
-  const octopusReadyMessage: OctopusWorkerResponseReady = {
-    command: 'octopus-ready',
-  };
-  // @ts-ignore
-  postMessage(octopusReadyMessage, undefined);
+  try {
+    octopusEngine = await Octopus.create(accessKey);
+    const octopusReadyMessage: OctopusWorkerResponseReady = {
+      command: 'octopus-ready',
+    };
+    // @ts-ignore
+    postMessage(octopusReadyMessage, undefined);
+  } catch (error) {
+    const errorMessage = String(error);
+    const octopusFailedMessage: OctopusWorkerResponseFailed = {
+      command: 'octopus-failed',
+      message: errorMessage,
+    };
+    // @ts-ignore
+    postMessage(octopusFailedMessage, undefined);
+  }
 }
 
 async function index(input: Int16Array): Promise<void> {
-  if (octopusEngine !== null) {
-    const metadata = await octopusEngine.index(input);
-    const octopusIndexMessage: OctopusWorkerResponseIndex = {
-      command: 'octopus-index',
-      metadata: metadata,
+  try {
+    if (octopusEngine !== null) {
+      const metadata = await octopusEngine.index(input);
+      const octopusIndexMessage: OctopusWorkerResponseIndex = {
+        command: 'octopus-index',
+        metadata: metadata,
+      };
+      // @ts-ignore
+      postMessage(octopusIndexMessage, undefined);
+    }
+  } catch (error) {
+    const errorMessage = String(error);
+    const octopusErrorMessage: OctopusWorkerResponseError = {
+      command: 'octopus-error',
+      message: errorMessage,
     };
     // @ts-ignore
-    postMessage(octopusIndexMessage, undefined);
+    postMessage(octopusErrorMessage, undefined);
   }
 }
 
 async function search(metadata: OctopusMetadata, searchPhrase: string): Promise<void> {
-  if (octopusEngine !== null) {
-    const matches = await octopusEngine.search(metadata, searchPhrase);
-    const octopusSearchMessage: OctopusWorkerResponseSearch = {
-      command: 'octopus-search',
-      matches: matches,
+  try {
+    if (octopusEngine !== null) {
+      const matches = await octopusEngine.search(metadata, searchPhrase);
+      const octopusSearchMessage: OctopusWorkerResponseSearch = {
+        command: 'octopus-search',
+        matches: matches,
+      };
+      // @ts-ignore
+      postMessage(octopusSearchMessage, undefined);
+    }
+  } catch (error) {
+    const errorMessage = String(error);
+    const octopusErrorMessage: OctopusWorkerResponseError = {
+      command: 'octopus-error',
+      message: errorMessage,
     };
     // @ts-ignore
-    postMessage(octopusSearchMessage, undefined);
+    postMessage(octopusErrorMessage, undefined);
   }
 }
 

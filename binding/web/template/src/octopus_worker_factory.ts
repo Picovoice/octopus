@@ -41,6 +41,9 @@ export class OctopusWorkerFactory {
     octopusWorker.postMessage(octopusInitCmd);
 
     const workerPromise = new Promise<OctopusWorker>((resolve, reject) => {
+      // @ts-ignore - hold the reference to it, gc doesn't clean worker
+      this.octopusWorker = octopusWorker;
+
       octopusWorker.onmessage = (
         event: MessageEvent<OctopusWorkerResponse>
       ): void => {

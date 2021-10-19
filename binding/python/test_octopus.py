@@ -17,7 +17,7 @@ import unittest
 
 import soundfile
 
-from octopus import Octopus, OctopusMetadata
+from octopus import *
 from util import *
 
 
@@ -48,10 +48,9 @@ class OctopusTestCase(unittest.TestCase):
         self.assertEqual(len(matches[self.search_term]), 1)
 
         match = matches[self.search_term][0]
-        expected_match = Octopus.Match(start_sec=11.519995, end_sec=12.383999, probability=1.0)
-        self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=5)
-        self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=5)
-        self.assertAlmostEqual(match.probability, expected_match.probability, places=5)
+        expected_match = Octopus.Match(start_sec=11.52, end_sec=12.38, probability=1.0)
+        self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=1)
+        self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=1)
 
     def test_index(self):
         metadata = self.octopus.index_audio_data(self.audio)
@@ -62,6 +61,44 @@ class OctopusTestCase(unittest.TestCase):
         metadata = self.octopus.index_audio_file(self.path)
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
+
+    def test_empty_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, [''])
+
+    def test_whitespace_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['   '])
+
+    def test_numeric_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['12'])
+
+    def test_hyphen_in_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['real-time'])
+
+    def test_invalid_search_phrase(self):
+        metadata = self.octopus.index_audio_file(self.path)
+        with self.assertRaises(OctopusInvalidArgumentError):
+            self.octopus.search(metadata, ['@@!%$'])
+
+    def test_index_with_spaces(self):
+        metadata = self.octopus.index_audio_data(self.audio)
+        search_term = ' americano   avocado    '
+        normalized_search_term = 'americano avocado'
+        matches = self.octopus.search(metadata, [search_term])
+        self.assertIn(normalized_search_term, matches)
+        self.assertEqual(len(matches[normalized_search_term]), 1)
+
+        match = matches[normalized_search_term][0]
+        expected_match = Octopus.Match(start_sec=9.47, end_sec=12.25, probability=.33)
+        self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=1)
+        self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=1)
 
     def test_to_from_bytes(self):
         original_metadata = self.octopus.index_audio_file(self.path)

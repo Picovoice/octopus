@@ -276,14 +276,14 @@ class Octopus(object):
         :return matches: A dictionary map of found matches
         """
 
-        phrases_set = set([x.strip() for x in phrases])
+        phrases_set = set([' '.join(x.strip().split()) for x in phrases])
 
         if any(len(x) == 0 for x in phrases_set):
             raise OctopusInvalidArgumentError("Search phrase cannot be empty")
 
         if any(not bool(self._PHRASE_REGEX.match(x)) for x in phrases_set):
             raise OctopusInvalidArgumentError(
-                "Search phrases should be normalized:\n"
+                "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n"
                 "\t12 >>> twelve\n"
                 "\t2021 >>> twenty twenty one\n"
                 "\tmother-in-law >>> mother in law"

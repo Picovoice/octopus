@@ -38,7 +38,6 @@ class LoadingAnimation(threading.Thread):
         while not self._done:
             for frame in self._frames:
                 if self._done:
-                    sys.stdout.write('\r')
                     break
                 sys.stdout.write('\r' + frame)
                 time.sleep(self._sleep_time_sec)
@@ -74,7 +73,7 @@ def main():
         print("Octopus version: %s" % octopus.version)
     except (MemoryError, ValueError, RuntimeError, PermissionError) as e:
         print(e)
-        exit(1)
+        sys.exit(1)
 
     indexing_animation = LoadingAnimation()
     metadata_list = list()
@@ -86,18 +85,19 @@ def main():
         except (MemoryError, ValueError, RuntimeError, PermissionError, IOError) as e:
             print("Failed to process '%s' with '%s'" % (os.path.basename(audio_file), e))
             octopus.delete()
-            exit(1)
+            sys.exit(1)
         finally:
             indexing_animation.stop()
 
     try:
         while True:
-            search_phrase = input("\nEnter search phrase (Ctrl+c to exit): ")
+            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
             if not search_phrase.replace(" ", "").isalpha():
                 print("The search phrase should only consist of alphabetic characters.")
                 continue
+            search_phrase = search_phrase.strip() 
             for i, metadata in enumerate(metadata_list):
-                matches = octopus.search(metadata, [str(search_phrase.strip())])
+                matches = octopus.search(metadata, [str(search_phrase)])
                 if len(matches) != 0:
                     print("Matches in '%s':" % (os.path.basename(args.audio_paths[i])))
                     results = matches[str(search_phrase)]

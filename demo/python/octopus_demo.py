@@ -92,7 +92,7 @@ def main():
 
     try:
         while True:
-            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
+            search_phrase = input("\nEnter search phrase (Ctrl+c to exit): ")
             if not search_phrase.replace(" ", "").isalpha():
                 print("The search phrase should only consist of alphabetic characters.")
                 continue

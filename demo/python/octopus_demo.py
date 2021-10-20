@@ -96,7 +96,7 @@ def main():
             for i, metadata in enumerate(metadata_list):
                 try:
                     matches = octopus.search(metadata, [str(search_phrase)])
-                except pvoctopus.octopus.OctopusInvalidArgumentError as e:
+                except pvoctopus.OctopusInvalidArgumentError as e:
                     print(e)
                     continue
                 if len(matches) != 0:

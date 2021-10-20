@@ -9,8 +9,22 @@
 # specific language governing permissions and limitations under the License.
 #
 
-from .octopus import Octopus, OctopusMetadata
-from .util import *
+from .octopus import Octopus
+from .octopus import OctopusActivationError
+from .octopus import OctopusActivationLimitError
+from .octopus import OctopusActivationRefusedError
+from .octopus import OctopusActivationThrottledError
+from .octopus import OctopusError
+from .octopus import OctopusIOError
+from .octopus import OctopusInvalidArgumentError
+from .octopus import OctopusInvalidStateError
+from .octopus import OctopusKeyError
+from .octopus import OctopusMemoryError
+from .octopus import OctopusMetadata
+from .octopus import OctopusRuntimeError
+from .octopus import OctopusStopIterationError
+from .util import pv_library_path
+from .util import pv_model_path
 
 LIBRARY_PATH = pv_library_path('')
 

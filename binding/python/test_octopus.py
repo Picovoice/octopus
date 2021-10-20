@@ -56,36 +56,43 @@ class OctopusTestCase(unittest.TestCase):
         metadata = self.octopus.index_audio_data(self.audio)
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
+        metadata.delete()
 
     def test_index_file(self):
         metadata = self.octopus.index_audio_file(self.path)
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
+        metadata.delete()
 
     def test_empty_search_phrase(self):
         metadata = self.octopus.index_audio_file(self.path)
         with self.assertRaises(OctopusInvalidArgumentError):
             self.octopus.search(metadata, [''])
+        metadata.delete()
 
     def test_whitespace_search_phrase(self):
         metadata = self.octopus.index_audio_file(self.path)
         with self.assertRaises(OctopusInvalidArgumentError):
             self.octopus.search(metadata, ['   '])
+        metadata.delete()
 
     def test_numeric_search_phrase(self):
         metadata = self.octopus.index_audio_file(self.path)
         with self.assertRaises(OctopusInvalidArgumentError):
             self.octopus.search(metadata, ['12'])
+        metadata.delete()
 
     def test_hyphen_in_search_phrase(self):
         metadata = self.octopus.index_audio_file(self.path)
         with self.assertRaises(OctopusInvalidArgumentError):
             self.octopus.search(metadata, ['real-time'])
+        metadata.delete()
 
     def test_invalid_search_phrase(self):
         metadata = self.octopus.index_audio_file(self.path)
         with self.assertRaises(OctopusInvalidArgumentError):
             self.octopus.search(metadata, ['@@!%$'])
+        metadata.delete()
 
     def test_index_with_spaces(self):
         metadata = self.octopus.index_audio_data(self.audio)
@@ -99,6 +106,7 @@ class OctopusTestCase(unittest.TestCase):
         expected_match = Octopus.Match(start_sec=9.47, end_sec=12.25, probability=.33)
         self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=1)
         self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=1)
+        metadata.delete()
 
     def test_to_from_bytes(self):
         original_metadata = self.octopus.index_audio_file(self.path)
@@ -108,6 +116,24 @@ class OctopusTestCase(unittest.TestCase):
         metadata = OctopusMetadata.from_bytes(metadata_bytes)
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
+        metadata.delete()
+
+    def test_to_from_bytes_file(self):
+        cached_file = 'original_metadata.oif'
+        original_metadata = self.octopus.index_audio_file(self.path)
+        with open(cached_file, 'wb') as f:
+            print(type(original_metadata.size))
+            f.write(original_metadata.to_bytes())
+        original_metadata.delete()
+
+        with open(cached_file, 'rb') as f:
+            metadata = OctopusMetadata.from_bytes(f.read())
+            print(type(metadata.size))
+            # print(len(metadata.to_bytes()))
+
+        matches = self.octopus.search(metadata, [self.search_term])
+        self.check_matches(matches)
+        # metadata.delete()
 
     def test_version(self):
         self.assertIsInstance(self.octopus.version, str)

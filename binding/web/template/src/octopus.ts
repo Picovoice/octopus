@@ -149,7 +149,7 @@ export class Octopus implements OctopusEngine {
       true
     );
 
-    return {metadataAddress, metadataLength};
+    return { metadataAddress, metadataLength };
   }
 
   /**
@@ -163,8 +163,12 @@ export class Octopus implements OctopusEngine {
     const searchPhraseCleaned = searchPhrase.trim();
     if (searchPhraseCleaned === '') {
       throw new Error('The search phrase cannot be empty');
-    } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z\s]/) !== -1) {
-      throw new Error('The search phrase should only consist of alphabetic characters. Try using words instead of numbers (e.g., "thirty one" instead of "31".');
+    } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z' \s]/) !== -1) {
+      throw new Error("Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
+        "\t12 >>> twelve\n" +
+        "\t2021 >>> twenty twenty one\n" +
+        "\tmother-in-law >>> mother in law\n" +
+        "\t5-minute meeting >>> five minute meeting");
     }
 
     const phraseAddress = await this._allignedAlloc(

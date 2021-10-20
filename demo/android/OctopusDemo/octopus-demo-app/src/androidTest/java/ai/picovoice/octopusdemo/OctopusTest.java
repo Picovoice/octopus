@@ -42,6 +42,7 @@ import java.util.Objects;
 
 import ai.picovoice.octopus.Octopus;
 import ai.picovoice.octopus.OctopusException;
+import ai.picovoice.octopus.OctopusInvalidArgumentException;
 import ai.picovoice.octopus.OctopusMatch;
 import ai.picovoice.octopus.OctopusMetadata;
 
@@ -155,6 +156,134 @@ public class OctopusTest {
         assertEquals(expectedMatch.getStartSec(), terminatorMatches[0].getStartSec(), 0.0);
         assertEquals(expectedMatch.getEndSec(), terminatorMatches[0].getEndSec(), 0.0);
         assertEquals(expectedMatch.getProbability(), terminatorMatches[0].getProbability(), 0.0);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testEmptySearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add("");
+        boolean invalidArg = false;
+        try {
+            octopus.search(metadata, searchPhrases);
+        } catch (OctopusInvalidArgumentException e) {
+            invalidArg = true;
+        }
+        assertTrue(invalidArg);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testWhitespaceSearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add("     ");
+        boolean invalidArg = false;
+        try {
+            octopus.search(metadata, searchPhrases);
+        } catch (OctopusInvalidArgumentException e) {
+            invalidArg = true;
+        }
+        assertTrue(invalidArg);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testNumericSearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add("12");
+        boolean invalidArg = false;
+        try {
+            octopus.search(metadata, searchPhrases);
+        } catch (OctopusInvalidArgumentException e) {
+            invalidArg = true;
+        }
+        assertTrue(invalidArg);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testHyphenInSearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add("real-time");
+        boolean invalidArg = false;
+        try {
+            octopus.search(metadata, searchPhrases);
+        } catch (OctopusInvalidArgumentException e) {
+            invalidArg = true;
+        }
+        assertTrue(invalidArg);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testInvalidSearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add("@@!%$");
+        boolean invalidArg = false;
+        try {
+            octopus.search(metadata, searchPhrases);
+        } catch (OctopusInvalidArgumentException e) {
+            invalidArg = true;
+        }
+        assertTrue(invalidArg);
+
+        metadata.delete();
+        octopus.delete();
+    }
+
+    @Test
+    public void testSpacesInSearchPhrase() throws Exception {
+        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+
+        String searchTerm = " americano   avocado    ";
+        String normalizedSearchTerm = "americano avocado";
+
+        HashSet<String> searchPhrases = new HashSet<>();
+        searchPhrases.add(searchTerm);
+
+        HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, searchPhrases);
+        assertTrue(matches.containsKey(normalizedSearchTerm));
+        assertEquals(matches.size(), 1);
+
+        OctopusMatch[] match = Objects.requireNonNull(matches.get(normalizedSearchTerm));
+        assertEquals(1, match.length);
+
+        OctopusMatch expected = new OctopusMatch(9.47f, 12.25f, 0.33f);
+        assertEquals(expected.getStartSec(), match[0].getStartSec(), 0.01);
+        assertEquals(expected.getEndSec(), match[0].getEndSec(), 0.01);
+        assertEquals(expected.getProbability(), match[0].getProbability(), 0.01);
 
         metadata.delete();
         octopus.delete();

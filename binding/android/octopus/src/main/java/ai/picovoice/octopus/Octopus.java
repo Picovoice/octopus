@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 /**
  * Android binding for Octopus Speech-to-Index engine. It transforms audio into searchable metadata.
@@ -35,6 +36,7 @@ public class Octopus {
         System.loadLibrary("pv_octopus");
     }
 
+    private final Pattern PHRASE_REGEX = Pattern.compile("^[a-zA-Z' ]+$");
     private final long handle;
 
     /**
@@ -102,7 +104,7 @@ public class Octopus {
      */
     public OctopusMetadata indexAudioFile(String path) throws OctopusException {
         File audioFile = new File(path);
-        if (!audioFile.exists() ) {
+        if (!audioFile.exists()) {
             throw new OctopusInvalidArgumentException(
                     String.format("No valid audio file found at '%s'", path));
         }
@@ -122,14 +124,35 @@ public class Octopus {
     public HashMap<String, OctopusMatch[]> search(
             OctopusMetadata metadata,
             HashSet<String> phrases) throws OctopusException {
+
         HashMap<String, OctopusMatch[]> searchResults = new HashMap<>();
         for (String phrase : phrases) {
+
+            final StringBuilder formattedPhraseBuilder = new StringBuilder();
+            for (String word : phrase.trim().split("\\s+")) {
+                formattedPhraseBuilder.append(word).append(" ");
+            }
+
+            final String formattedPhrase = formattedPhraseBuilder.toString().trim();
+            if (formattedPhrase.isEmpty()) {
+                throw new OctopusInvalidArgumentException("Search phrase cannot be empty");
+            }
+
+            if(!PHRASE_REGEX.matcher(formattedPhrase).matches()) {
+                throw new OctopusInvalidArgumentException(
+                        "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
+                                "\t12 >>> twelve\n" +
+                                "\t2021 >>> twenty twenty one\n" +
+                                "\tmother-in-law >>> mother in law\n" +
+                                "\t5-minute meeting >>> five minute meeting");
+            }
+
             OctopusMatch[] searchResult = search(
                     handle,
                     metadata.handle,
                     metadata.numBytes,
-                    phrase);
-            searchResults.put(phrase, searchResult);
+                    formattedPhrase);
+            searchResults.put(formattedPhrase, searchResult);
         }
         return searchResults;
     }

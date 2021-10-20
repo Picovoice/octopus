@@ -45,13 +45,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import ai.picovoice.octopus.Octopus;
-import ai.picovoice.octopus.OctopusException;
-import ai.picovoice.octopus.OctopusMatch;
-import ai.picovoice.octopus.OctopusMetadata;
+import ai.picovoice.octopus.*;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String accessKey = "${YOUR_ACCESS_KEY_HERE}";
+    private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}";
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
     final private ArrayList<Short> pcmData = new ArrayList<>();
@@ -64,9 +61,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.octopus_demo);
 
         try {
-            octopus = new Octopus.Builder(accessKey).build(getApplicationContext());
-        } catch (OctopusException ex) {
-            displayError(ex.toString());
+            octopus = new Octopus.Builder(ACCESS_KEY).build(getApplicationContext());
+        } catch (OctopusInvalidArgumentException e) {
+            displayError(String.format("AccessKey '%s' is invalid", ACCESS_KEY));
+        } catch (OctopusActivationException e) {
+            displayError("AccessKey activation error");
+        } catch (OctopusActivationLimitException e) {
+            displayError("AccessKey reached its device limit");
+        } catch (OctopusActivationRefusedException e) {
+            displayError("AccessKey refused");
+        } catch (OctopusActivationThrottledException e) {
+            displayError("AccessKey has been throttled");
+        } catch (OctopusException e) {
+            displayError("Failed to initialize Octopus " + e.getMessage());
         }
     }
 

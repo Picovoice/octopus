@@ -45,11 +45,7 @@ public class Octopus {
      * @throws OctopusException if there is an error while initializing Octopus.
      */
     public Octopus(String accessKey, String modelPath) throws OctopusException {
-        try {
-            handle = init(accessKey, modelPath);
-        } catch (Exception e) {
-            throw new OctopusException(e);
-        }
+        handle = init(accessKey, modelPath);
     }
 
     private static void extractPackageResources(Context context) throws OctopusException {
@@ -60,7 +56,7 @@ public class Octopus {
                     resources.openRawResource(R.raw.octopus_params),
                     resources.getResourceEntryName(R.raw.octopus_params) + ".pv");
         } catch (IOException ex) {
-            throw new OctopusException(ex);
+            throw new OctopusIOException(ex);
         }
     }
 
@@ -94,11 +90,7 @@ public class Octopus {
      * @throws OctopusException if there is an error while processing the audio data.
      */
     public OctopusMetadata indexAudioData(short[] pcm) throws OctopusException {
-        try {
-            return index(handle, pcm, pcm.length);
-        } catch (Exception e) {
-            throw new OctopusException(e);
-        }
+        return index(handle, pcm, pcm.length);
     }
 
     /**
@@ -111,16 +103,11 @@ public class Octopus {
     public OctopusMetadata indexAudioFile(String path) throws OctopusException {
         File audioFile = new File(path);
         if (!audioFile.exists() ) {
-            throw new OctopusException(
-                    new IllegalArgumentException(
-                            String.format("No valid audio file found at '%s'", path)));
+            throw new OctopusInvalidArgumentException(
+                    String.format("No valid audio file found at '%s'", path));
         }
 
-        try {
-            return indexFile(handle, path);
-        } catch (Exception e) {
-            throw new OctopusException(e);
-        }
+        return indexFile(handle, path);
     }
 
     /**
@@ -135,20 +122,16 @@ public class Octopus {
     public HashMap<String, OctopusMatch[]> search(
             OctopusMetadata metadata,
             HashSet<String> phrases) throws OctopusException {
-        try {
-            HashMap<String, OctopusMatch[]> searchResults = new HashMap<>();
-            for (String phrase : phrases) {
-                OctopusMatch[] searchResult = search(
-                        handle,
-                        metadata.handle,
-                        metadata.numBytes,
-                        phrase);
-                searchResults.put(phrase, searchResult);
-            }
-            return searchResults;
-        } catch (Exception e) {
-            throw new OctopusException(e);
+        HashMap<String, OctopusMatch[]> searchResults = new HashMap<>();
+        for (String phrase : phrases) {
+            OctopusMatch[] searchResult = search(
+                    handle,
+                    metadata.handle,
+                    metadata.numBytes,
+                    phrase);
+            searchResults.put(phrase, searchResult);
         }
+        return searchResults;
     }
 
     /**
@@ -219,13 +202,13 @@ public class Octopus {
                                 context.getAssets().open(modelPath),
                                 modelFilename);
                     } catch (IOException ex) {
-                        throw new OctopusException(ex);
+                        throw new OctopusIOException(ex);
                     }
                 }
             }
 
             if (accessKey == null) {
-                throw new OctopusException("AccessKey must not be null");
+                throw new OctopusInvalidArgumentException("AccessKey must not be null");
             }
 
             return new Octopus(accessKey, modelPath);

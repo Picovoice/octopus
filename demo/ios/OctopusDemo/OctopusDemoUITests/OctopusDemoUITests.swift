@@ -38,9 +38,9 @@ class OctopusDemoUITests: XCTestCase {
         XCTAssert(matches["terminator"]!.count == 1)
         
         let terminatorMatches = matches["terminator"]!
-        XCTAssert(terminatorMatches[0].startSec == expectedMatch.startSec)
-        XCTAssert(terminatorMatches[0].endSec == expectedMatch.endSec)
-        XCTAssert(terminatorMatches[0].probability == expectedMatch.probability)
+        XCTAssertEqual(terminatorMatches[0].startSec, expectedMatch.startSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].endSec, expectedMatch.endSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].probability, expectedMatch.probability, accuracy: 0.01)
         
         metadata.delete()
         octopus.delete()
@@ -62,9 +62,9 @@ class OctopusDemoUITests: XCTestCase {
         XCTAssert(matches["terminator"]!.count == 1)
         
         let terminatorMatches = matches["terminator"]!
-        XCTAssert(terminatorMatches[0].startSec == expectedMatch.startSec)
-        XCTAssert(terminatorMatches[0].endSec == expectedMatch.endSec)
-        XCTAssert(terminatorMatches[0].probability == expectedMatch.probability)
+        XCTAssertEqual(terminatorMatches[0].startSec, expectedMatch.startSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].endSec, expectedMatch.endSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].probability, expectedMatch.probability, accuracy: 0.01)
         
         metadata.delete()
         octopus.delete()
@@ -89,11 +89,139 @@ class OctopusDemoUITests: XCTestCase {
         XCTAssert(matches["terminator"]!.count == 1)
         
         let terminatorMatches = matches["terminator"]!
-        XCTAssert(terminatorMatches[0].startSec == expectedMatch.startSec)
-        XCTAssert(terminatorMatches[0].endSec == expectedMatch.endSec)
-        XCTAssert(terminatorMatches[0].probability == expectedMatch.probability)
+        XCTAssertEqual(terminatorMatches[0].startSec, expectedMatch.startSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].endSec, expectedMatch.endSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].probability, expectedMatch.probability, accuracy: 0.01)
         
         metadata!.delete()
+        octopus.delete()
+    }
+    
+    func testEmptySearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+       
+        let invalidPhrase: Set<String> = [""]
+        var invalidArg = false
+        do {
+            let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
+        } catch OctopusError.OctopusInvalidArgumentError {
+            invalidArg = true
+        }
+        
+        XCTAssert(invalidArg)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+    
+    func testWhitespaceSearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+       
+        let invalidPhrase: Set<String> = ["    "]
+        var invalidArg = false
+        do {
+            let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
+        } catch OctopusError.OctopusInvalidArgumentError {
+            invalidArg = true
+        }
+        
+        XCTAssert(invalidArg)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+    
+    func testNumericSearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+       
+        let invalidPhrase: Set<String> = ["12"]
+        var invalidArg = false
+        do {
+            let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
+        } catch OctopusError.OctopusInvalidArgumentError {
+            invalidArg = true
+        }
+        
+        XCTAssert(invalidArg)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+    
+    func testHyphenInSearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+       
+        let invalidPhrase: Set<String> = ["real-time"]
+        var invalidArg = false
+        do {
+            let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
+        } catch OctopusError.OctopusInvalidArgumentError {
+            invalidArg = true
+        }
+        
+        XCTAssert(invalidArg)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+    
+    func testInvalidSearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+       
+        let invalidPhrase: Set<String> = ["@@!%$"]
+        var invalidArg = false
+        do {
+            let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
+        } catch OctopusError.OctopusInvalidArgumentError {
+            invalidArg = true
+        }
+        
+        XCTAssert(invalidArg)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+    
+    func testSpacesInSearchPhrase() throws {
+        let bundle = Bundle(for: type(of: self))
+        let audioFilePath = bundle.path(forResource: "audio/multiple_keywords", ofType: "wav")!
+        
+        let octopus = try Octopus(accessKey: accessKey)
+        let metadata = try octopus.indexAudioFile(path: audioFilePath)
+        
+        let searchPhrase: Set<String> = [" americano     avocado    "]
+        let normalizedSearchPhrase = "americano avocado"
+        
+        let matches = try octopus.search(metadata: metadata, phrases: searchPhrase)
+        XCTAssert(matches[normalizedSearchPhrase]!.count == 1)
+        
+        let match = matches[normalizedSearchPhrase]![0]
+        let expected = OctopusMatch(startSec: 9.47, endSec: 12.25, probability: 0.33)
+        XCTAssertEqual(match.startSec, expected.startSec, accuracy: 0.01)
+        XCTAssertEqual(match.endSec, expected.endSec, accuracy: 0.01)
+        XCTAssertEqual(match.probability, expected.probability, accuracy: 0.01)
+        
+        metadata.delete()
         octopus.delete()
     }
 }

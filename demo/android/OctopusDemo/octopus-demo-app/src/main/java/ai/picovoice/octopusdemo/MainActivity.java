@@ -33,6 +33,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,10 +46,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import ai.picovoice.octopus.Octopus;
-import ai.picovoice.octopus.OctopusException;
-import ai.picovoice.octopus.OctopusMatch;
-import ai.picovoice.octopus.OctopusMetadata;
+import ai.picovoice.octopus.*;
 
 public class MainActivity extends AppCompatActivity {
     private static final String accessKey = "${YOUR_ACCESS_KEY_HERE}";
@@ -65,8 +63,18 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             octopus = new Octopus.Builder(accessKey).build(getApplicationContext());
-        } catch (OctopusException ex) {
-            displayError(ex.toString());
+        } catch (OctopusInvalidArgumentException e) {
+            displayError("AccessKey provided is invalid");
+        } catch (OctopusActivationException e) {
+            displayError("AccessKey activation error");
+        } catch (OctopusActivationLimitException e) {
+            displayError("AccessKey reached its device limit");
+        } catch (OctopusActivationRefusedException e) {
+            displayError("AccessKey refused");
+        } catch (OctopusActivationThrottledException e) {
+            displayError("AccessKey has been throttled");
+        } catch (OctopusException e) {
+            displayError("Failed to initialize Octopus " + e.getMessage());
         }
     }
 

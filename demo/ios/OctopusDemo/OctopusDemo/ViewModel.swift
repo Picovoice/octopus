@@ -30,15 +30,15 @@ class ViewModel: ObservableObject {
     init() {
         do {
             try octopus = Octopus(accessKey: ACCESS_KEY)
-        } catch OctopusError.invalidArgument {
-            errorMessage = "ACCESS_KEY provided is invalid."
-        } catch OctopusError.activationError {
+        } catch OctopusError.OctopusInvalidArgumentError {
+            errorMessage = "ACCESS_KEY '\(ACCESS_KEY)' is invalid."
+        } catch OctopusError.OctopusActivationError {
             errorMessage = "ACCESS_KEY activation error."
-        } catch OctopusError.activationRefused {
+        } catch OctopusError.OctopusActivationRefusedError {
             errorMessage = "ACCESS_KEY activation refused."
-        } catch OctopusError.activationLimitReached {
+        } catch OctopusError.OctopusActivationLimitError {
             errorMessage = "ACCESS_KEY reached its limit."
-        } catch OctopusError.activationThrottled {
+        } catch OctopusError.OctopusActivationThrottledError  {
             errorMessage = "ACCESS_KEY is throttled."
         } catch {
             errorMessage = "\(error)"

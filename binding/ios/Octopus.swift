@@ -46,6 +46,7 @@ public class Octopus {
     /// Octopus version
     public static let version = String(cString: pv_octopus_version())
     
+    private let PHRASE_REGEX = "^[a-zA-Z' ]+$"
     private var handle: OpaquePointer?
     
     /// Constructor.
@@ -172,13 +173,32 @@ public class Octopus {
         var matches = Dictionary<String, [OctopusMatch]>()
         
         for phrase in phrases {
+            
+            let formattedPhrase: String = phrase.trimmingCharacters(in: .whitespacesAndNewlines)
+                .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+                .split(separator: " ")
+                .joined(separator: " ")
+            
+            if formattedPhrase.isEmpty {
+                throw OctopusError.OctopusInvalidArgumentError("Search phrase cannot be empty")
+            }
+            
+            if formattedPhrase.range(of: PHRASE_REGEX, options: .regularExpression) == nil {
+                throw OctopusError.OctopusInvalidArgumentError(
+                    "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
+                    "\t12 >>> twelve\n" +
+                    "\t2021 >>> twenty twenty one\n" +
+                    "\tmother-in-law >>> mother in law\n" +
+                    "\t5-minute meeting >>> five minute meeting")
+            }
+            
             var cMatches:UnsafeMutablePointer<pv_octopus_match_t>?
             var cNumMatches:Int32 = -1
             
             let status = pv_octopus_search(handle,
                                            metadata.handle,
                                            Int32(metadata.numBytes),
-                                           phrase,
+                                           formattedPhrase,
                                            &cMatches,
                                            &cNumMatches)
             if(status != PV_STATUS_SUCCESS) {
@@ -195,7 +215,7 @@ public class Octopus {
                 phraseMatches.append(phraseMatch)
             }
             
-            matches[phrase] = phraseMatches
+            matches[formattedPhrase] = phraseMatches
             
         }
         

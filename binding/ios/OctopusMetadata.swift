@@ -46,7 +46,7 @@ public class OctopusMetadata {
     /// - Returns: A byte array of the metadata
     public func getBytes() throws -> [UInt8] {
         if handle == nil {
-            throw OctopusError.invalidState
+            throw OctopusError.OctopusInvalidStateError("Octopus metadata has been deleted")
         }
         
         return Array(UnsafeBufferPointer(start: handle, count:numBytes))

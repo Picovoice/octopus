@@ -94,7 +94,11 @@ def main():
             search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
             search_phrase = search_phrase.strip()
             for i, metadata in enumerate(metadata_list):
-                matches = octopus.search(metadata, [str(search_phrase)])
+                try:
+                    matches = octopus.search(metadata, [str(search_phrase)])
+                except pvoctopus.octopus.OctopusInvalidArgumentError as e:
+                    print(e)
+                    continue
                 if len(matches) != 0:
                     print("Matches in '%s':" % (os.path.basename(args.audio_paths[i])))
                     results = matches[str(search_phrase)]

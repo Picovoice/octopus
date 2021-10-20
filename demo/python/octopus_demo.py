@@ -92,10 +92,7 @@ def main():
     try:
         while True:
             search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
-            if not search_phrase.replace(" ", "").isalpha():
-                print("The search phrase should only consist of alphabetic characters.")
-                continue
-            search_phrase = search_phrase.strip() 
+            search_phrase = search_phrase.strip()
             for i, metadata in enumerate(metadata_list):
                 matches = octopus.search(metadata, [str(search_phrase)])
                 if len(matches) != 0:

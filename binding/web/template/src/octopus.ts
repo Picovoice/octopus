@@ -167,7 +167,7 @@ export class Octopus implements OctopusEngine {
       throw new Error("Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
         "\t12 >>> twelve\n" +
         "\t2021 >>> twenty twenty one\n" +
-        "\tmother-in-law >>> mother in law" +
+        "\tmother-in-law >>> mother in law\n" +
         "\t5-minute meeting >>> five minute meeting");
     }
 

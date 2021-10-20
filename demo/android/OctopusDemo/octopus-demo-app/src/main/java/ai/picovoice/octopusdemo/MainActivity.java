@@ -33,7 +33,6 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import ai.picovoice.octopus.*;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String accessKey = "${YOUR_ACCESS_KEY_HERE}";
+    private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}";
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
     final private ArrayList<Short> pcmData = new ArrayList<>();
@@ -62,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.octopus_demo);
 
         try {
-            octopus = new Octopus.Builder(accessKey).build(getApplicationContext());
+            octopus = new Octopus.Builder(ACCESS_KEY).build(getApplicationContext());
         } catch (OctopusInvalidArgumentException e) {
-            displayError("AccessKey provided is invalid");
+            displayError(String.format("AccessKey '%s' is invalid", ACCESS_KEY));
         } catch (OctopusActivationException e) {
             displayError("AccessKey activation error");
         } catch (OctopusActivationLimitException e) {

@@ -74,11 +74,8 @@ class OctopusMetadata(object):
     Python representation of the metadata object.
     """
 
-    _libc = cdll.msvcrt if platform.system() == 'Windows' else CDLL(find_library('c'))
-
-    def __init__(self, handle, size, needs_free=True):
+    def __init__(self, handle, size):
         self._inner = (handle, size)
-        self._needs_free = needs_free
 
     @property
     def handle(self):
@@ -93,15 +90,11 @@ class OctopusMetadata(object):
         size = c_int(len(metadata_bytes))
         byte_ptr = (c_byte * size.value).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
-        return OctopusMetadata(handle=handle, size=size, needs_free=False)
+        return OctopusMetadata(handle=handle, size=size)
 
     def to_bytes(self):
         byte_array = cast(self.handle, POINTER(c_byte * self.size.value))
         return bytes(byte_array.contents)
-
-    def delete(self):
-        if self._needs_free:
-            self._libc.free(self.handle)
 
 
 class Octopus(object):
@@ -186,7 +179,8 @@ class Octopus(object):
         self._index_file_func = library.pv_octopus_index_file
         self._index_file_func.argtypes = [
             POINTER(self.COctopus),
-            c_char_p, POINTER(c_void_p),
+            c_char_p,
+            POINTER(c_void_p),
             POINTER(c_int32)]
         self._index_file_func.restype = self.PicovoiceStatuses
 
@@ -233,7 +227,7 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size, needs_free=True)
+        return OctopusMetadata(handle=metadata, size=metadata_size)
 
     def index_audio_file(self, path):
         """
@@ -257,7 +251,7 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size, needs_free=True)
+        return OctopusMetadata(handle=metadata, size=metadata_size)
 
     Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
 

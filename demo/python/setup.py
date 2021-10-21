@@ -31,7 +31,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/octopus",
     packages=["pvoctopusdemo"],
-    install_requires=["pvoctopusd==1.0.1", "tabulate"],
+    install_requires=["pvoctopusdemo==1.0.1", "tabulate"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",

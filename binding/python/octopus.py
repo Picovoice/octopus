@@ -76,7 +76,7 @@ class OctopusMetadata(object):
 
     _libc = cdll.msvcrt if platform.system() == 'Windows' else CDLL(find_library('c'))
 
-    def __init__(self, handle, size, needs_free=False):
+    def __init__(self, handle, size, needs_free=True):
         self._inner = (handle, size)
         self._needs_free = needs_free
 
@@ -93,7 +93,7 @@ class OctopusMetadata(object):
         size = c_int(len(metadata_bytes))
         byte_ptr = (c_byte * size.value).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
-        return OctopusMetadata(handle=handle, size=size)
+        return OctopusMetadata(handle=handle, size=size, needs_free=False)
 
     def to_bytes(self):
         byte_array = cast(self.handle, POINTER(c_byte * self.size.value))

@@ -114,8 +114,6 @@ def main():
         print('Stopping ...')
     finally:
         octopus.delete()
-        for metadata in metadata_list:
-            metadata.delete()
 
 
 if __name__ == '__main__':

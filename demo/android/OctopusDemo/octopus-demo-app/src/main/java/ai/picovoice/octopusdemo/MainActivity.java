@@ -64,14 +64,15 @@ import ai.picovoice.octopus.OctopusMetadata;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}";
+    private static final String ACCESS_KEY = "{YOUR_APP_ID_HERE}";
+    private static final int MAX_RECORDING_SEC = 120;
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
     private final ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
     private Timer recordingTimer;
     private final ArrayList<Short> pcmData = new ArrayList<>();
 
-    private double recordingTimeMSec = 0;
+    private double recordingTimeSec = 0;
 
     public Octopus octopus;
     private OctopusMetadata metadata = null;
@@ -221,11 +222,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void toggleRecording(boolean recording) {
         if (recording) {
-
             microphoneReader.start();
             setUIInteractivity(true);
             setUIState(UIState.RECORDING);
-            recordingTimeMSec = 0;
+            recordingTimeSec = 0;
 
             TextView timerValue = findViewById(R.id.recordingTimerText);
             recordingTimer = new Timer();
@@ -233,9 +233,17 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("DefaultLocale")
                 @Override
                 public void run() {
-                    recordingTimeMSec += 0.1;
+                    recordingTimeSec += 0.1;
                     runOnUiThread(()->{
-                        timerValue.setText(String.format("%.1f", recordingTimeMSec));
+                        timerValue.setText(String.format("%.1f", recordingTimeSec));
+                        if(recordingTimeSec >= MAX_RECORDING_SEC){
+                            displayError(
+                                    "Max recording length exceeded. Stopping...",
+                                    Toast.LENGTH_SHORT);
+                            ToggleButton toggleButton = findViewById(R.id.recordButton);
+                            toggleButton.setChecked(false);
+                            toggleRecording(false);
+                        }
                     });
                 }
             }, 100, 100);
@@ -275,18 +283,20 @@ public class MainActivity extends AppCompatActivity {
     public void displayMatches(OctopusMatch[] matches) {
         runOnUiThread(()->{
             TextView searchResultsCountText = findViewById(R.id.searchResultsCountText);
-            LinearLayout resultsTable = findViewById(R.id.resultsTable);
+            LinearLayout resultsTableHeader = findViewById(R.id.resultsTableHeader);
+            RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
             if (matches.length == 0) {
                 searchResultsCountText.setText("No matches found");
-                resultsTable.setVisibility(View.INVISIBLE);
+                resultsTableHeader.setVisibility(View.INVISIBLE);
+                searchResultsView.setVisibility(View.INVISIBLE);
                 return;
             }
 
             String plural = matches.length > 1 ? "matches" : "match";
             searchResultsCountText.setText(String.format("%d %s found", matches.length, plural));
-            resultsTable.setVisibility(View.VISIBLE);
+            resultsTableHeader.setVisibility(View.VISIBLE);
+            searchResultsView.setVisibility(View.VISIBLE);
 
-            RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
             for (OctopusMatch match : matches) {
                 Log.i("OctopusDemo", String.format("%f -> %f (%f)%n", match.getStartSec(), match.getEndSec(), match.getProbability()));
             }
@@ -316,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, searchSet);
                 if (matches.containsKey(searchPhrase)) {
                     OctopusMatch[] phraseMatches = matches.get(searchPhrase);
-                    setUIState(UIState.SEARCH_RESULTS);
                     if (phraseMatches != null) {
                         displayMatches(phraseMatches);
                     }
@@ -325,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 displayError(e.getMessage(), Toast.LENGTH_LONG);
             }
             finally {
+                setUIState(UIState.SEARCH_RESULTS);
                 setUIInteractivity(true);
             }
         });

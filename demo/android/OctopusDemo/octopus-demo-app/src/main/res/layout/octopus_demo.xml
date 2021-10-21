@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/searchLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
             </TextView>
 
             <LinearLayout
-                android:id="@+id/resultsTable"
+                android:id="@+id/resultsTableHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -85,7 +85,7 @@
                     android:layout_weight="33"
                     android:text="Start (sec)"
                     android:textColor="#555555"
-                    android:textSize="20dp"
+                    android:textSize="19dp"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
                     android:textAlignment="center" />
@@ -97,7 +97,7 @@
                     android:layout_weight="33"
                     android:text="End (sec)"
                     android:textColor="#555555"
-                    android:textSize="20dp"
+                    android:textSize="19dp"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
                     android:textAlignment="center" />
@@ -109,25 +109,29 @@
                     android:layout_weight="33"
                     android:text="Probability"
                     android:textColor="#555555"
-                    android:textSize="20dp"
+                    android:textSize="19dp"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
                     android:textAlignment="center" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/searchResultsView"
-                android:background="@color/colorPrimaryDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/searchResultsView"
+                    android:background="@color/colorPrimaryDark"
+                    android:paddingVertical="7dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp" />
             </ScrollView>
-
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

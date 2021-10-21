@@ -152,10 +152,9 @@ for match in avocado_matches:
     print(f"Match for `avocado`: {match.start_sec} -> {match.end_sec} ({match.probablity})")
 ```
 
-When done both the metadata and handle resources have to be released explicitly:
+When done the handle resources have to be released explicitly:
 
 ```python
-metadata.delete()
 handle.delete()
 ```
 

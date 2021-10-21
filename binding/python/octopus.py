@@ -74,8 +74,6 @@ class OctopusMetadata(object):
     Python representation of the metadata object.
     """
 
-    _libc = cdll.msvcrt if platform.system() == 'Windows' else CDLL(find_library('c'))
-
     def __init__(self, handle, size):
         self._inner = (handle, size)
 
@@ -89,17 +87,14 @@ class OctopusMetadata(object):
 
     @staticmethod
     def from_bytes(metadata_bytes):
-        size = len(metadata_bytes)
-        byte_ptr = (c_byte * size).from_buffer_copy(metadata_bytes)
+        size = c_int(len(metadata_bytes))
+        byte_ptr = (c_byte * size.value).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
         return OctopusMetadata(handle=handle, size=size)
 
     def to_bytes(self):
         byte_array = cast(self.handle, POINTER(c_byte * self.size.value))
         return bytes(byte_array.contents)
-
-    def delete(self):
-        self._libc.free(self.handle)
 
 
 class Octopus(object):
@@ -184,7 +179,8 @@ class Octopus(object):
         self._index_file_func = library.pv_octopus_index_file
         self._index_file_func.argtypes = [
             POINTER(self.COctopus),
-            c_char_p, POINTER(c_void_p),
+            c_char_p,
+            POINTER(c_void_p),
             POINTER(c_int32)]
         self._index_file_func.restype = self.PicovoiceStatuses
 

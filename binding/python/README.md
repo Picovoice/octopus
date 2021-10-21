@@ -84,9 +84,8 @@ cached_metadata = pvoctopus.OctopusMetadata.from_bytes(metadata_bytes)
 matches = self.octopus.search(cached_metadata, ['avocado'])
 ```
 
-When done both the metadata and handle resources have to be released explicitly:
+When done the handle resources have to be released explicitly:
 
 ```python
-metadata.delete()
 handle.delete()
 ```

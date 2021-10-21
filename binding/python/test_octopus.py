@@ -103,9 +103,20 @@ class OctopusTestCase(unittest.TestCase):
     def test_to_from_bytes(self):
         original_metadata = self.octopus.index_audio_file(self.path)
         metadata_bytes = original_metadata.to_bytes()
-        original_metadata.delete()
 
         metadata = OctopusMetadata.from_bytes(metadata_bytes)
+        matches = self.octopus.search(metadata, [self.search_term])
+        self.check_matches(matches)
+
+    def test_to_from_bytes_file(self):
+        cached_file = 'original_metadata.oif'
+        original_metadata = self.octopus.index_audio_file(self.path)
+        with open(cached_file, 'wb') as f:
+            f.write(original_metadata.to_bytes())
+
+        with open(cached_file, 'rb') as f:
+            metadata = OctopusMetadata.from_bytes(f.read())
+
         matches = self.octopus.search(metadata, [self.search_term])
         self.check_matches(matches)
 

@@ -76,8 +76,9 @@ class OctopusMetadata(object):
 
     _libc = cdll.msvcrt if platform.system() == 'Windows' else CDLL(find_library('c'))
 
-    def __init__(self, handle, size):
+    def __init__(self, handle, size, needs_free=False):
         self._inner = (handle, size)
+        self._needs_free = needs_free
 
     @property
     def handle(self):
@@ -89,8 +90,8 @@ class OctopusMetadata(object):
 
     @staticmethod
     def from_bytes(metadata_bytes):
-        size = len(metadata_bytes)
-        byte_ptr = (c_byte * size).from_buffer_copy(metadata_bytes)
+        size = c_int(len(metadata_bytes))
+        byte_ptr = (c_byte * size.value).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
         return OctopusMetadata(handle=handle, size=size)
 
@@ -99,7 +100,8 @@ class OctopusMetadata(object):
         return bytes(byte_array.contents)
 
     def delete(self):
-        self._libc.free(self.handle)
+        if self._needs_free:
+            self._libc.free(self.handle)
 
 
 class Octopus(object):
@@ -231,7 +233,7 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size)
+        return OctopusMetadata(handle=metadata, size=metadata_size, needs_free=True)
 
     def index_audio_file(self, path):
         """
@@ -255,7 +257,7 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size)
+        return OctopusMetadata(handle=metadata, size=metadata_size, needs_free=True)
 
     Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
 

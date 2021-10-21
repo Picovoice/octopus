@@ -7,77 +7,144 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
+        android:id="@+id/centralLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/searchLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/searchLayout">
+        app:layout_constraintTop_toTopOf="parent" >
 
         <LinearLayout
+            android:id="@+id/recordingTimerLayout"
+            android:layout_marginTop="100dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
+            android:layout_height="match_parent">
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/recordingTimerText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Start (sec)"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:textAlignment="textStart" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="End (sec)"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:textAlignment="textStart" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Probability"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:textAlignment="textStart" />
+                android:text="0.0s"
+                android:textSize="50dp"
+                android:textAlignment="center">
+            </TextView>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchResultsView"
+        <LinearLayout
+            android:id="@+id/indexingLayout"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:indeterminateTint="@color/colorPrimary">
+            </ProgressBar>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Indexing.."
+                android:textSize="25dp"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center">
+            </TextView>
+        </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/searchResultsLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/searchResultsCountText"
+                android:text="# matches found"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:textColor="#555555"
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <LinearLayout
+                android:id="@+id/resultsTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Start (sec)"
+                    android:textColor="#555555"
+                    android:textSize="20dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="End (sec)"
+                    android:textColor="#555555"
+                    android:textSize="20dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Probability"
+                    android:textColor="#555555"
+                    android:textSize="20dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchResultsView"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp" />
+            </ScrollView>
+
+        </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/recordingTextView"
+        app:layout_constraintTop_toBottomOf="@+id/centralLayout"
+        app:layout_constraintBottom_toTopOf="@+id/statusTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="40dp" >
+        android:visibility="invisible">
         <EditText
             android:id="@+id/editTextSearchPhrase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-
             android:ems="10"
             android:hint="Search Phrase"
             android:inputType="textPersonName"
@@ -87,13 +154,30 @@
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:onClick="onSearchClick"
             android:text="Search"/>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/recordingTextView"
+        android:id="@+id/fatalErrorText"
+        android:background="#ff0e0e"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="ERROR"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:paddingVertical="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/statusTextView">
+    </TextView>
+
+    <TextView
+        android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

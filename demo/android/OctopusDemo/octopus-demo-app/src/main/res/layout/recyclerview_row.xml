@@ -7,6 +7,8 @@
         android:id="@+id/startSec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_weight="33"
         android:textAlignment="textStart" />
 
@@ -14,6 +16,8 @@
         android:id="@+id/endSec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_weight="33"
         android:textAlignment="textStart" />
 
@@ -21,6 +25,8 @@
         android:id="@+id/probability"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:layout_weight="33"
         android:textAlignment="textStart" />
 </LinearLayout>

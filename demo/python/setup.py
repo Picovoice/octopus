@@ -23,7 +23,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvoctopusdemo",
-    version="1.0.0",
+    version="1.0.4",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Octopus Speech-to-Index engine.",
@@ -31,7 +31,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/octopus",
     packages=["pvoctopusdemo"],
-    install_requires=["pvoctopusdemo==1.0.1", "tabulate"],
+    install_requires=["pvoctopus==1.0.3", "tabulate"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -43,7 +43,7 @@ setuptools.setup(
     ],
     entry_points=dict(
         console_scripts=[
-            'octopus_demo=pvoctopusdemo.otcopus_demo:main',
+            'octopus_demo=pvoctopusdemo.octopus_demo:main',
         ],
     ),
     python_requires='>=3',

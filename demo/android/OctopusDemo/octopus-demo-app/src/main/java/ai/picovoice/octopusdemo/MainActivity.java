@@ -22,10 +22,14 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Process;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -41,17 +45,35 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import ai.picovoice.octopus.*;
+import ai.picovoice.octopus.Octopus;
+import ai.picovoice.octopus.OctopusActivationException;
+import ai.picovoice.octopus.OctopusActivationLimitException;
+import ai.picovoice.octopus.OctopusActivationRefusedException;
+import ai.picovoice.octopus.OctopusActivationThrottledException;
+import ai.picovoice.octopus.OctopusException;
+import ai.picovoice.octopus.OctopusInvalidArgumentException;
+import ai.picovoice.octopus.OctopusMatch;
+import ai.picovoice.octopus.OctopusMetadata;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}";
+
+    private static final String ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}";
+    private static final int MAX_RECORDING_SEC = 120;
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();
-    final private ArrayList<Short> pcmData = new ArrayList<>();
+    private final ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+    private Timer recordingTimer;
+    private final ArrayList<Short> pcmData = new ArrayList<>();
+
+    private double recordingTimeSec = 0;
+
     public Octopus octopus;
     private OctopusMetadata metadata = null;
 
@@ -59,32 +81,122 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.octopus_demo);
+        setUIInteractivity(false);
 
         try {
             octopus = new Octopus.Builder(ACCESS_KEY).build(getApplicationContext());
+            setUIInteractivity(true);
         } catch (OctopusInvalidArgumentException e) {
-            displayError(String.format("AccessKey '%s' is invalid", ACCESS_KEY));
+            displayFatalError(String.format("AccessKey '%s' is invalid", ACCESS_KEY));
         } catch (OctopusActivationException e) {
-            displayError("AccessKey activation error");
+            displayFatalError("AccessKey activation error");
         } catch (OctopusActivationLimitException e) {
-            displayError("AccessKey reached its device limit");
+            displayFatalError("AccessKey reached its device limit");
         } catch (OctopusActivationRefusedException e) {
-            displayError("AccessKey refused");
+            displayFatalError("AccessKey refused");
         } catch (OctopusActivationThrottledException e) {
-            displayError("AccessKey has been throttled");
+            displayFatalError("AccessKey has been throttled");
         } catch (OctopusException e) {
-            displayError("Failed to initialize Octopus " + e.getMessage());
+            displayFatalError("Failed to initialize Octopus " + e.getMessage());
         }
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         octopus.delete();
+        super.onDestroy();
     }
 
-    private void displayError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void setUIInteractivity(boolean isInteractive) {
+        runOnUiThread(() -> {
+            ToggleButton toggleButton = findViewById(R.id.recordButton);
+            EditText searchPhraseEditText = findViewById(R.id.editTextSearchPhrase);
+            Button searchButton = findViewById(R.id.searchButton);
+            toggleButton.setEnabled(isInteractive);
+            searchPhraseEditText.setEnabled(isInteractive);
+            searchButton.setEnabled(isInteractive);
+            if (isInteractive) {
+                toggleButton.setBackgroundResource(R.drawable.button_background);
+                searchButton.setBackgroundResource(R.color.colorPrimary);
+            } else {
+                toggleButton.setBackgroundResource(R.drawable.button_disabled);
+                searchButton.setBackgroundResource(R.color.colorDisabled);
+            }
+        });
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void setUIState(UIState state) {
+        runOnUiThread(() -> {
+            FrameLayout centralLayout = findViewById(R.id.centralLayout);
+            LinearLayout recordingTimerLayout = findViewById(R.id.recordingTimerLayout);
+            LinearLayout indexingLayout = findViewById(R.id.indexingLayout);
+            LinearLayout searchResultsLayout = findViewById(R.id.searchResultsLayout);
+            LinearLayout searchLayout = findViewById(R.id.searchLayout);
+            TextView statusTextView = findViewById(R.id.statusTextView);
+
+            switch (state) {
+                case INTRO:
+                    centralLayout.setVisibility(View.INVISIBLE);
+                    searchLayout.setVisibility(View.INVISIBLE);
+                    statusTextView.setText("Start by recording some audio");
+                    break;
+                case RECORDING:
+                    centralLayout.setVisibility(View.VISIBLE);
+                    recordingTimerLayout.setVisibility(View.VISIBLE);
+                    indexingLayout.setVisibility(View.INVISIBLE);
+                    searchLayout.setVisibility(View.INVISIBLE);
+                    searchResultsLayout.setVisibility(View.INVISIBLE);
+                    statusTextView.setText("Recording...");
+                    break;
+                case INDEXING:
+                    centralLayout.setVisibility(View.VISIBLE);
+                    recordingTimerLayout.setVisibility(View.INVISIBLE);
+                    indexingLayout.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.INVISIBLE);
+                    searchResultsLayout.setVisibility(View.INVISIBLE);
+                    statusTextView.setText("");
+                    break;
+                case NEW_SEARCH:
+                    centralLayout.setVisibility(View.VISIBLE);
+                    recordingTimerLayout.setVisibility(View.INVISIBLE);
+                    indexingLayout.setVisibility(View.INVISIBLE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    searchResultsLayout.setVisibility(View.INVISIBLE);
+                    EditText searchText = findViewById(R.id.editTextSearchPhrase);
+                    searchText.setText("");
+                    statusTextView.setText("Try searching for phrase in your recording");
+                    break;
+                case SEARCH_RESULTS:
+                    centralLayout.setVisibility(View.VISIBLE);
+                    recordingTimerLayout.setVisibility(View.INVISIBLE);
+                    indexingLayout.setVisibility(View.INVISIBLE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    searchResultsLayout.setVisibility(View.VISIBLE);
+                    statusTextView.setText("");
+                    break;
+                case FATAL_ERROR:
+                    centralLayout.setVisibility(View.INVISIBLE);
+                    searchLayout.setVisibility(View.INVISIBLE);
+                    statusTextView.setText("");
+                    break;
+            }
+        });
+    }
+
+    private void displayFatalError(String message) {
+        setUIInteractivity(false);
+        setUIState(UIState.FATAL_ERROR);
+        runOnUiThread(()->{
+            TextView fatalErrorText = findViewById(R.id.fatalErrorText);
+            fatalErrorText.setText(message);
+            fatalErrorText.setVisibility(View.VISIBLE);
+        });
+    }
+    private void displayError(String message, int toastLength) {
+        runOnUiThread(()->{
+            Toast.makeText(this, message, toastLength).show();
+        });
     }
 
     private boolean hasRecordPermission() {
@@ -102,93 +214,153 @@ public class MainActivity extends AppCompatActivity {
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             ToggleButton toggleButton = findViewById(R.id.recordButton);
             toggleButton.toggle();
+            displayFatalError("Microphone permission is required for this demo");
         } else {
-            TextView recordingTextView = findViewById(R.id.recordingTextView);
-            recordingTextView.setText("Recording...");
+            toggleRecording(true);
+        }
+    }
+
+    private void toggleRecording(boolean recording) {
+        if (recording) {
             microphoneReader.start();
-        }
-    }
+            setUIInteractivity(true);
+            setUIState(UIState.RECORDING);
+            recordingTimeSec = 0;
 
-    public void displayMatches(OctopusMatch[] matches) {
-        RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
-
-        for (OctopusMatch match : matches) {
-            System.out.printf("%f -> %f (%f)%n", match.getStartSec(), match.getEndSec(), match.getProbability());
-        }
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        searchResultsView.setLayoutManager(linearLayoutManager);
-
-        SearchResultsViewAdaptor searchResultsViewAdaptor = new SearchResultsViewAdaptor(getApplicationContext(), Arrays.asList(matches));
-        searchResultsView.setAdapter(searchResultsViewAdaptor);
-    }
-
-    public void onSearchClick(View view) {
-        EditText searchText = findViewById(R.id.editTextSearchPhrase);
-
-        if (metadata == null) {
-            displayError("Please record some audio and wait for indexing to finish");
-            return;
-        }
-
-        String searchPhrase = searchText.getText().toString();
-        if (searchPhrase.length() == 0) {
-            displayError("Please enter a search phrase in");
-            return;
-        }
-
-        HashSet<String> searchSet = new HashSet<>();
-        searchSet.add(searchPhrase);
-        try {
-            HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, searchSet);
-
-            if (matches.containsKey(searchPhrase)) {
-                OctopusMatch[] phraseMatches = matches.get(searchPhrase);
-                if (phraseMatches != null) {
-                    displayMatches(phraseMatches);
+            TextView timerValue = findViewById(R.id.recordingTimerText);
+            recordingTimer = new Timer();
+            recordingTimer.scheduleAtFixedRate(new TimerTask() {
+                @SuppressLint("DefaultLocale")
+                @Override
+                public void run() {
+                    recordingTimeSec += 0.1;
+                    runOnUiThread(()->{
+                        timerValue.setText(String.format("%.1f", recordingTimeSec));
+                        if(recordingTimeSec >= MAX_RECORDING_SEC){
+                            displayError(
+                                    "Max recording length exceeded. Stopping...",
+                                    Toast.LENGTH_SHORT);
+                            ToggleButton toggleButton = findViewById(R.id.recordButton);
+                            toggleButton.setChecked(false);
+                            toggleRecording(false);
+                        }
+                    });
                 }
+            }, 100, 100);
+        } else {
+            if(recordingTimer != null) {
+                recordingTimer.cancel();
+                recordingTimer = null;
             }
-        } catch (OctopusException e) {
-            displayError("Octopus search failed\n" + e.toString());
-        }
-    }
 
-    @SuppressLint({"SetTextI18n", "DefaultLocale"})
-    public void onRecordClick(View view) {
-        ToggleButton recordButton = findViewById(R.id.recordButton);
-        TextView recordingTextView = findViewById(R.id.recordingTextView);
-
-        if (octopus == null) {
-            displayError("Octopus is not initialized");
-            recordButton.setChecked(false);
-            return;
-        }
-
-        try {
-            if (recordButton.isChecked()) {
-                if (hasRecordPermission()) {
-                    recordingTextView.setText("Recording...");
-                    microphoneReader.start();
-                } else {
-                    requestRecordPermission();
+            setUIInteractivity(false);
+            setUIState(UIState.INDEXING);
+            taskExecutor.execute(() -> {
+                try {
+                    microphoneReader.stop();
+                } catch (InterruptedException e) {
+                    displayError(e.getMessage(), Toast.LENGTH_SHORT);
                 }
-            } else {
-                microphoneReader.stop();
-                recordingTextView.setText("Indexing, please wait...");
 
                 short[] pcmDataArray = new short[pcmData.size()];
                 for (int i = 0; i < pcmData.size(); ++i) {
                     pcmDataArray[i] = pcmData.get(i);
                 }
 
-                metadata = octopus.indexAudioData(pcmDataArray);
-                recordingTextView.setText(String.format("Indexing %d seconds of audio complete!", pcmData.size() / octopus.getPcmDataSampleRate()));
-            }
-        } catch (InterruptedException e) {
-            displayError("Audio stop command interrupted\n" + e.toString());
-        } catch (OctopusException e) {
-            displayError("Audio failed\n" + e.toString());
+                try {
+                    metadata = octopus.indexAudioData(pcmDataArray);
+                } catch (OctopusException e) {
+                    displayError(e.getMessage(), Toast.LENGTH_LONG);
+                }
+
+                setUIState(UIState.NEW_SEARCH);
+                setUIInteractivity(true);
+            });
         }
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    public void displayMatches(OctopusMatch[] matches) {
+        runOnUiThread(()->{
+            TextView searchResultsCountText = findViewById(R.id.searchResultsCountText);
+            LinearLayout resultsTableHeader = findViewById(R.id.resultsTableHeader);
+            RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
+            if (matches.length == 0) {
+                searchResultsCountText.setText("No matches found");
+                resultsTableHeader.setVisibility(View.INVISIBLE);
+                searchResultsView.setVisibility(View.INVISIBLE);
+                return;
+            }
+
+            String plural = matches.length > 1 ? "matches" : "match";
+            searchResultsCountText.setText(String.format("%d %s found", matches.length, plural));
+            resultsTableHeader.setVisibility(View.VISIBLE);
+            searchResultsView.setVisibility(View.VISIBLE);
+
+            for (OctopusMatch match : matches) {
+                Log.i("OctopusDemo", String.format("%f -> %f (%f)%n", match.getStartSec(), match.getEndSec(), match.getProbability()));
+            }
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            searchResultsView.setLayoutManager(linearLayoutManager);
+
+            SearchResultsViewAdaptor searchResultsViewAdaptor = new SearchResultsViewAdaptor(getApplicationContext(), Arrays.asList(matches));
+            searchResultsView.setAdapter(searchResultsViewAdaptor);
+        });
+    }
+
+    public void onSearchClick(View view) {
+        EditText searchText = findViewById(R.id.editTextSearchPhrase);
+        String searchPhrase = searchText.getText().toString();
+        if (searchPhrase.length() == 0) {
+            displayError("Please enter a search phrase", Toast.LENGTH_SHORT);
+            return;
+        }
+
+        setUIInteractivity(false);
+
+        taskExecutor.execute(()->{
+            HashSet<String> searchSet = new HashSet<>();
+            searchSet.add(searchPhrase);
+            try {
+                HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, searchSet);
+                if (matches.containsKey(searchPhrase)) {
+                    OctopusMatch[] phraseMatches = matches.get(searchPhrase);
+                    if (phraseMatches != null) {
+                        displayMatches(phraseMatches);
+                    }
+                }
+            } catch (OctopusException e) {
+                displayError(e.getMessage(), Toast.LENGTH_LONG);
+            }
+            finally {
+                setUIState(UIState.SEARCH_RESULTS);
+                setUIInteractivity(true);
+            }
+        });
+    }
+
+    public void onRecordClick(View view) {
+        ToggleButton recordButton = findViewById(R.id.recordButton);
+        if (recordButton.isChecked()) {
+            if (hasRecordPermission()) {
+                toggleRecording(true);
+            } else {
+                setUIInteractivity(false);
+                requestRecordPermission();
+            }
+        } else {
+            toggleRecording(false);
+        }
+    }
+
+    private enum UIState {
+        INTRO,
+        RECORDING,
+        INDEXING,
+        NEW_SEARCH,
+        SEARCH_RESULTS,
+        FATAL_ERROR
     }
 
     public static class SearchResultsViewAdaptor extends RecyclerView.Adapter<SearchResultsViewAdaptor.ViewHolder> {

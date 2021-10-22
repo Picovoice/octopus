@@ -7,20 +7,26 @@
         android:id="@+id/startSec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
         android:layout_weight="33"
-        android:textAlignment="textStart" />
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/endSec"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="33"
-        android:textAlignment="textStart" />
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/probability"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="33"
-        android:textAlignment="textStart" />
+        android:textColor="@android:color/white"
+        android:textSize="18dp"
+        android:textAlignment="center" />
 </LinearLayout>

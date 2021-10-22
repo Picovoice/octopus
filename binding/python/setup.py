@@ -30,6 +30,7 @@ include pvoctopus/util.py
 include pvoctopus/lib/common/octopus_params.pv
 include pvoctopus/lib/linux/x86_64/libpv_octopus.so
 include pvoctopus/lib/mac/x86_64/libpv_octopus.dylib
+include pvoctopus/lib/mac/arm64/libpv_octopus.dylib
 include pvoctopus/lib/windows/amd64/libpv_octopus.dll
 """
 

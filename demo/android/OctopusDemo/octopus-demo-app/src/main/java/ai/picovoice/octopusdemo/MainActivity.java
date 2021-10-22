@@ -64,7 +64,7 @@ import ai.picovoice.octopus.OctopusMetadata;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ACCESS_KEY = "{YOUR_APP_ID_HERE}";
+    private static final String ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}";
     private static final int MAX_RECORDING_SEC = 120;
 
     private final MicrophoneReader microphoneReader = new MicrophoneReader();

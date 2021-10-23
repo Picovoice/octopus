@@ -176,6 +176,7 @@ public class Octopus {
             
             let formattedPhrase: String = phrase.trimmingCharacters(in: .whitespacesAndNewlines)
                 .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+                .replacingOccurrences(of: "[‘’]+", with: "'", options: .regularExpression)
                 .split(separator: " ")
                 .joined(separator: " ")
             
@@ -216,7 +217,6 @@ public class Octopus {
             }
             
             matches[formattedPhrase] = phraseMatches
-            
         }
         
         return matches

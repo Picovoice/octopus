@@ -144,8 +144,8 @@ class ViewModel: ObservableObject {
         
         do {
             let searchResults = try octopus.search(metadata: metadata, phrases: Set([searchPhraseText]))
-            if (searchResults[searchPhraseText] != nil) {
-                results = searchResults[searchPhraseText]!
+            for (_, matches) in searchResults {
+                results = matches
                 for result in results {
                     print(result)
                 }
@@ -158,8 +158,9 @@ class ViewModel: ObservableObject {
                     let pluralMatch = results.count == 1 ? "match" : "matches"
                     searchResultCountText = "\(results.count) \(pluralMatch) found"
                     state = UIState.SEARCH_RESULTS
-                 }
+                }
             }
+        
         } catch OctopusError.OctopusInvalidArgumentError(let errorMessage) {
             showErrorAlert(errorMessage)
         } catch {

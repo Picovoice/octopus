@@ -1,5 +1,5 @@
 PODS:
-  - Octopus-iOS (1.0.0)
+  - Octopus-iOS (1.0.2)
 
 DEPENDENCIES:
   - Octopus-iOS (~> 1.0.0)
@@ -9,8 +9,8 @@ SPEC REPOS:
     - Octopus-iOS
 
 SPEC CHECKSUMS:
-  Octopus-iOS: addd6e93df04a7b82686b18cefff28f1f3c7a7b6
+  Octopus-iOS: 12b2c38acd35d7aacad02c252eec5e6bad166b9e
 
 PODFILE CHECKSUM: 82a46476d0052a072ed7e91aaf7b628826f1b259
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1

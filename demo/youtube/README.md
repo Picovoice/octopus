@@ -26,13 +26,10 @@ replace `${ACCESS_KEY}` with your own obtained from [Picovoice Console](https://
 is a sample output:
 
 ```console
-indexed 3024 seconds of audio in 52.03 seconds
-searched 3024 seconds of audio for 1 phrases in 0.01001 seconds
-jian yang >>>
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=1332
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=1438
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=1791
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2019
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2420
-https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2478
+searched 3024 seconds of audio for 1 phrases in 0.02068 seconds
+pied piper >>>
+[0.5] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=784
+[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=840
+[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2355
+[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2940
 ```

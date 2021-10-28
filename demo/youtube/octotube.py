@@ -30,6 +30,7 @@ def main():
     parser.add_argument('--access-key', required=True)
     parser.add_argument('--url', required=True)
     parser.add_argument('--phrases', nargs='+', required=True)
+    parser.add_argument('--min-prob', type=float, default=0.25)
     parser.add_argument('--work-folder', default=os.path.expanduser('~/'))
     args = parser.parse_args()
 
@@ -55,9 +56,11 @@ def main():
     print(
         f'searched {int(length_sec)} seconds of audio for {len(args.phrases)} phrases in {time.time() - start_sec:.5f} seconds')
     for phrase, phrase_matches in matches.items():
-        print(f'{phrase} >>>')
-        for phrase_match in phrase_matches:
-            print(f'{args.url}&t={int(phrase_match.start_sec)}')
+        phrase_matches = [x for x in phrase_matches if x.probability >= args.min_prob]
+        if len(phrase_matches) > 0:
+            print(f'{phrase} >>>')
+            for phrase_match in phrase_matches:
+                print(f'[{phrase_match.probability:.1f}] {args.url}&t={int(phrase_match.start_sec)}')
 
 
 if __name__ == '__main__':

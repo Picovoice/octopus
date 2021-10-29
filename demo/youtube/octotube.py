@@ -46,7 +46,7 @@ def main():
         metadata = o.index_audio_file(wav_path)
         with open(metadata_path, 'wb') as f:
             f.write(metadata.to_bytes())
-        print(f'indexed {int(length_sec)} seconds of audio in {time.time() - start_sec:.2f} seconds')
+        print(f'Indexed {int(length_sec)} seconds of audio in {time.time() - start_sec:.2f} seconds')
 
     with open(metadata_path, 'rb') as f:
         metadata = pvoctopus.OctopusMetadata.from_bytes(f.read())
@@ -54,13 +54,13 @@ def main():
     start_sec = time.time()
     matches = o.search(metadata, phrases=args.phrases)
     print(
-        f'searched {int(length_sec)} seconds of audio for {len(args.phrases)} phrases in {time.time() - start_sec:.5f} seconds')
+        f'Searched {int(length_sec)} seconds of audio for {len(args.phrases)} phrases in {time.time() - start_sec:.5f} seconds')
     for phrase, phrase_matches in matches.items():
         phrase_matches = [x for x in phrase_matches if x.probability >= args.min_prob]
         if len(phrase_matches) > 0:
             print(f'{phrase} >>>')
             for phrase_match in phrase_matches:
-                print(f'[{phrase_match.probability:.1f}] {args.url}&t={int(phrase_match.start_sec)}')
+                print(f'[{int(phrase_match.probability * 100)}%] {args.url}&t={int(phrase_match.start_sec)}')
 
 
 if __name__ == '__main__':

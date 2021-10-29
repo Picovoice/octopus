@@ -2,7 +2,7 @@
 
 ## Prerequisite
 
-- [FFmpeg](https://www.ffmpeg.org/)
+- [FFmpeg](https://www.ffmpeg.org/) (On Windows you need to add FFmpeg to your `PATH`)
 - Python 3.5+
 
 ## Usage
@@ -22,7 +22,7 @@ python3 demo/youtube/octotube.py \
 --phrases ${SEARCH_PHRASES}
 ```
 
-replace `${ACCESS_KEY}` with your own obtained from [Picovoice Console](https://console.picovoice.ai/). Replace `${YOUTUBE_VIDEO_URL}`
+Replace `${ACCESS_KEY}` with your own obtained from [Picovoice Console](https://console.picovoice.ai/). Replace `${YOUTUBE_VIDEO_URL}`
 with the URL to a video (not a playlist or channel). A video URL on YouTube should look like this: `https://www.youtube.com/watch?v=${VIDEO_UUID}`.
 
 Here is a sample output:

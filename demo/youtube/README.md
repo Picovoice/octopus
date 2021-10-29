@@ -19,11 +19,13 @@ From the root of the repository run:
 python3 demo/youtube/octotube.py \
 --access-key ${ACCESS_KEY} \
 --url ${YOUTUBE_VIDEO_URL} \
---phrases ${SEARCH_PHRASE0} ${SEARCH_PHRASE1}
+--phrases ${SEARCH_PHRASES}
 ```
 
-replace `${ACCESS_KEY}` with your own obtained from [Picovoice Console](https://console.picovoice.ai/). Here
-is a sample output:
+replace `${ACCESS_KEY}` with your own obtained from [Picovoice Console](https://console.picovoice.ai/). Replace `${YOUTUBE_VIDEO_URL}`
+with the URL to a video (not a playlist or channel). A video URL on YouTube should look like this: `https://www.youtube.com/watch?v=${VIDEO_UUID}`.
+
+Here is a sample output:
 
 ```console
 searched 3024 seconds of audio for 1 phrases in 0.02068 seconds

@@ -30,8 +30,8 @@ Here is a sample output:
 ```console
 searched 3024 seconds of audio for 1 phrases in 0.02068 seconds
 pied piper >>>
-[0.5] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=784
-[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=840
-[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2355
-[1.0] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2940
+[50%] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=784
+[100%] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=840
+[100%] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2355
+[100%] https://www.youtube.com/watch?v=Lt6PPiTTwbE&t=2940
 ```

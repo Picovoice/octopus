@@ -17,7 +17,7 @@
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@picovoice/octopus-web-en-worker": "^1.0.3"
+    "@picovoice/octopus-web-en-worker": "^1.0.4"
   },
   "devDependencies": {
     "serve": "^11.3.2"

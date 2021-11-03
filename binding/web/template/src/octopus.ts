@@ -13,6 +13,7 @@
 
 // @ts-ignore
 import * as Asyncify from 'asyncify-wasm';
+import { Mutex } from 'async-mutex';
 
 import type { OctopusEngine, OctopusMetadata, OctopusMatch } from './octopus_types';
 import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
@@ -64,6 +65,7 @@ export class Octopus implements OctopusEngine {
 
   private _wasmMemory: WebAssembly.Memory;
   private _memoryBufferView: DataView;
+  private _processMutex: Mutex;
 
   private _objectAddress: number;
   private _metadataAddressAddress: number;
@@ -73,6 +75,7 @@ export class Octopus implements OctopusEngine {
 
   private static _sampleRate: number;
   private static _version: string;
+  private static _octopusMutex = new Mutex;
 
   private constructor(handleWasm: OctopusWasmOutput) {
     Octopus._sampleRate = handleWasm.sampleRate;
@@ -93,6 +96,7 @@ export class Octopus implements OctopusEngine {
     this._octopusMatchLengthAddress = handleWasm.octopusMatchLengthAddress;
 
     this._memoryBufferView = new DataView(handleWasm.memory.buffer);
+    this._processMutex = new Mutex();
   }
 
   /**
@@ -114,42 +118,51 @@ export class Octopus implements OctopusEngine {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
     }
 
-    const pcmAddress = await this._allignedAlloc(
-      Int16Array.BYTES_PER_ELEMENT,
-      (pcm.length) * Int16Array.BYTES_PER_ELEMENT
-    );
+    const returnPromise = new Promise<OctopusMetadata>((resolve, reject) => {
+      this._processMutex.runExclusive(async () => {
+        const pcmAddress = await this._allignedAlloc(
+          Int16Array.BYTES_PER_ELEMENT,
+          (pcm.length) * Int16Array.BYTES_PER_ELEMENT
+        );
 
-    const memoryBufferInt16 = new Int16Array(this._wasmMemory.buffer);
-    memoryBufferInt16.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
+        const memoryBufferInt16 = new Int16Array(this._wasmMemory.buffer);
+        memoryBufferInt16.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
 
-    const status = await this._pvOctopusIndex(
-      this._objectAddress,
-      pcmAddress,
-      pcm.length,
-      this._metadataAddressAddress,
-      this._metadataLengthAddress
-    );
-    if (status !== PV_STATUS_SUCCESS) {
-      const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-      throw new Error(
-        `index failed with status ${arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          await this._pvStatusToString(status)
-        )}`
-      );
-    }
+        const status = await this._pvOctopusIndex(
+          this._objectAddress,
+          pcmAddress,
+          pcm.length,
+          this._metadataAddressAddress,
+          this._metadataLengthAddress
+        );
+        if (status !== PV_STATUS_SUCCESS) {
+          const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+          throw new Error(
+            `index failed with status ${arrayBufferToStringAtIndex(
+              memoryBufferUint8,
+              await this._pvStatusToString(status)
+            )}`
+          );
+        }
 
-    const metadataAddress = this._memoryBufferView.getInt32(
-      this._metadataAddressAddress,
-      true
-    );
+        const metadataAddress = this._memoryBufferView.getInt32(
+          this._metadataAddressAddress,
+          true
+        );
 
-    const metadataLength = this._memoryBufferView.getInt32(
-      this._metadataLengthAddress,
-      true
-    );
+        const metadataLength = this._memoryBufferView.getInt32(
+          this._metadataLengthAddress,
+          true
+        );
 
-    return { metadataAddress, metadataLength };
+        return { metadataAddress, metadataLength };
+      }).then((result: OctopusMetadata) => {
+        resolve(result);
+      }).catch((error: any) => {
+        reject(error);
+      });
+    });
+    return returnPromise;
   }
 
   /**
@@ -160,68 +173,78 @@ export class Octopus implements OctopusEngine {
    * @return An array of OctopusMatch objects.
    */
   public async search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch[]> {
-    const searchPhraseCleaned = searchPhrase.trim();
-    if (searchPhraseCleaned === '') {
-      throw new Error('The search phrase cannot be empty');
-    } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z' \s]/) !== -1) {
-      throw new Error("Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
-        "\t12 >>> twelve\n" +
-        "\t2021 >>> twenty twenty one\n" +
-        "\tmother-in-law >>> mother in law\n" +
-        "\t5-minute meeting >>> five minute meeting");
-    }
+    const returnPromise = new Promise<OctopusMatch[]>((resolve, reject) => {
+      this._processMutex.runExclusive(async () => {
 
-    const phraseAddress = await this._allignedAlloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      (searchPhraseCleaned.length + 1) * Uint8Array.BYTES_PER_ELEMENT
-    );
+        const searchPhraseCleaned = searchPhrase.trim();
+        if (searchPhraseCleaned === '') {
+          throw new Error('The search phrase cannot be empty');
+        } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z' \s]/) !== -1) {
+          throw new Error("Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
+            "\t12 >>> twelve\n" +
+            "\t2021 >>> twenty twenty one\n" +
+            "\tmother-in-law >>> mother in law\n" +
+            "\t5-minute meeting >>> five minute meeting");
+        }
 
-    if (phraseAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
-    }
+        const phraseAddress = await this._allignedAlloc(
+          Uint8Array.BYTES_PER_ELEMENT,
+          (searchPhraseCleaned.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+        );
 
-    const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-    for (let i = 0; i < searchPhraseCleaned.length; i++) {
-      memoryBufferUint8[phraseAddress + i] = searchPhraseCleaned.charCodeAt(i);
-    }
-    memoryBufferUint8[phraseAddress + searchPhraseCleaned.length] = 0;
+        if (phraseAddress === 0) {
+          throw new Error('malloc failed: Cannot allocate memory');
+        }
 
-    const status = await this._pvOctopusSearch(
-      this._objectAddress,
-      octopusMetadata.metadataAddress,
-      octopusMetadata.metadataLength,
-      phraseAddress,
-      this._octopusMatchAddressAddress,
-      this._octopusMatchLengthAddress
-    );
-    if (status !== PV_STATUS_SUCCESS) {
-      throw new Error(
-        `search failed with status ${arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          await this._pvStatusToString(status)
-        )}`
-      );
-    }
+        const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+        for (let i = 0; i < searchPhraseCleaned.length; i++) {
+          memoryBufferUint8[phraseAddress + i] = searchPhraseCleaned.charCodeAt(i);
+        }
+        memoryBufferUint8[phraseAddress + searchPhraseCleaned.length] = 0;
 
-    const matches = [];
-    const octopusMatchAddress = this._memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
-    const octopusMatchLength = this._memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
+        const status = await this._pvOctopusSearch(
+          this._objectAddress,
+          octopusMetadata.metadataAddress,
+          octopusMetadata.metadataLength,
+          phraseAddress,
+          this._octopusMatchAddressAddress,
+          this._octopusMatchLengthAddress
+        );
+        if (status !== PV_STATUS_SUCCESS) {
+          throw new Error(
+            `search failed with status ${arrayBufferToStringAtIndex(
+              memoryBufferUint8,
+              await this._pvStatusToString(status)
+            )}`
+          );
+        }
 
-    for (let i = 0; i < octopusMatchLength; i++) {
-      const octopusMatch = octopusMatchAddress + i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
+        const matches = [];
+        const octopusMatchAddress = this._memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
+        const octopusMatchLength = this._memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
 
-      const startSec = this._memoryBufferView.getFloat32(octopusMatch, true);
-      const endSec = this._memoryBufferView.getFloat32(octopusMatch + 1 * Number(Float32Array.BYTES_PER_ELEMENT), true);
-      const probability = this._memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+        for (let i = 0; i < octopusMatchLength; i++) {
+          const octopusMatch = octopusMatchAddress + i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
 
-      matches.push({
-        startSec,
-        endSec,
-        probability
+          const startSec = this._memoryBufferView.getFloat32(octopusMatch, true);
+          const endSec = this._memoryBufferView.getFloat32(octopusMatch + 1 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+          const probability = this._memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+
+          matches.push({
+            startSec,
+            endSec,
+            probability
+          });
+        }
+
+        return matches;
+      }).then((result: OctopusMatch[]) => {
+        resolve(result);
+      }).catch((error: any) => {
+        reject(error);
       });
-    }
-
-    return matches;
+    });
+    return returnPromise;
   }
 
   get version(): string {
@@ -245,8 +268,17 @@ export class Octopus implements OctopusEngine {
     if (!isAccessKeyValid(accessKey)) {
       throw new Error('Invalid AccessKey');
     }
-    const wasmOutput = await Octopus.initWasm(accessKey.trim());
-    return new Octopus(wasmOutput);
+    const returnPromise = new Promise<Octopus>((resolve, reject) => {
+      Octopus._octopusMutex.runExclusive(async () => {
+        const wasmOutput = await Octopus.initWasm(accessKey.trim());
+        return new Octopus(wasmOutput);
+      }).then((result: Octopus) => {
+        resolve(result);
+      }).catch((error: any) => {
+        reject(error);
+      });
+    });
+    return returnPromise;
   }
 
   private static async initWasm(accessKey: string): Promise<OctopusWasmOutput> {

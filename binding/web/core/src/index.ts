@@ -98,3 +98,12 @@ export interface OctopusEngine {
 export interface OctopusWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: OctopusWorkerRequest): void;
 }
+
+export interface OctopusWorkerFactory {
+  create(
+    accessKey: string,
+    indexCallback?: (metadata: OctopusMetadata) => void,
+    searchCallback?: (matches: OctopusMatch[]) => void,
+    errorCallback?: (error: string | Error) => void,
+  ): Promise<OctopusWorker>;
+}

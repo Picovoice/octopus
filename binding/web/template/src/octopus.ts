@@ -1,12 +1,12 @@
 /*
-    Copyright 2021 Picovoice Inc.
+  Copyright 2021-2022 Picovoice Inc.
 
-    You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
-    file accompanying this source.
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
 
-    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
-    an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
-    specific language governing permissions and limitations under the License.
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
 */
 
 /* eslint camelcase: 0 */
@@ -15,7 +15,7 @@
 import * as Asyncify from 'asyncify-wasm';
 import { Mutex } from 'async-mutex';
 
-import type { OctopusEngine, OctopusMetadata, OctopusMatch } from './octopus_types';
+import type { OctopusEngine, OctopusMetadata, OctopusMatch } from '@picovoice/octopus-web-core';
 import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
 import { wasiSnapshotPreview1Emulator } from './wasi_snapshot';
 
@@ -26,6 +26,35 @@ import {
   fetchWithTimeout,
   stringHeaderToObject,
 } from './utils';
+
+/**
+ * WebAssembly function types
+ */
+
+ type aligned_alloc_type = (alignment: number, size: number) => Promise<number>;
+ type pv_octopus_version_type = () => Promise<number>;
+ type pv_octopus_index_type = (
+   object: number,
+   pcm: number,
+   numSamples: number,
+   indices: number,
+   numIndicesBytes: number
+ ) => Promise<number>;
+ type pv_octopus_search_type = (
+   object: number,
+   indices: number,
+   numIndicesBytes: number,
+   phrase: number,
+   matches: number,
+   numMatches: number
+) => Promise<number>;
+ type pv_octopus_delete_type = (object: number) => Promise<void>;
+ type pv_octopus_init_type = (
+   accessKey: number,
+   object: number
+) => Promise<number>
+ type pv_status_to_string_type = (status: number) => Promise<number>;
+ type pv_sample_rate_type = () => Promise<number>;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Octopus Speech-To-Index engine.
@@ -39,12 +68,12 @@ import {
 
 type OctopusWasmOutput = {
   memory: WebAssembly.Memory;
-  alignedAlloc: CallableFunction;
+  alignedAlloc: aligned_alloc_type;
   objectAddress: number;
-  pvOctopusDelete: CallableFunction;
-  pvOctopusIndex: CallableFunction;
-  pvOctopusSearch: CallableFunction;
-  pvStatusToString: CallableFunction;
+  pvOctopusDelete: pv_octopus_delete_type;
+  pvOctopusIndex: pv_octopus_index_type;
+  pvOctopusSearch: pv_octopus_search_type;
+  pvStatusToString: pv_status_to_string_type;
   sampleRate: number;
   version: string;
   metadataAddressAddress: number;
@@ -56,12 +85,12 @@ type OctopusWasmOutput = {
 const PV_STATUS_SUCCESS = 10000;
 
 export class Octopus implements OctopusEngine {
-  private _allignedAlloc: CallableFunction;
+  private _allignedAlloc: aligned_alloc_type;
 
-  private _pvOctopusDelete: CallableFunction;
-  private _pvOctopusIndex: CallableFunction;
-  private _pvOctopusSearch: CallableFunction;
-  private _pvStatusToString: CallableFunction;
+  private _pvOctopusDelete: pv_octopus_delete_type;
+  private _pvOctopusIndex: pv_octopus_index_type;
+  private _pvOctopusSearch: pv_octopus_search_type;
+  private _pvStatusToString: pv_status_to_string_type;
 
   private _wasmMemory: WebAssembly.Memory;
   private _memoryBufferView: DataView;
@@ -420,20 +449,20 @@ export class Octopus implements OctopusEngine {
       importObject
     );
 
-    const aligned_alloc = instance.exports.aligned_alloc as CallableFunction;
+    const aligned_alloc = instance.exports.aligned_alloc as aligned_alloc_type;
 
     const pv_octopus_version = instance.exports
-      .pv_octopus_version as CallableFunction;
+      .pv_octopus_version as pv_octopus_version_type;
     const pv_octopus_index = instance.exports
-      .pv_octopus_index as CallableFunction;
+      .pv_octopus_index as pv_octopus_index_type;
     const pv_octopus_search = instance.exports
-      .pv_octopus_search as CallableFunction;
+      .pv_octopus_search as pv_octopus_search_type;
     const pv_octopus_delete = instance.exports
-      .pv_octopus_delete as CallableFunction;
-    const pv_octopus_init = instance.exports.pv_octopus_init as CallableFunction;
+      .pv_octopus_delete as pv_octopus_delete_type;
+    const pv_octopus_init = instance.exports.pv_octopus_init as pv_octopus_init_type;
     const pv_status_to_string = instance.exports
-      .pv_status_to_string as CallableFunction;
-    const pv_sample_rate = instance.exports.pv_sample_rate as CallableFunction;
+      .pv_status_to_string as pv_status_to_string_type;
+    const pv_sample_rate = instance.exports.pv_sample_rate as pv_sample_rate_type;
 
     const metadataAddressAddress = await aligned_alloc(
       Int32Array.BYTES_PER_ELEMENT,

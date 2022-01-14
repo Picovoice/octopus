@@ -1,16 +1,16 @@
 /*
-    Copyright 2021 Picovoice Inc.
+  Copyright 2021-2022 Picovoice Inc.
 
-    You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
-    file accompanying this source.
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
 
-    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
-    an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
-    specific language governing permissions and limitations under the License.
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
 */
 
 import OctWorker from 'web-worker:./octopus_worker.ts';
-import type { OctopusWorkerRequestInit, OctopusWorkerResponse, OctopusWorker } from './octopus_types';
+import type { OctopusWorkerRequestInit, OctopusWorkerResponse, OctopusWorker, OctopusMetadata, OctopusMatch } from '@picovoice/octopus-web-core';
 
 export class OctopusWorkerFactory {
   private constructor() { }
@@ -23,9 +23,9 @@ export class OctopusWorkerFactory {
    */
   public static async create(
     accessKey: string,
-    indexCallback?: CallableFunction,
-    searchCallback?: CallableFunction,
-    errorCallback?: CallableFunction,
+    indexCallback?: (metadata: OctopusMetadata) => void,
+    searchCallback?: (matches: OctopusMatch[]) => void,
+    errorCallback?: (error: string | Error) => void,
   ): Promise<Worker> {
     // n.b. The *worker* creation is itself synchronous. But, inside the worker is an async
     // method of OctopusFactory which is initializing. This means the worker is not actually ready

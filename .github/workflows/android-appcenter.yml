@@ -54,7 +54,7 @@ jobs:
       run: appcenter test run espresso 
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Octopus-Android"
-        --devices "Picovoice/single-android" 
+        --devices "Picovoice/android-5-12" 
         --app-path octopus-demo-app/build/outputs/apk/debug/octopus-demo-app-debug.apk
         --test-series "octopus-android"
         --locale "en_US" 

@@ -12,6 +12,7 @@
 # limitations under the License.
 #
 
+import os
 import sys
 import unittest
 
@@ -25,6 +26,7 @@ class OctopusTestCase(unittest.TestCase):
     octopus = None
     search_term = 'avocado'
     path = None
+    cached_file = 'original_metadata.oif'
 
     @classmethod
     def setUpClass(cls):
@@ -42,6 +44,9 @@ class OctopusTestCase(unittest.TestCase):
     def tearDownClass(cls):
         if cls.octopus is not None:
             cls.octopus.delete()
+
+        if os.path.isfile(cls.cached_file):
+            os.remove(cls.cached_file)
 
     def check_matches(self, matches):
         self.assertIn(self.search_term, matches)
@@ -109,12 +114,11 @@ class OctopusTestCase(unittest.TestCase):
         self.check_matches(matches)
 
     def test_to_from_bytes_file(self):
-        cached_file = 'original_metadata.oif'
         original_metadata = self.octopus.index_audio_file(self.path)
-        with open(cached_file, 'wb') as f:
+        with open(self.cached_file, 'wb') as f:
             f.write(original_metadata.to_bytes())
 
-        with open(cached_file, 'rb') as f:
+        with open(self.cached_file, 'rb') as f:
             metadata = OctopusMetadata.from_bytes(f.read())
 
         matches = self.octopus.search(metadata, [self.search_term])

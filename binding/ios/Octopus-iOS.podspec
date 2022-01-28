@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Octopus-iOS'
     s.module_name = 'Octopus'
-    s.version = '1.0.3'
+    s.version = '1.1.0'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS binding for Picovoice\'s Octopus Speech-to-Index engine'
     s.description = 

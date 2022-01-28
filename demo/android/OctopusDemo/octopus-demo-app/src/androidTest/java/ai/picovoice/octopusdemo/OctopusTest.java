@@ -28,13 +28,13 @@ import org.junit.runner.RunWith;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -109,11 +109,15 @@ public class OctopusTest {
         Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
 
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
-        byte[] rawData = Files.readAllBytes(audioFile.toPath());
-        short[] samples = new short[rawData.length / 2];
+
+        FileInputStream audioInputStream = new FileInputStream(audioFile);
+        byte[] rawData = new byte[(int) audioFile.length()];
+        short[] samples = new short[((int) audioFile.length()) / 2];
         ByteBuffer pcmBuff = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
+        audioInputStream.skip(44);
+        int numRead = audioInputStream.read(pcmBuff.array());
+        assertTrue(((numRead + 44) / 2) == samples.length);
         pcmBuff.asShortBuffer().get(samples);
-        samples = Arrays.copyOfRange(samples, 44, samples.length);
 
         OctopusMetadata metadata = octopus.indexAudioData(samples);
 

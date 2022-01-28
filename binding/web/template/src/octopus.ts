@@ -12,26 +12,22 @@
 /* eslint camelcase: 0 */
 
 // @ts-ignore
-import * as Asyncify from 'asyncify-wasm';
 import { Mutex } from 'async-mutex';
+
+import { 
+  aligned_alloc_type, 
+  buildWasm,
+  arrayBufferToStringAtIndex,
+  isAccessKeyValid
+} from '@picovoice/web-utils';
 
 import type { OctopusEngine, OctopusMetadata, OctopusMatch } from '@picovoice/octopus-web-core';
 import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
-import { wasiSnapshotPreview1Emulator } from './wasi_snapshot';
-
-import {
-  arrayBufferToStringAtIndex,
-  base64ToUint8Array,
-  isAccessKeyValid,
-  fetchWithTimeout,
-  stringHeaderToObject,
-} from './utils';
 
 /**
  * WebAssembly function types
  */
 
- type aligned_alloc_type = (alignment: number, size: number) => Promise<number>;
  type pv_octopus_version_type = () => Promise<number>;
  type pv_octopus_index_type = (
    object: number,
@@ -314,155 +310,18 @@ export class Octopus implements OctopusEngine {
     const memory = new WebAssembly.Memory({ initial: 1000, maximum: 2000 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
-    const memoryBufferInt32 = new Int32Array(memory.buffer);
 
-    const pvConsoleLogWasm = function (index: number): void {
-      // eslint-disable-next-line no-console
-      console.log(arrayBufferToStringAtIndex(memoryBufferUint8, index));
-    };
+    const exports = await buildWasm(memory, OCTOPUS_WASM_BASE64);
 
-    const pvAssertWasm = function (
-      expr: number,
-      line: number,
-      fileNameAddress: number
-    ): void {
-      if (expr === 0) {
-        const fileName = arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          fileNameAddress
-        );
-        throw new Error(`assertion failed at line ${line} in "${fileName}"`);
-      }
-    };
+    const aligned_alloc = exports.aligned_alloc as aligned_alloc_type;
 
-    const pvTimeWasm = function (): number {
-      return Date.now() / 1000;
-    };
-
-    const pvHttpsRequestWasm = async function (
-      httpMethodAddress: number,
-      serverNameAddress: number,
-      endpointAddress: number,
-      headerAddress: number,
-      bodyAddress: number,
-      timeoutMs: number,
-      responseAddressAddress: number,
-      responseSizeAddress: number,
-      responseCodeAddress: number
-    ): Promise<void> {
-      const httpMethod = arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        httpMethodAddress
-      );
-      const serverName = arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        serverNameAddress
-      );
-      const endpoint = arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        endpointAddress
-      );
-      const header = arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        headerAddress
-      );
-      const body = arrayBufferToStringAtIndex(memoryBufferUint8, bodyAddress);
-
-      const headerObject = stringHeaderToObject(header);
-
-      let response: Response | undefined = undefined;
-      let responseText = '';
-      let statusCode: number;
-
-      try {
-        response = await fetchWithTimeout(
-          `https://${serverName}${endpoint}`,
-          {
-            method: httpMethod,
-            headers: headerObject,
-            body: body,
-          },
-          timeoutMs
-        );
-        statusCode = response.status;
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-        statusCode = 0;
-      }
-
-      if (response !== undefined) {
-        try {
-          responseText = await response.text();
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(error);
-          statusCode = 1;
-        }
-
-        // eslint-disable-next-line
-        const responseAddress = await aligned_alloc(
-          Int8Array.BYTES_PER_ELEMENT,
-          (responseText.length + 1) * Int8Array.BYTES_PER_ELEMENT
-        );
-        if (responseAddress === 0) {
-          throw new Error('malloc failed: Cannot allocate memory');
-        }
-
-        memoryBufferInt32[
-          responseSizeAddress / Int32Array.BYTES_PER_ELEMENT
-        ] = responseText.length + 1;
-        memoryBufferInt32[
-          responseAddressAddress / Int32Array.BYTES_PER_ELEMENT
-        ] = responseAddress;
-
-        for (let i = 0; i < responseText.length; i++) {
-          memoryBufferUint8[responseAddress + i] = responseText.charCodeAt(i);
-        }
-        memoryBufferUint8[responseAddress + responseText.length] = 0;
-      }
-
-      memoryBufferInt32[
-        responseCodeAddress / Int32Array.BYTES_PER_ELEMENT
-      ] = statusCode;
-    };
-
-    const importObject = {
-      // eslint-disable-next-line camelcase
-      wasi_snapshot_preview1: wasiSnapshotPreview1Emulator,
-      env: {
-        memory: memory,
-        // eslint-disable-next-line camelcase
-        pv_console_log_wasm: pvConsoleLogWasm,
-        // eslint-disable-next-line camelcase
-        pv_assert_wasm: pvAssertWasm,
-        // eslint-disable-next-line camelcase
-        pv_time_wasm: pvTimeWasm,
-        // eslint-disable-next-line camelcase
-        pv_https_request_wasm: pvHttpsRequestWasm,
-      },
-    };
-
-    const wasmCodeArray = base64ToUint8Array(OCTOPUS_WASM_BASE64);
-    const { instance } = await Asyncify.instantiate(
-      wasmCodeArray,
-      importObject
-    );
-
-    const aligned_alloc = instance.exports.aligned_alloc as aligned_alloc_type;
-
-    const pv_octopus_version = instance.exports
-      .pv_octopus_version as pv_octopus_version_type;
-    const pv_octopus_index = instance.exports
-      .pv_octopus_index as pv_octopus_index_type;
-    const pv_octopus_search = instance.exports
-      .pv_octopus_search as pv_octopus_search_type;
-    const pv_octopus_delete = instance.exports
-      .pv_octopus_delete as pv_octopus_delete_type;
-    const pv_octopus_init = instance.exports.pv_octopus_init as pv_octopus_init_type;
-    const pv_status_to_string = instance.exports
-      .pv_status_to_string as pv_status_to_string_type;
-    const pv_sample_rate = instance.exports.pv_sample_rate as pv_sample_rate_type;
+    const pv_octopus_version = exports.pv_octopus_version as pv_octopus_version_type;
+    const pv_octopus_index = exports.pv_octopus_index as pv_octopus_index_type;
+    const pv_octopus_search = exports.pv_octopus_search as pv_octopus_search_type;
+    const pv_octopus_delete = exports.pv_octopus_delete as pv_octopus_delete_type;
+    const pv_octopus_init = exports.pv_octopus_init as pv_octopus_init_type;
+    const pv_status_to_string = exports.pv_status_to_string as pv_status_to_string_type;
+    const pv_sample_rate = exports.pv_sample_rate as pv_sample_rate_type;
 
     const metadataAddressAddress = await aligned_alloc(
       Int32Array.BYTES_PER_ELEMENT,

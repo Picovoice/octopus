@@ -1,21 +1,16 @@
 PODS:
-  - Octopus-iOS (1.1.0)
+  - Octopus-iOS (1.0.2)
 
 DEPENDENCIES:
-  - Octopus-iOS (from `https://raw.githubusercontent.com/Picovoice/octopus/app-center/binding/ios/Octopus-iOS.podspec`)
+  - Octopus-iOS (~> 1.0.0)
 
-EXTERNAL SOURCES:
-  Octopus-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/octopus/app-center/binding/ios/Octopus-iOS.podspec
-
-CHECKOUT OPTIONS:
-  Octopus-iOS:
-    :commit: e9fbad4a89ca5e2e87baba1cd4c01975c7148c4e
-    :git: https://github.com/Picovoice/octopus.git
+SPEC REPOS:
+  trunk:
+    - Octopus-iOS
 
 SPEC CHECKSUMS:
-  Octopus-iOS: 5f52400f37a299a42dbb8aac66ef1a56db49a946
+  Octopus-iOS: 12b2c38acd35d7aacad02c252eec5e6bad166b9e
 
-PODFILE CHECKSUM: 5d9b4a257a5657e40ea4c6a6636592725ac7d643
+PODFILE CHECKSUM: 82a46476d0052a072ed7e91aaf7b628826f1b259
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1

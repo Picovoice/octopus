@@ -307,9 +307,9 @@ export class Octopus implements OctopusEngine {
   }
 
   private static async initWasm(accessKey: string): Promise<OctopusWasmOutput> {
-    // A WebAssembly page has a constant size of 64KiB. -> 12MiB ~= 200 pages
+    // A WebAssembly page has a constant size of 64KiB. -> 16MiB ~= 256 pages
     // minimum memory requirements for init: 81 pages
-    const memory = new WebAssembly.Memory({ initial: 200, maximum: 2000 });
+    const memory = new WebAssembly.Memory({ initial: 256, maximum: 2048 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
 

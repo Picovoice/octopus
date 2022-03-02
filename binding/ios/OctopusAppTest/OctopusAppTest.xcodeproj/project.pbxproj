@@ -13,11 +13,11 @@
 		1E0064CF27CEEA65006FF6E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064CD27CEEA65006FF6E9 /* Main.storyboard */; };
 		1E0064D127CEEA66006FF6E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064D027CEEA66006FF6E9 /* Assets.xcassets */; };
 		1E0064D427CEEA66006FF6E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064D227CEEA66006FF6E9 /* LaunchScreen.storyboard */; };
-		1E0064F927CEEB98006FF6E9 /* multiple_keywords.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064F827CEEB98006FF6E9 /* multiple_keywords.wav */; };
+		36696536961DE78B3E1C06FA /* libPods-OctopusAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4C18BEF03CEC4522355C2A /* libPods-OctopusAppTestUITests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1E0064DB27CEEA66006FF6E9 /* PBXContainerItemProxy */ = {
+		1E00650427CFEC95006FF6E9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1E0064BC27CEEA65006FF6E9 /* Project object */;
 			proxyType = 1;
@@ -35,10 +35,10 @@
 		1E0064D027CEEA66006FF6E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1E0064D327CEEA66006FF6E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1E0064D527CEEA66006FF6E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OctopusAppTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E0064E827CEEA66006FF6E9 /* OctopusAppTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OctopusAppTestUITests.swift; sourceTree = "<group>"; };
 		1E0064F727CEEA96006FF6E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E0064F827CEEB98006FF6E9 /* multiple_keywords.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = multiple_keywords.wav; path = ../../../../res/audio/multiple_keywords.wav; sourceTree = "<group>"; };
+		1E0064FE27CFEC95006FF6E9 /* OctopusAppTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OctopusAppTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A109F9943E62FDC1E51D722 /* Pods-OctopusAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4C18BEF03CEC4522355C2A /* libPods-OctopusAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,10 +55,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1E0064D727CEEA66006FF6E9 /* Frameworks */ = {
+		1E0064FB27CFEC95006FF6E9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36696536961DE78B3E1C06FA /* libPods-OctopusAppTestUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				1E0064C427CEEA65006FF6E9 /* OctopusAppTest.app */,
-				1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */,
+				1E0064FE27CFEC95006FF6E9 /* OctopusAppTestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -151,23 +152,26 @@
 			productReference = 1E0064C427CEEA65006FF6E9 /* OctopusAppTest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1E0064D927CEEA66006FF6E9 /* OctopusAppTestTests */ = {
+		1E0064FD27CFEC95006FF6E9 /* OctopusAppTestUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1E0064F127CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestTests" */;
+			buildConfigurationList = 1E00650827CFEC95006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestUITests" */;
 			buildPhases = (
-				1E0064D627CEEA66006FF6E9 /* Sources */,
-				1E0064D727CEEA66006FF6E9 /* Frameworks */,
-				1E0064D827CEEA66006FF6E9 /* Resources */,
+				051297945D889D2994D839D4 /* [CP] Check Pods Manifest.lock */,
+				1E0064FA27CFEC95006FF6E9 /* Sources */,
+				1E0064FB27CFEC95006FF6E9 /* Frameworks */,
+				1E0064FC27CFEC95006FF6E9 /* Resources */,
+				F55BCF9ECEB148EE2668A8B5 /* [CP] Embed Pods Frameworks */,
+				181672AA5A8141305FB20EC6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				1E0064DC27CEEA66006FF6E9 /* PBXTargetDependency */,
+				1E00650527CFEC95006FF6E9 /* PBXTargetDependency */,
 			);
-			name = OctopusAppTestTests;
-			productName = OctopusAppTestTests;
-			productReference = 1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
+			name = OctopusAppTestUITests;
+			productName = OctopusAppTestUITests;
+			productReference = 1E0064FE27CFEC95006FF6E9 /* OctopusAppTestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -182,7 +186,7 @@
 					1E0064C327CEEA65006FF6E9 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
-					1E0064D927CEEA66006FF6E9 = {
+					1E0064FD27CFEC95006FF6E9 = {
 						CreatedOnToolsVersion = 13.2.1;
 						TestTargetID = 1E0064C327CEEA65006FF6E9;
 					};
@@ -202,7 +206,7 @@
 			projectRoot = "";
 			targets = (
 				1E0064C327CEEA65006FF6E9 /* OctopusAppTest */,
-				1E0064D927CEEA66006FF6E9 /* OctopusAppTestTests */,
+				1E0064FD27CFEC95006FF6E9 /* OctopusAppTestUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -218,17 +222,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1E0064D827CEEA66006FF6E9 /* Resources */ = {
+		1E0064FC27CFEC95006FF6E9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E0064F927CEEB98006FF6E9 /* multiple_keywords.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		051297945D889D2994D839D4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OctopusAppTestUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		099DC105C4C090417630866D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -244,6 +269,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		181672AA5A8141305FB20EC6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D3A5791552EFDF0A035C668 /* [CP] Check Pods Manifest.lock */ = {
@@ -285,6 +327,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F55BCF9ECEB148EE2668A8B5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -297,7 +356,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1E0064D627CEEA66006FF6E9 /* Sources */ = {
+		1E0064FA27CFEC95006FF6E9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -307,10 +366,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1E0064DC27CEEA66006FF6E9 /* PBXTargetDependency */ = {
+		1E00650527CFEC95006FF6E9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1E0064C327CEEA65006FF6E9 /* OctopusAppTest */;
-			targetProxy = 1E0064DB27CEEA66006FF6E9 /* PBXContainerItemProxy */;
+			targetProxy = 1E00650427CFEC95006FF6E9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -506,51 +565,44 @@
 			};
 			name = Release;
 		};
-		1E0064F227CEEA66006FF6E9 /* Debug */ = {
+		1E00650627CFEC95006FF6E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A109F9943E62FDC1E51D722 /* Pods-OctopusAppTestUITests.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65723695GD;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestTests;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OctopusAppTest.app/OctopusAppTest";
+				TEST_TARGET_NAME = OctopusAppTest;
 			};
 			name = Debug;
 		};
-		1E0064F327CEEA66006FF6E9 /* Release */ = {
+		1E00650727CFEC95006FF6E9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F4E04511A77E54C10386FB49 /* Pods-OctopusAppTestUITests.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65723695GD;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestTests;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OctopusAppTest.app/OctopusAppTest";
+				TEST_TARGET_NAME = OctopusAppTest;
 			};
 			name = Release;
 		};
@@ -575,11 +627,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1E0064F127CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestTests" */ = {
+		1E00650827CFEC95006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1E0064F227CEEA66006FF6E9 /* Debug */,
-				1E0064F327CEEA66006FF6E9 /* Release */,
+				1E00650627CFEC95006FF6E9 /* Debug */,
+				1E00650727CFEC95006FF6E9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

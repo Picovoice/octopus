@@ -10,7 +10,7 @@
 import XCTest
 import Octopus
 
-class OctopusDemoUITests: XCTestCase {
+class OctopusAppTestUITests: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
     
     let phrases: Set<String> = ["gorilla", "terminator"]

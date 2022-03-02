@@ -17,8 +17,3 @@ Open the OctopusDemo Xcode project and build. Launch the demo on a simulator or 
 3. Press stop. Wait for the info box to display "Indexing Complete". This may take a few seconds.
 4. Enter your search phrase into the text input and press search. The results will appear below.
 5. You can continue to enter in new search phrases without re-recording or re-indexing the audio.
-
-
-## Running the Instrumented Unit Tests
-1. Open the OctopusDemo XCode project.
-2. Run the tests (`Product`->`Test`)

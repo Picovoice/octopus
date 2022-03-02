@@ -18,4 +18,5 @@ Pod::Spec.new do |s|
     s.vendored_frameworks = 'lib/ios/PvOctopus.xcframework'
     s.resources = 'lib/common/octopus_params.pv'
     s.source_files = 'binding/ios/*.{swift}'
+    s.excluded_files = 'binding/ios/OctopusTestApp/**'
   end

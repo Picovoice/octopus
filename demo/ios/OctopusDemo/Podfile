@@ -4,7 +4,3 @@ platform :ios, '9.0'
 target 'OctopusDemo' do
     pod 'Octopus-iOS', '~> 1.1.0'
 end
-
-target 'OctopusDemoUITests' do
-    pod 'Octopus-iOS', '~> 1.1.0'
-end

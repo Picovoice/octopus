@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A4DF03AB93039DC6A992730 /* libPods-OctopusAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */; };
+		1E0064C827CEEA65006FF6E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064C727CEEA65006FF6E9 /* AppDelegate.swift */; };
+		1E0064CC27CEEA65006FF6E9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064CB27CEEA65006FF6E9 /* ViewController.swift */; };
+		1E0064CF27CEEA65006FF6E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064CD27CEEA65006FF6E9 /* Main.storyboard */; };
+		1E0064D127CEEA66006FF6E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064D027CEEA66006FF6E9 /* Assets.xcassets */; };
+		1E0064D427CEEA66006FF6E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064D227CEEA66006FF6E9 /* LaunchScreen.storyboard */; };
+		1E0064F927CEEB98006FF6E9 /* multiple_keywords.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064F827CEEB98006FF6E9 /* multiple_keywords.wav */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1E0064DB27CEEA66006FF6E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E0064BC27CEEA65006FF6E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E0064C327CEEA65006FF6E9;
+			remoteInfo = OctopusAppTest;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		060C8DEBFFA82E434C42783A /* Pods-OctopusAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTest.release.xcconfig"; path = "Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest.release.xcconfig"; sourceTree = "<group>"; };
+		1E0064C427CEEA65006FF6E9 /* OctopusAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OctopusAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E0064C727CEEA65006FF6E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1E0064CB27CEEA65006FF6E9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1E0064CE27CEEA65006FF6E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1E0064D027CEEA66006FF6E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1E0064D327CEEA66006FF6E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1E0064D527CEEA66006FF6E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OctopusAppTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E0064E827CEEA66006FF6E9 /* OctopusAppTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OctopusAppTestUITests.swift; sourceTree = "<group>"; };
+		1E0064F727CEEA96006FF6E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E0064F827CEEB98006FF6E9 /* multiple_keywords.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = multiple_keywords.wav; path = ../../../../res/audio/multiple_keywords.wav; sourceTree = "<group>"; };
+		3A109F9943E62FDC1E51D722 /* Pods-OctopusAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C4C18BEF03CEC4522355C2A /* libPods-OctopusAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4E04511A77E54C10386FB49 /* Pods-OctopusAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
+		F5AF54842119EA76E7CB3C85 /* Pods-OctopusAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTest.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1E0064C127CEEA65006FF6E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A4DF03AB93039DC6A992730 /* libPods-OctopusAppTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E0064D727CEEA66006FF6E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E0064BB27CEEA65006FF6E9 = {
+			isa = PBXGroup;
+			children = (
+				1E0064C627CEEA65006FF6E9 /* OctopusAppTest */,
+				1E0064E727CEEA66006FF6E9 /* OctopusAppTestUITests */,
+				1E0064C527CEEA65006FF6E9 /* Products */,
+				81D82352532BDF40E30C02E9 /* Pods */,
+				C61A87423E5B220A51E25364 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1E0064C527CEEA65006FF6E9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E0064C427CEEA65006FF6E9 /* OctopusAppTest.app */,
+				1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1E0064C627CEEA65006FF6E9 /* OctopusAppTest */ = {
+			isa = PBXGroup;
+			children = (
+				1E0064C727CEEA65006FF6E9 /* AppDelegate.swift */,
+				1E0064CB27CEEA65006FF6E9 /* ViewController.swift */,
+				1E0064CD27CEEA65006FF6E9 /* Main.storyboard */,
+				1E0064D027CEEA66006FF6E9 /* Assets.xcassets */,
+				1E0064D227CEEA66006FF6E9 /* LaunchScreen.storyboard */,
+				1E0064D527CEEA66006FF6E9 /* Info.plist */,
+			);
+			path = OctopusAppTest;
+			sourceTree = "<group>";
+		};
+		1E0064E727CEEA66006FF6E9 /* OctopusAppTestUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1E0064F827CEEB98006FF6E9 /* multiple_keywords.wav */,
+				1E0064E827CEEA66006FF6E9 /* OctopusAppTestUITests.swift */,
+				1E0064F727CEEA96006FF6E9 /* Info.plist */,
+			);
+			path = OctopusAppTestUITests;
+			sourceTree = "<group>";
+		};
+		81D82352532BDF40E30C02E9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F5AF54842119EA76E7CB3C85 /* Pods-OctopusAppTest.debug.xcconfig */,
+				060C8DEBFFA82E434C42783A /* Pods-OctopusAppTest.release.xcconfig */,
+				3A109F9943E62FDC1E51D722 /* Pods-OctopusAppTestUITests.debug.xcconfig */,
+				F4E04511A77E54C10386FB49 /* Pods-OctopusAppTestUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C61A87423E5B220A51E25364 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */,
+				4C4C18BEF03CEC4522355C2A /* libPods-OctopusAppTestUITests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E0064C327CEEA65006FF6E9 /* OctopusAppTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E0064EE27CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTest" */;
+			buildPhases = (
+				6D3A5791552EFDF0A035C668 /* [CP] Check Pods Manifest.lock */,
+				1E0064C027CEEA65006FF6E9 /* Sources */,
+				1E0064C127CEEA65006FF6E9 /* Frameworks */,
+				1E0064C227CEEA65006FF6E9 /* Resources */,
+				099DC105C4C090417630866D /* [CP] Embed Pods Frameworks */,
+				C0A683631E64F2C172582FED /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OctopusAppTest;
+			productName = OctopusAppTest;
+			productReference = 1E0064C427CEEA65006FF6E9 /* OctopusAppTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1E0064D927CEEA66006FF6E9 /* OctopusAppTestTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E0064F127CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestTests" */;
+			buildPhases = (
+				1E0064D627CEEA66006FF6E9 /* Sources */,
+				1E0064D727CEEA66006FF6E9 /* Frameworks */,
+				1E0064D827CEEA66006FF6E9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E0064DC27CEEA66006FF6E9 /* PBXTargetDependency */,
+			);
+			name = OctopusAppTestTests;
+			productName = OctopusAppTestTests;
+			productReference = 1E0064DA27CEEA66006FF6E9 /* OctopusAppTestTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E0064BC27CEEA65006FF6E9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					1E0064C327CEEA65006FF6E9 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					1E0064D927CEEA66006FF6E9 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 1E0064C327CEEA65006FF6E9;
+					};
+				};
+			};
+			buildConfigurationList = 1E0064BF27CEEA65006FF6E9 /* Build configuration list for PBXProject "OctopusAppTest" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1E0064BB27CEEA65006FF6E9;
+			productRefGroup = 1E0064C527CEEA65006FF6E9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E0064C327CEEA65006FF6E9 /* OctopusAppTest */,
+				1E0064D927CEEA66006FF6E9 /* OctopusAppTestTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E0064C227CEEA65006FF6E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E0064D427CEEA66006FF6E9 /* LaunchScreen.storyboard in Resources */,
+				1E0064D127CEEA66006FF6E9 /* Assets.xcassets in Resources */,
+				1E0064CF27CEEA65006FF6E9 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E0064D827CEEA66006FF6E9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E0064F927CEEB98006FF6E9 /* multiple_keywords.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		099DC105C4C090417630866D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D3A5791552EFDF0A035C668 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OctopusAppTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C0A683631E64F2C172582FED /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E0064C027CEEA65006FF6E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E0064CC27CEEA65006FF6E9 /* ViewController.swift in Sources */,
+				1E0064C827CEEA65006FF6E9 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E0064D627CEEA66006FF6E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1E0064DC27CEEA66006FF6E9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E0064C327CEEA65006FF6E9 /* OctopusAppTest */;
+			targetProxy = 1E0064DB27CEEA66006FF6E9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1E0064CD27CEEA65006FF6E9 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E0064CE27CEEA65006FF6E9 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1E0064D227CEEA66006FF6E9 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E0064D327CEEA66006FF6E9 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1E0064EC27CEEA66006FF6E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1E0064ED27CEEA66006FF6E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1E0064EF27CEEA66006FF6E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5AF54842119EA76E7CB3C85 /* Pods-OctopusAppTest.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OctopusAppTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		1E0064F027CEEA66006FF6E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 060C8DEBFFA82E434C42783A /* Pods-OctopusAppTest.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OctopusAppTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		1E0064F227CEEA66006FF6E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OctopusAppTest.app/OctopusAppTest";
+			};
+			name = Debug;
+		};
+		1E0064F327CEEA66006FF6E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusAppTestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OctopusAppTest.app/OctopusAppTest";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E0064BF27CEEA65006FF6E9 /* Build configuration list for PBXProject "OctopusAppTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E0064EC27CEEA66006FF6E9 /* Debug */,
+				1E0064ED27CEEA66006FF6E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E0064EE27CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E0064EF27CEEA66006FF6E9 /* Debug */,
+				1E0064F027CEEA66006FF6E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E0064F127CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E0064F227CEEA66006FF6E9 /* Debug */,
+				1E0064F327CEEA66006FF6E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1E0064BC27CEEA65006FF6E9 /* Project object */;
+}

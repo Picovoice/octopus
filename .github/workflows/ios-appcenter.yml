@@ -5,17 +5,17 @@ on:
   push:
     branches: [ main ]
     paths: 
-      - 'demo/ios'
-      - '!demo/ios/README.md'
+      - 'binding/ios/OctopusAppTest/Podfile.lock'
+      - '.github/workflows/ios-appcenter.yml'
   pull_request:
     branches: [ main ]
     paths: 
-      - 'demo/ios'
-      - '!demo/ios/README.md'
+      - 'binding/ios/OctopusAppTest/Podfile.lock'
+      - '.github/workflows/ios-appcenter.yml'
       
 defaults:
   run:
-    working-directory: demo/ios/OctopusDemo
+    working-directory: binding/ios/OctopusAppTest
     
 jobs:
   build:
@@ -43,14 +43,14 @@ jobs:
 
       - name: Inject AppID
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
-          OctopusDemoUITests/OctopusDemoUITests.swift
+          OctopusAppTestUITests/OctopusAppTestUITests.swift
 
       - name: XCode Build
         run: xcrun xcodebuild build-for-testing 
           -configuration Debug 
-          -workspace OctopusDemo.xcworkspace
+          -workspace OctopusAppTest.xcworkspace
           -sdk iphoneos 
-          -scheme OctopusDemo
+          -scheme OctopusAppTest
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
@@ -58,7 +58,7 @@ jobs:
         run: appcenter test run xcuitest 
           --token ${{secrets.APPCENTERAPITOKEN}}
           --app "Picovoice/Octopus-iOS"
-          --devices "Picovoice/ios-single" 
+          --devices "Picovoice/ios-min-max" 
           --test-series "octopus-ios"
           --locale "en_US" 
           --build-dir ddp/Build/Products/Debug-iphoneos

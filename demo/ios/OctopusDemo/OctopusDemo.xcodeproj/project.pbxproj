@@ -10,22 +10,9 @@
 		02447A8D26D94F75004A6CE9 /* OctopusDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447A8C26D94F75004A6CE9 /* OctopusDemoApp.swift */; };
 		02447A8F26D94F75004A6CE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447A8E26D94F75004A6CE9 /* ContentView.swift */; };
 		02447A9126D94F7C004A6CE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02447A9026D94F7C004A6CE9 /* Assets.xcassets */; };
-		02447AAA26D94F7D004A6CE9 /* OctopusDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447AA926D94F7D004A6CE9 /* OctopusDemoUITests.swift */; };
-		02447AC326D97700004A6CE9 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 02447AC226D97700004A6CE9 /* audio */; };
-		3E6880B214F5EDAF25AA9564 /* libPods-OctopusDemoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24507AE86738A9648654B975 /* libPods-OctopusDemoUITests.a */; };
 		9705AFE37156E1D2A9533F29 /* libPods-OctopusDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666EDA10662F0431AFA4AC40 /* libPods-OctopusDemo.a */; };
 		C76A41602703B17000DB57D6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76A415F2703B17000DB57D6 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		02447AA626D94F7D004A6CE9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 02447A8126D94F74004A6CE9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 02447A8826D94F75004A6CE9;
-			remoteInfo = OctopusDemo;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		02447A8926D94F75004A6CE9 /* OctopusDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OctopusDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,10 +20,6 @@
 		02447A8E26D94F75004A6CE9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		02447A9026D94F7C004A6CE9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02447A9526D94F7C004A6CE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		02447AA526D94F7D004A6CE9 /* OctopusDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OctopusDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		02447AA926D94F7D004A6CE9 /* OctopusDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OctopusDemoUITests.swift; sourceTree = "<group>"; };
-		02447AAB26D94F7D004A6CE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		02447AC226D97700004A6CE9 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../../../../res/audio; sourceTree = "<group>"; };
 		06946230EAE44F5F84E6EE64 /* Pods-OctopusDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		24507AE86738A9648654B975 /* libPods-OctopusDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		666EDA10662F0431AFA4AC40 /* libPods-OctopusDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,14 +38,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		02447AA226D94F7D004A6CE9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3E6880B214F5EDAF25AA9564 /* libPods-OctopusDemoUITests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -70,7 +45,6 @@
 			isa = PBXGroup;
 			children = (
 				02447A8B26D94F75004A6CE9 /* OctopusDemo */,
-				02447AA826D94F7D004A6CE9 /* OctopusDemoUITests */,
 				02447A8A26D94F75004A6CE9 /* Products */,
 				7983C9752CBB2C0CDEFFB371 /* Pods */,
 				C755637026F5049B0056D84F /* Frameworks */,
@@ -81,7 +55,6 @@
 			isa = PBXGroup;
 			children = (
 				02447A8926D94F75004A6CE9 /* OctopusDemo.app */,
-				02447AA526D94F7D004A6CE9 /* OctopusDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,24 +69,6 @@
 				C76A415F2703B17000DB57D6 /* ViewModel.swift */,
 			);
 			path = OctopusDemo;
-			sourceTree = "<group>";
-		};
-		02447AA826D94F7D004A6CE9 /* OctopusDemoUITests */ = {
-			isa = PBXGroup;
-			children = (
-				02447AC126D976EA004A6CE9 /* test_resources */,
-				02447AA926D94F7D004A6CE9 /* OctopusDemoUITests.swift */,
-				02447AAB26D94F7D004A6CE9 /* Info.plist */,
-			);
-			path = OctopusDemoUITests;
-			sourceTree = "<group>";
-		};
-		02447AC126D976EA004A6CE9 /* test_resources */ = {
-			isa = PBXGroup;
-			children = (
-				02447AC226D97700004A6CE9 /* audio */,
-			);
-			name = test_resources;
 			sourceTree = "<group>";
 		};
 		7983C9752CBB2C0CDEFFB371 /* Pods */ = {
@@ -159,27 +114,6 @@
 			productReference = 02447A8926D94F75004A6CE9 /* OctopusDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		02447AA426D94F7D004A6CE9 /* OctopusDemoUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 02447AB426D94F7D004A6CE9 /* Build configuration list for PBXNativeTarget "OctopusDemoUITests" */;
-			buildPhases = (
-				069B3BFF51816DB41D373BE3 /* [CP] Check Pods Manifest.lock */,
-				02447AA126D94F7D004A6CE9 /* Sources */,
-				02447AA226D94F7D004A6CE9 /* Frameworks */,
-				02447AA326D94F7D004A6CE9 /* Resources */,
-				4543F9EEBAC4084739676658 /* [CP] Embed Pods Frameworks */,
-				CD69EBBF54FF8D6E98428C92 /* [CP] Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				02447AA726D94F7D004A6CE9 /* PBXTargetDependency */,
-			);
-			name = OctopusDemoUITests;
-			productName = OctopusDemoUITests;
-			productReference = 02447AA526D94F7D004A6CE9 /* OctopusDemoUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -191,10 +125,6 @@
 				TargetAttributes = {
 					02447A8826D94F75004A6CE9 = {
 						CreatedOnToolsVersion = 12.5;
-					};
-					02447AA426D94F7D004A6CE9 = {
-						CreatedOnToolsVersion = 12.5;
-						TestTargetID = 02447A8826D94F75004A6CE9;
 					};
 				};
 			};
@@ -212,7 +142,6 @@
 			projectRoot = "";
 			targets = (
 				02447A8826D94F75004A6CE9 /* OctopusDemo */,
-				02447AA426D94F7D004A6CE9 /* OctopusDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -226,56 +155,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		02447AA326D94F7D004A6CE9 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				02447AC326D97700004A6CE9 /* audio in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		069B3BFF51816DB41D373BE3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OctopusDemoUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4543F9EEBAC4084739676658 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		97803BFB8FEEF34F8A17768F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -308,23 +190,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CD69EBBF54FF8D6E98428C92 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F41FFDAC131AF46FF8A5DDE4 /* [CP] Check Pods Manifest.lock */ = {
@@ -362,23 +227,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		02447AA126D94F7D004A6CE9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				02447AAA26D94F7D004A6CE9 /* OctopusDemoUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		02447AA726D94F7D004A6CE9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 02447A8826D94F75004A6CE9 /* OctopusDemo */;
-			targetProxy = 02447AA626D94F7D004A6CE9 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		02447AAC26D94F7D004A6CE9 /* Debug */ = {
@@ -543,46 +392,6 @@
 			};
 			name = Release;
 		};
-		02447AB526D94F7D004A6CE9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 06946230EAE44F5F84E6EE64 /* Pods-OctopusDemoUITests.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EU9HUJJU2X;
-				INFOPLIST_FILE = OctopusDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OctopusDemo;
-			};
-			name = Debug;
-		};
-		02447AB626D94F7D004A6CE9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8BFDB05F1E5BF515CD2CB16F /* Pods-OctopusDemoUITests.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = EU9HUJJU2X;
-				INFOPLIST_FILE = OctopusDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.OctopusDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OctopusDemo;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -600,15 +409,6 @@
 			buildConfigurations = (
 				02447AAF26D94F7D004A6CE9 /* Debug */,
 				02447AB026D94F7D004A6CE9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		02447AB426D94F7D004A6CE9 /* Build configuration list for PBXNativeTarget "OctopusDemoUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				02447AB526D94F7D004A6CE9 /* Debug */,
-				02447AB626D94F7D004A6CE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -97,3 +97,7 @@ When done resources have to be released explicitly:
 metadata.delete();
 handle.delete();
 ```
+
+## Running Unit Tests
+
+Copy your `AccessKey` into the `accessKey` variable in [`OctopusAppTestUITests.swift`](OctopusAppTest/OctopusAppTestUITests/OctopusAppTestUITests.swift). Open `OctopusAppTest.xcworkspace` with XCode and run the tests with `Product > Test`.

@@ -12,6 +12,12 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 
 This library requires several modern browser features: WebAssembly, Web Workers, and promises. Internet Explorer will _not_ work.
 
+## AccessKey
+
+Cobra requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Cobra SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Packages
 
 The Octopus SDK for Web is split into separate worker and factory packages; import each as required.

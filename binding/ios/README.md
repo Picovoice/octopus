@@ -10,6 +10,12 @@ hypothesis (e.g. homophones)
 
 - iOS 9.0+
 
+## AccessKey
+
+Cobra requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Cobra SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Installation
 
 The Octopus iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Octopus-iOS). To import it into your iOS project, add the following line to your Podfile: 

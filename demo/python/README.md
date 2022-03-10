@@ -13,6 +13,12 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 - Python 3
 - Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64).
 
+## AccessKey
+
+Cobra requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Cobra SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Installation
 
 ```console

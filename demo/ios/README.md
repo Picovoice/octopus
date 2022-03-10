@@ -1,5 +1,11 @@
 # Octopus iOS Demo
 
+## AccessKey
+
+Cobra requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Cobra SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Setup
 
 1. Before building the demo app, run the following from this directory to install the Octopus CocoaPod:

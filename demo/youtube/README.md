@@ -5,6 +5,12 @@
 - [FFmpeg](https://www.ffmpeg.org/) (On Windows you need to add FFmpeg to your `PATH`)
 - Python 3.5+
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Usage
 
 Install Python dependencies:

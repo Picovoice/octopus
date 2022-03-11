@@ -23,6 +23,12 @@ dependencies {
 }
 ```
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Usage
 
 Create an instance of the engine with the Octopus Builder class by passing in the Android app context:
@@ -30,7 +36,7 @@ Create an instance of the engine with the Octopus Builder class by passing in th
 ```java
 import ai.picovoice.octopus.*;
 
-final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 try {
     Octopus handle = new Octopus.Builder(accessKey).build(appContext);
 } catch (OctopusException ex) { }

@@ -13,6 +13,12 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 - Python 3
 - Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64).
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Installation
 
 ```console
@@ -26,7 +32,7 @@ This demo allows testing Octopus interactively through commandline. It accepts M
 ```console
 octopus_demo  --access_key {AccessKey} --audio_paths ${AUDIO_PATHS}
 ```
-where `{AccessKey}` is an AccessKey which should be obtained from [Picovoice Console](https://picovoice.ai/console/).
+where `{AccessKey}` is an AccessKey which should be obtained from [Picovoice Console](https://console.picovoice.ai/).
 
 After processing audio files, you are asked for a search phrase:
 

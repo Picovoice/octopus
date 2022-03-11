@@ -138,7 +138,7 @@ class Octopus(object):
         Constructor.
 
         :param library_path: Absolute path to Octopus' dynamic library.
-        :param access_key: AppID provided by Picovoice Console (https://picovoice.ai/console/)
+        :param access_key: AppID provided by Picovoice Console (https://console.picovoice.ai/)
         :param model_path: Absolute path to file containing model parameters.
         """
 

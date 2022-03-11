@@ -3,6 +3,12 @@
 This is a basic demo to show how to use Octopus for web browsers, using the IIFE version of the library
 (i.e. an HTML script tag). It instantiates an Octopus worker engine and uses it to index and search an audio file.
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Install & run
 
 ```console

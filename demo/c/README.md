@@ -7,6 +7,12 @@
 - [Mingw-w64](http://mingw-w64.org/doku.php) (Windows Only)
 - This doc assumes commands are run from the [root](../..) of the repository.
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Build
 
 ### Linux and macOS
@@ -24,7 +30,7 @@ cmake -S demo/c -B demo/c/build -G "MinGW Makefiles" && cmake --build demo/c/bui
 ## Run Index Demo
 
 Indexes a given audio file and saves the metadata. In the following, replace `${ACCESS_KEY}` with
-the AccessKey provided by [Picovoice Console](https://picovoice.ai/console/),
+the AccessKey provided by [Picovoice Console](https://console.picovoice.ai/),
 replace `${AUDIO_PATH}` with the path to a given audio file and replace `${INDEX_PATH}` with the path to cached index file.
 
 ### Ubuntu
@@ -72,7 +78,7 @@ ${INDEX_PATH}
 ## Run Search Demo
 
 Searches cached metadata for utterances of a given search phrase. In the following, replace `${ACCESS_KEY}` with
-the AccessKey provided by [Picovoice Console](https://picovoice.ai/console/),
+the AccessKey provided by [Picovoice Console](https://console.picovoice.ai/),
 replace `${INDEX_PATH}` with the path to a given index file and replace `${PHRASE}` to a search phrase.
 
 ### Ubuntu

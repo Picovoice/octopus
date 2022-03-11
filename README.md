@@ -49,7 +49,7 @@ Run the following in the terminal:
 octopus_demo  --access_key {AccessKey} --audio_paths ${AUDIO_PATHS}
 ```
 
-Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/) and `${AUDIO_PATHS}` with a space-separated list of audio files.
+Replace `${AccessKey}` with your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/) and `${AUDIO_PATHS}` with a space-separated list of audio files.
 Octopus starts processing the audio files and asks you for search phrases and shows results interactively.
 
 For more information about the Python demos go to [demo/python](/demo/python).
@@ -75,7 +75,7 @@ Then search the index for a given phrase:
 ```
 
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with 
-AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/), `${AUDIO_PATH}` with the path to a given
+AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/), `${AUDIO_PATH}` with the path to a given
 audio file and format, `${INDEX_PATH}` with the path to cached index file and `${SEARCH_PHRASE}` to a search phrase.
 
 For more information about C demos go to [demo/c](/demo/c).
@@ -86,7 +86,7 @@ Using [Android Studio](https://developer.android.com/studio/index.html), open [d
 as an Android project.
 
 Replace `"${YOUR_ACCESS_KEY_HERE}"` inside [MainActivity.java](/demo/android/OctopusDemo/octopus-demo-app/src/main/java/ai/picovoice/octopusdemo/MainActivity.java)
-with your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/). Then run the demo.
+with your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/). Then run the demo.
 
 For more information about Android demos go to [demo/android](/demo/android).
 
@@ -99,7 +99,7 @@ pod install
 ```
 
 Replace `"{YOUR_ACCESS_KEY_HERE}"` inside [`ViewModel.swift`](/demo/ios/OctopusDemo/OctopusDemo/ViewModel.swift) with your
-AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/).  Then, using [Xcode](https://developer.apple.com/xcode/),
+AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/).  Then, using [Xcode](https://developer.apple.com/xcode/),
 open the generated `OctopusDemo.xcworkspace` and run the application.
 
 For more information about iOS demos go to [demo/ios](/demo/ios).
@@ -130,7 +130,7 @@ Create an instance of the engine:
 
 ```python
 import pvoctopus
-access_key = ""  # AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+access_key = ""  # AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 handle = pvoctopus.create(access_key=access_key)
 ```
 
@@ -164,7 +164,7 @@ handle.delete()
 
 ```c
     const char *model_path = "..."; // absolute path to the model file available at `lib/common/octopus_params.pv`
-    const char *access_key = "..." // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+    const char *access_key = "..." // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
     pv_octopus_t *handle = NULL;
     pv_status_t status = pv_octopus_init(access_key, model_path, &handle);
     if (status != PV_STATUS_SUCCESS) {
@@ -209,7 +209,7 @@ Create an instance of the engine:
 ```java
 import ai.picovoice.octopus.*;
 
-final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 try {
     Octopus handle = new Octopus.Builder(accessKey).build(appContext);
 } catch (OctopusException ex) { }
@@ -253,7 +253,7 @@ Create an instance of the engine:
 ```swift
 import Octopus
 
-let accessKey : String = // .. AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+let accessKey : String = // .. AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 do {
     let handle = try Octopus(accessKey: accessKey)
 } catch { }
@@ -317,7 +317,7 @@ to allow it to perform processing off the main thread.
     async function startOctopus() {
       // Create an Octopus Worker
       // Note: you receive a Worker object, _not_ an individual Octopus instance
-      const accessKey = ... // AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
+      const accessKey = ... // AccessKey string provided by Picovoice Console (https://console.picovoice.ai/)
       const OctopusWorker = await OctopusWorkerFactory.create(
         accessKey,
         octopusIndexCallback,
@@ -380,7 +380,7 @@ function octopusSearchCallback(matches) {
 async function startOctopus() {
   // Create an Octopus Worker
   // Note: you receive a Worker object, _not_ an individual Octopus instance
-  const accessKey = // .. AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+  const accessKey = // .. AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
   const OctopusWorker = await OctopusWorkerFactory.create(
     accessKey,
     octopusIndexCallback,

@@ -1,5 +1,11 @@
 # Octopus iOS Demo
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Setup
 
 1. Before building the demo app, run the following from this directory to install the Octopus CocoaPod:
@@ -7,7 +13,7 @@
 pod install
 ```
 2. Replace `"YOUR_ACCESS_KEY_HERE"` inside [`ViewModel.swift`](/demo/ios/OctopusDemo/OctopusDemo/ViewModel.swift) with
-your AccessKey obtained from [Picovoice Console](https://picovoice.ai/console/).
+your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/).
 
 ## Usage
 Open the OctopusDemo Xcode project and build. Launch the demo on a simulator or a physical iOS device.

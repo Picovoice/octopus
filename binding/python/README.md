@@ -17,6 +17,12 @@ hypothesis (e.g. homophones)
 pip3 install pvoctopus
 ```
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Usage
 
 Create an instance of the engine:
@@ -24,7 +30,7 @@ Create an instance of the engine:
 ```python
 import pvoctopus
 
-access_key = ""  # AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+access_key = ""  # AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 handle = pvoctopus.create(access_key=access_key)
 ```
 

@@ -12,6 +12,12 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 
 This library requires several modern browser features: WebAssembly, Web Workers, and promises. Internet Explorer will _not_ work.
 
+## AccessKey
+
+Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Octopus SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 ## Packages
 
 The Octopus SDK for Web is split into separate worker and factory packages; import each as required.
@@ -65,7 +71,7 @@ function octopusSearchCallback(matches) {
 async function startOctopus() {
   // Create an Octopus Worker
   // Note: you receive a Worker object, _not_ an individual Octopus instance
-  const accessKey = ... // .. AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
+  const accessKey = ... // .. AccessKey string provided by Picovoice Console (https://console.picovoice.ai/)
   const OctopusWorker = await OctopusWorkerFactory.create(
     accessKey,
     octopusIndexCallback,
@@ -111,7 +117,7 @@ E.g.:
 import { Octopus } from "@picovoice/octopus-web-en-factory";
 
 async function startOctopus() {
-  const accessKey = ""; // .. AccessKey string provided by Picovoice Console (https://picovoice.ai/console/)
+  const accessKey = ""; // .. AccessKey string provided by Picovoice Console (https://console.picovoice.ai/)
   const handle = await Octopus.create(accessKey);
 }
 

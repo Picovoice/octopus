@@ -52,7 +52,7 @@ public class Octopus {
     /// Constructor.
     ///
     /// - Parameters:
-    ///   - accessKey: AccessKey obtained from the Picvoice Console (https://picovoice.ai/console/)
+    ///   - accessKey: AccessKey obtained from the Picvoice Console (https://console.picovoice.ai/)
     ///   - modelPath: Absolute path to file containing model parameters.
     /// - Throws: OctopusError
     public init(accessKey:String, modelPath:String? = nil) throws {

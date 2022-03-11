@@ -35,7 +35,7 @@ def create(access_key, library_path=None, model_path=None):
     """
     Factory method for Octopus Speech-to-Index engine.
 
-    :param access_key: AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+    :param access_key: AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
     :param library_path: Absolute path to Octopus' dynamic library. If not set it will be set to the default
     location.
     :param model_path: Absolute path to the file containing model parameters. If not set it will be set to the default

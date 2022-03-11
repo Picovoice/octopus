@@ -60,7 +60,7 @@ def main():
 
     parser.add_argument(
         '--access_key',
-        help='AccessKey provided by Picovoice Console (https://picovoice.ai/console/)',
+        help='AccessKey provided by Picovoice Console (https://console.picovoice.ai/)',
         required=True)
 
     args = parser.parse_args()

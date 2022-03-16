@@ -57,7 +57,7 @@ static void pv_close_dl(void *dl) {
 
 }
 
-int main(int argc, char *argv[]) {
+int picovoice_main(int argc, char *argv[]) {
     if (argc != 6) {
         fprintf(stderr, "usage : %s dl_path model_path access_key index_path phrase\n", argv[0]);
         exit(1);
@@ -165,4 +165,47 @@ int main(int argc, char *argv[]) {
     free(matches);
 
     return 0;
+}
+
+int main(int argc, char *argv[]) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#define UTF8_COMPOSITION_FLAG (0)
+#define NULL_TERMINATED (-1)
+
+    LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    if (wargv == NULL) {
+        fprintf(stderr, "CommandLineToArgvW failed\n");
+        exit(1);
+    }
+
+    char *utf8_argv[argc];
+
+    for (int i = 0; i < argc; ++i) {
+        // WideCharToMultiByte: https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte
+        int arg_chars_num = WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, NULL, 0, NULL, NULL);
+        utf8_argv[i] = (char *) malloc(arg_chars_num * sizeof(char));
+        if (!utf8_argv[i]) {
+            fprintf(stderr, "failed to to allocate memory for converting args");
+        }
+        WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, utf8_argv[i], arg_chars_num, NULL, NULL);
+    }
+
+    LocalFree(wargv);
+    argv = utf8_argv;
+
+#endif
+
+    int result = picovoice_main(argc, argv);
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    for (int i = 0; i < argc; ++i) {
+        free(utf8_argv[i]);
+    }
+
+#endif
+
+    return result;
 }

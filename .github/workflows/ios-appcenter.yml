@@ -41,7 +41,7 @@ jobs:
       - name: Run Cocoapods
         run: pod install
 
-      - name: Inject AppID
+      - name: Inject AccessKey
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
           OctopusAppTestUITests/OctopusAppTestUITests.swift
 

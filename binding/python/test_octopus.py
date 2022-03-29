@@ -30,9 +30,9 @@ class OctopusTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        app_id = sys.argv[1]
+        access_key = sys.argv[1]
         cls.octopus = Octopus(
-            access_key=app_id,
+            access_key=access_key,
             library_path=pv_library_path('../..'),
             model_path=pv_model_path('../..'))
 

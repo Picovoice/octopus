@@ -195,10 +195,6 @@ public class Octopus {
         private String accessKey = null;
         private String modelPath = null;
 
-        public Builder(String accessKey) {
-            this.accessKey = accessKey;
-        }
-
         public Builder setAccessKey(String accessKey) {
             this.accessKey = accessKey;
             return this;

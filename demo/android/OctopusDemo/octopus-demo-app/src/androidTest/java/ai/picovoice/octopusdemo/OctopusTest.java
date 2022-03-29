@@ -84,7 +84,7 @@ public class OctopusTest {
     @Test
     public void testIndexAndSearchAudioFile() throws OctopusException {
 
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -106,7 +106,7 @@ public class OctopusTest {
 
     @Test
     public void testIndexAndSearchAudioData() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
 
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
 
@@ -138,7 +138,7 @@ public class OctopusTest {
 
     @Test
     public void testMetadataMarshalling() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -167,7 +167,7 @@ public class OctopusTest {
 
     @Test
     public void testEmptySearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -187,7 +187,7 @@ public class OctopusTest {
 
     @Test
     public void testWhitespaceSearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -207,7 +207,7 @@ public class OctopusTest {
 
     @Test
     public void testNumericSearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -227,7 +227,7 @@ public class OctopusTest {
 
     @Test
     public void testHyphenInSearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -247,7 +247,7 @@ public class OctopusTest {
 
     @Test
     public void testInvalidSearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 
@@ -267,7 +267,7 @@ public class OctopusTest {
 
     @Test
     public void testSpacesInSearchPhrase() throws Exception {
-        Octopus octopus = new Octopus.Builder(accessKey).build(appContext);
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
         File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
         OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
 

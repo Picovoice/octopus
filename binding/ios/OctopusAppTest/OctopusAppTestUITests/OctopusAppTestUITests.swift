@@ -12,7 +12,8 @@ import Octopus
 
 class OctopusAppTestUITests: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
-    
+    let thresholdString: String = "{PERFORMANCE_THRESHOLD_SEC}"
+
     let phrases: Set<String> = ["gorilla", "terminator"]
     let expectedMatch = OctopusMatch(
         startSec: 39.168,
@@ -220,6 +221,41 @@ class OctopusAppTestUITests: XCTestCase {
         XCTAssertEqual(match.startSec, expected.startSec, accuracy: 0.01)
         XCTAssertEqual(match.endSec, expected.endSec, accuracy: 0.01)
         XCTAssertEqual(match.probability, expected.probability, accuracy: 0.01)
+        
+        metadata.delete()
+        octopus.delete()
+    }
+
+    func testPerformance() throws {
+        try XCTSkipIf(thresholdString == "{PERFORMANCE_THRESHOLD_SEC}")
+
+        let performanceThresholdSec = Double(thresholdString)
+        try XCTSkipIf(performanceThresholdSec == nil)
+
+        let bundle = Bundle(for: type(of: self))
+        let fileURL:URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
+        let audioData = try Data(contentsOf: fileURL)
+        var pcm = Array<Int16>(repeating: 0, count: (audioData.count - 44) / 2)
+        _ = pcm.withUnsafeMutableBytes {
+            audioData.copyBytes(to: $0, from: 44..<audioData.count)
+        }
+
+        let octopus = try Octopus(accessKey: accessKey)
+
+        var totalNSec = 0.0
+        let metadata = try octopus.indexAudioData(pcm: pcm)
+        let matches = try octopus.search(metadata: metadata, phrases: phrases)
+
+        let totalSec = Double(round(totalNSec * 1000) / 1000)
+        XCTAssertLessThanOrEqual(totalSec, performanceThresholdSec!)
+        
+        XCTAssert(matches["gorilla"]!.count == 0)
+        XCTAssert(matches["terminator"]!.count == 1)
+
+        let terminatorMatches = matches["terminator"]!
+        XCTAssertEqual(terminatorMatches[0].startSec, expectedMatch.startSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].endSec, expectedMatch.endSec, accuracy: 0.01)
+        XCTAssertEqual(terminatorMatches[0].probability, expectedMatch.probability, accuracy: 0.01)
         
         metadata.delete()
         octopus.delete()

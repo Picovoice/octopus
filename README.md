@@ -74,7 +74,7 @@ Then search the index for a given phrase:
 ./demo/c/build/octopus_search_demo ${LIBRARY_PATH} ${MODEL_PATH} ${ACCESS_KEY} ${INDEX_PATH} ${SEARCH_PHRASE}
 ```
 
-Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with 
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${ACCESS_KEY}` with
 AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/), `${AUDIO_PATH}` with the path to a given
 audio file and format, `${INDEX_PATH}` with the path to cached index file and `${SEARCH_PHRASE}` to a search phrase.
 
@@ -139,7 +139,7 @@ Index your raw audio data or file:
 ```python
 audio_data = [..]
 metadata = handle.index(audio_data)
-# or 
+# or
 audio_file_path = "/path/to/my/audiofile.wav"
 metadata = handle.index_file(audio_file_path)
 ```
@@ -211,7 +211,7 @@ import ai.picovoice.octopus.*;
 
 final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 try {
-    Octopus handle = new Octopus.Builder(accessKey).build(appContext);
+    Octopus handle = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
 } catch (OctopusException ex) { }
 ```
 

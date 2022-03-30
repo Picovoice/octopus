@@ -38,7 +38,7 @@ import ai.picovoice.octopus.*;
 
 final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
 try {
-    Octopus handle = new Octopus.Builder(accessKey).build(appContext);
+    Octopus handle = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
 } catch (OctopusException ex) { }
 ```
 
@@ -88,7 +88,7 @@ HashMap <String, OctopusMatch[]> matches = handle.search(metadata, phrases);
 ```
 
 Matches are returned in a hashmap, where the key is the input phrase and the associated value is an array
-of immutable `OctopusMatch` objects that represent any instances of the phrase that were found in the input audio. 
+of immutable `OctopusMatch` objects that represent any instances of the phrase that were found in the input audio.
 The start time and end time of the match are given in seconds, while the probability is a floating-point value between [0, 1].
 
 ```java

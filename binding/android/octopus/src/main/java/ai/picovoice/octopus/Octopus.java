@@ -195,10 +195,6 @@ public class Octopus {
         private String accessKey = null;
         private String modelPath = null;
 
-        public Builder(String accessKey) {
-            this.accessKey = accessKey;
-        }
-
         public Builder setAccessKey(String accessKey) {
             this.accessKey = accessKey;
             return this;
@@ -210,6 +206,9 @@ public class Octopus {
         }
 
         public Octopus build(Context context) throws OctopusException {
+            if (accessKey == null || this.accessKey.equals("")) {
+                throw new OctopusInvalidArgumentException("No AccessKey was provided to Octopus");
+            }
 
             if (modelPath == null) {
                 if (defaultModelPath == null) {
@@ -228,10 +227,6 @@ public class Octopus {
                         throw new OctopusIOException(ex);
                     }
                 }
-            }
-
-            if (accessKey == null) {
-                throw new OctopusInvalidArgumentException("AccessKey must not be null");
             }
 
             return new Octopus(accessKey, modelPath);

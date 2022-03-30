@@ -5,19 +5,20 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'demo/android/OctopusDemo'
+      - 'demo/android/OctopusDemo/**'
       - '!demo/android/OctopusDemo/README.md'
-    
+      - '.github/workflows/android-appcenter.yml'
   pull_request:
     branches: [ main ]
     paths:
-      - 'demo/android/OctopusDemo'
+      - 'demo/android/OctopusDemo/**'
       - '!demo/android/OctopusDemo/README.md'
+      - '.github/workflows/android-appcenter.yml'
 
 defaults:
   run:
     working-directory: demo/android/OctopusDemo
-    
+
 jobs:
   build:
     name: Run Android Tests on AppCenter
@@ -51,11 +52,11 @@ jobs:
       run: ./gradlew assembleAndroidTest
 
     - name: Run tests on AppCenter
-      run: appcenter test run espresso 
+      run: appcenter test run espresso
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Octopus-Android"
-        --devices "Picovoice/android-min-max" 
+        --devices "Picovoice/android-min-max"
         --app-path octopus-demo-app/build/outputs/apk/debug/octopus-demo-app-debug.apk
         --test-series "octopus-android"
-        --locale "en_US" 
+        --locale "en_US"
         --build-dir octopus-demo-app/build/outputs/apk/androidTest/debug

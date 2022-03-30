@@ -243,10 +243,15 @@ class OctopusAppTestUITests: XCTestCase {
         let octopus = try Octopus(accessKey: accessKey)
 
         var totalNSec = 0.0
+
+        let before = CFAbsoluteTimeGetCurrent()
         let metadata = try octopus.indexAudioData(pcm: pcm)
         let matches = try octopus.search(metadata: metadata, phrases: phrases)
+        let after = CFAbsoluteTimeGetCurrent()
 
+        totalNSec += (after - before)
         let totalSec = Double(round(totalNSec * 1000) / 1000)
+
         XCTAssertLessThanOrEqual(totalSec, performanceThresholdSec!)
         
         XCTAssert(matches["gorilla"]!.count == 0)

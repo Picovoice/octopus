@@ -50,7 +50,7 @@ jobs:
         cmake -S demo/c/. -B demo/c/build
         cmake --build demo/c/build
 
-    - uses: ./.github/actions/c-filedemo
+    - uses: ./.github/actions/c-demo
       name: Run demo
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}

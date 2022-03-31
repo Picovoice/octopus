@@ -1,4 +1,4 @@
-name: Run filedemo
+name: Run demo
 
 inputs:
   access_key:

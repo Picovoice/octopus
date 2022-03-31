@@ -1,15 +1,15 @@
-#if !defined(_WIN32) && !defined(_WIN64)
-
-#include <dlfcn.h>
-
-#endif
-
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 
 #include <windows.h>
+
+#else
+
+#include <dlfcn.h>
 
 #endif
 
@@ -57,39 +57,96 @@ static void pv_close_dl(void *dl) {
 
 }
 
+static void print_dl_error(const char *message) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    fprintf(stderr, "%s with code '%lu'.\n", message, GetLastError());
+
+#else
+
+    fprintf(stderr, "%s with '%s'.\n", message, dlerror());
+
+#endif
+
+}
+
+static struct option long_options[] = {
+        {"library_path",                required_argument, NULL, 'l'},
+        {"model_path",                  required_argument, NULL, 'm'},
+        {"access_key",                  required_argument, NULL, 'a'},
+        {"index_path",                  required_argument, NULL, 'i'},
+        {"search_phrase",               required_argument, NULL, 's'},
+        {"performance_threshold_sec",   optional_argument, NULL, 'p'},
+};
+
+void print_usage(const char *program_name) {
+    fprintf(
+        stderr,  
+        "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -i INDEX_PATH -s SEARCH_PHRASE\n",
+        program_name);
+}
+
 int picovoice_main(int argc, char *argv[]) {
-    if (argc != 6) {
-        fprintf(stderr, "usage : %s dl_path model_path access_key index_path phrase\n", argv[0]);
+    const char *library_path = NULL;
+    const char *model_path = NULL;
+    const char *access_key = NULL;
+    const char *index_path = NULL;
+    const char *search_phrase = NULL;
+    double performance_threshold_sec = 0;
+
+    int c;
+    while ((c = getopt_long(argc, argv, "l:m:a:i:s:p:", long_options, NULL)) != -1) {
+        switch (c) {
+            case 'l':
+                library_path = optarg;
+                break;
+            case 'm':
+                model_path = optarg;
+                break;
+            case 'a':
+                access_key = optarg;
+                break;
+            case 'i':
+                index_path = optarg;
+                break;
+            case 's':
+                search_phrase = optarg;
+                break;
+            case 'p':
+                performance_threshold_sec = strtod(optarg, NULL);
+                break;
+            default:
+                exit(1);
+        }
+    }
+
+    if (!library_path || !model_path || !search_phrase || !access_key || !index_path) {
+        print_usage(argv[0]);
         exit(1);
     }
 
-    const char *dl_path = argv[1];
-    const char *model_path = argv[2];
-    const char *access_key = argv[3];
-    const char *index_path = argv[4];
-    const char *phrase = argv[5];
-
-    void *dl = pv_open_dl(dl_path);
+    void *dl = pv_open_dl(library_path);
     if (!dl) {
-        fprintf(stderr, "failed to open library.\n");
+        print_dl_error("Failed to open library");
         exit(1);
     }
 
     const char *(*pv_status_to_string_func)(pv_status_t) = pv_load_sym(dl, "pv_status_to_string");
     if (!pv_status_to_string_func) {
-        fprintf(stderr, "failed to load 'pv_status_to_string()'.\n");
+        print_dl_error("Failed to load symbol 'pv_status_to_string'");
         exit(1);
     }
 
     pv_status_t (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
     if (!pv_octopus_init_func) {
-        fprintf(stderr, "failed to load 'pv_octopus_init()'.\n");
+        print_dl_error("Failed to load symbol 'pv_octopus_init'");
         exit(1);
     }
 
     void (*pv_octopus_delete_func)(pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_delete");
     if (!pv_octopus_delete_func) {
-        fprintf(stderr, "failed to load 'pv_octopus_delete()'.\n");
+        print_dl_error("Failed to load symbol 'pv_octopus_delete'");
         exit(1);
     }
 
@@ -101,13 +158,13 @@ int picovoice_main(int argc, char *argv[]) {
             pv_octopus_match_t **,
             int32_t *) = pv_load_sym(dl, "pv_octopus_search");
     if (!pv_octopus_search_func) {
-        fprintf(stderr, "failed to load 'pv_octopus_search()'.\n");
+        print_dl_error("Failed to load symbol 'pv_octopus_search'");
         exit(1);
     }
 
     const char (*pv_octopus_version_func)(const pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_version");
     if (!pv_octopus_version_func) {
-        fprintf(stderr, "failed to load 'pv_octopus_version()'.\n");
+        print_dl_error("Failed to load symbol 'pv_octopus_version'");
         exit(1);
     }
 
@@ -139,13 +196,25 @@ int picovoice_main(int argc, char *argv[]) {
 
     fclose(f);
 
+    double total_cpu_time_usec = 0;
+
     pv_octopus_match_t *matches = NULL;
     int32_t num_matches = 0;
-    status = pv_octopus_search_func(o, indices, num_indices_byte, phrase, &matches, &num_matches);
+
+    struct timeval before;
+    gettimeofday(&before, NULL);
+
+    status = pv_octopus_search_func(o, indices, num_indices_byte, search_phrase, &matches, &num_matches);
     if (status != PV_STATUS_SUCCESS) {
         fprintf(stderr, "failed to search with '%s'.\n", pv_status_to_string_func(status));
         exit(1);
     }
+
+    struct timeval after;
+    gettimeofday(&after, NULL);
+   
+    total_cpu_time_usec +=
+        (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
 
     free(indices);
     pv_octopus_delete_func(o);
@@ -163,6 +232,14 @@ int picovoice_main(int argc, char *argv[]) {
     }
 
     free(matches);
+
+    if (performance_threshold_sec > 0) {
+        const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
+        if (total_cpu_time_sec > performance_threshold_sec) {
+            fprintf(stderr, "Expected threshold (%.3fs), process took (%.3fs)\n", performance_threshold_sec, total_cpu_time_sec);
+            exit(1);
+        }
+    }
 
     return 0;
 }

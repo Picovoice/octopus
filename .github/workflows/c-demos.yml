@@ -7,28 +7,38 @@ on:
     paths:
       - 'demo/c/**'
       - '!demo/c/README.md'
+      - '.github/workflows/c-demos.yml'
+
   pull_request:
     branches: [ main ]
     paths:
       - 'demo/c/**'
       - '!demo/c/README.md'
+      - '.github/workflows/c-demos.yml'
 
 jobs:
-  build-index-demo:
-    runs-on: ubuntu-latest
+  build-demos-github-hosted:
+    runs-on: ${{ matrix.os }}
 
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
-    - name: Build Index Demo
-      run: |
-        cmake -S demo/c/. -B demo/c/build
-        cmake --build demo/c/build --target octopus_index_demo
-
-  build-search-demo:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          platform: linux
+          arch: x86_64
+          ext: so
+          performance_threshold_sec: 1.5
+        - os: windows-latest
+          platform: windows
+          arch: amd64
+          ext: dll
+          performance_threshold_sec: 1.5
+        - os: macos-latest
+          platform: mac
+          arch: x86_64
+          ext: dylib
+          performance_threshold_sec: 1.5
 
     steps:
     - uses: actions/checkout@v2
@@ -38,4 +48,15 @@ jobs:
     - name: Build Search Demo
       run: |
         cmake -S demo/c/. -B demo/c/build
-        cmake --build demo/c/build --target octopus_search_demo
+        cmake --build demo/c/build
+
+    - uses: ./.github/actions/c-filedemo
+      name: Run demo
+      with:
+        access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_octopus.${{ matrix.ext }}
+        model_path: ../../lib/common/octopus_params.pv
+        audio_path: ../../res/audio/multiple_keywords.wav
+        index_path: ../../index.oif
+        search_phrase: picovoice
+        performance_threshold_sec: ${{ matrix.performance_threshold_sec }}

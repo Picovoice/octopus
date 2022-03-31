@@ -8,6 +8,7 @@ on:
       - 'demo/android/OctopusDemo/**'
       - '!demo/android/OctopusDemo/README.md'
       - '.github/workflows/android-appcenter.yml'
+
   pull_request:
     branches: [ main ]
     paths:
@@ -44,6 +45,9 @@ jobs:
 
     - name: Inject AccessKey
       run: echo pvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" >> local.properties
+
+    - name: Inject Performance Threshold
+      run: echo performanceThresholdSec="3.5" >> local.properties
 
     - name: Build app
       run: ./gradlew assembleDebug

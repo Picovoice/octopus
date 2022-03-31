@@ -20,6 +20,7 @@ import com.microsoft.appcenter.espresso.Factory;
 import com.microsoft.appcenter.espresso.ReportHelper;
 
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -293,6 +294,45 @@ public class OctopusTest {
         octopus.delete();
     }
 
+    @Test
+    public void testPerformance() throws Exception {
+        String thresholdString = appContext.getString(R.string.performanceThresholdSec);
+        Assume.assumeNotNull(thresholdString);
+        Assume.assumeFalse(thresholdString.equals(""));
+
+        double performanceThresholdSec = Double.parseDouble(thresholdString);
+
+        Octopus octopus = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
+        File audioFile = new File(testResourcesPath, "audio/multiple_keywords.wav");
+
+        long totalNSec = 0;
+
+        long before = System.nanoTime();
+        OctopusMetadata metadata = octopus.indexAudioFile(audioFile.getAbsolutePath());
+        HashMap<String, OctopusMatch[]> matches = octopus.search(metadata, testPhrases);
+        long after = System.nanoTime();
+
+        totalNSec += (after - before);
+        double totalSec = Math.round(((double) totalNSec) * 1e-6) / 1000.0;
+        assertTrue(
+                String.format("Expected threshold (%.3fs), process took (%.3fs)", performanceThresholdSec, totalSec),
+                totalSec <= performanceThresholdSec
+        );
+
+        assertTrue(matches.containsKey("gorilla"));
+        assertEquals(0, Objects.requireNonNull(matches.get("gorilla")).length);
+        assertTrue(matches.containsKey("terminator"));
+
+        OctopusMatch[] terminatorMatches = Objects.requireNonNull(matches.get("terminator"));
+        assertEquals(1, terminatorMatches.length);
+        assertEquals(expectedMatch.getStartSec(), terminatorMatches[0].getStartSec(), 0.0);
+        assertEquals(expectedMatch.getEndSec(), terminatorMatches[0].getEndSec(), 0.0);
+        assertEquals(expectedMatch.getProbability(), terminatorMatches[0].getProbability(), 0.0);
+
+        metadata.delete();
+        octopus.delete();
+    }
+    
     private void extractAssetsRecursively(String path) throws IOException {
 
         String[] list = assetManager.list(path);

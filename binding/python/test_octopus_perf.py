@@ -78,7 +78,7 @@ class OctopusTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print("usage: test_octopus_perf.py ${ACCESS_KEY} ${NUM_TEST_INTERVALS} "
               "${INDEX_PERFORMANCE_THRESHOLD_SEC} ${SEARCH_PERFORMANCE_THRESHOLD_SEC}")
         exit(1)

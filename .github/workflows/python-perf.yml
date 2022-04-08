@@ -35,14 +35,14 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
-          index_performance_threshold_sec: 0.0
-          search_performance_threshold_sec: 0.0
+          index_performance_threshold_sec: 1.3
+          search_performance_threshold_sec: 0.001
         - os: windows-latest
-          index_performance_threshold_sec: 0.0
-          search_performance_threshold_sec: 0.0
+          index_performance_threshold_sec: 1.3
+          search_performance_threshold_sec: 0.001
         - os: macos-latest
-          index_performance_threshold_sec: 0.0
-          search_performance_threshold_sec: 0.0
+          index_performance_threshold_sec: 1.3
+          search_performance_threshold_sec: 0.001
 
     steps:
     - uses: actions/checkout@v2

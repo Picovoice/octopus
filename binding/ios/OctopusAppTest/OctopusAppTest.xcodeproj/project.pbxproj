@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A4DF03AB93039DC6A992730 /* libPods-OctopusAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */; };
+		16197350434656617777BDDE /* libPods-OctopusAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */; };
 		1E0064C827CEEA65006FF6E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064C727CEEA65006FF6E9 /* AppDelegate.swift */; };
 		1E0064CC27CEEA65006FF6E9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064CB27CEEA65006FF6E9 /* ViewController.swift */; };
 		1E0064CF27CEEA65006FF6E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064CD27CEEA65006FF6E9 /* Main.storyboard */; };
@@ -17,7 +18,7 @@
 		1E00654627CFF260006FF6E9 /* OctopusAppTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064E827CEEA66006FF6E9 /* OctopusAppTestUITests.swift */; };
 		1E5B7B042800D9BE00F8BDDB /* PerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B7B032800D9BE00F8BDDB /* PerformanceTest.swift */; };
 		1E5B7B072800DD6600F8BDDB /* multiple_keywords.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7B062800DD6600F8BDDB /* multiple_keywords.wav */; };
-		36696536961DE78B3E1C06FA /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		36696536961DE78B3E1C06FA /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		F80AD4648813F37825025113 /* libPods-PerformanceTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PerformanceTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		493470BF19F372CF4D8D103E /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
 		498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F8DE7C85EEF4D52669142E7 /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
 		F4E04511A77E54C10386FB49 /* Pods-OctopusAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F5AF54842119EA76E7CB3C85 /* Pods-OctopusAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTest.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest.debug.xcconfig"; sourceTree = "<group>"; };
@@ -77,7 +79,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36696536961DE78B3E1C06FA /* (null) in Frameworks */,
+				36696536961DE78B3E1C06FA /* BuildFile in Frameworks */,
+				16197350434656617777BDDE /* libPods-OctopusAppTestUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +168,7 @@
 			children = (
 				498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */,
 				44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */,
+				4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

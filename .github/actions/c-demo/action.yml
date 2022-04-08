@@ -17,7 +17,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - name: Indexing with performance measuring
+  - name: Indexing
     run: >
       ./build/octopus_index_demo
       -a ${{ inputs.access_key }}

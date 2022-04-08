@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Picovoice Inc.
+# Copyright 2021-2022 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license.
 # A copy of the license is located in the "LICENSE" file accompanying this
@@ -12,13 +12,11 @@
 # limitations under the License.
 #
 
-import os
 import sys
 import unittest
 
-import soundfile
-
 from octopus import *
+from test_util import *
 from util import *
 
 
@@ -37,8 +35,9 @@ class OctopusTestCase(unittest.TestCase):
             model_path=pv_model_path('../..'))
 
         cls.path = os.path.join(os.path.dirname(__file__), '../../res/audio/multiple_keywords.wav')
-        cls.audio, sample_rate = soundfile.read(cls.path, dtype='int16')
-        assert sample_rate == cls.octopus.pcm_sample_rate
+        cls.audio = read_wav_file(
+            cls.path,
+            cls.octopus.pcm_sample_rate)
 
     @classmethod
     def tearDownClass(cls):

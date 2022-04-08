@@ -77,12 +77,11 @@ static struct option long_options[] = {
         {"access_key",                  required_argument, NULL, 'a'},
         {"index_path",                  required_argument, NULL, 'i'},
         {"search_phrase",               required_argument, NULL, 's'},
-        {"performance_threshold_sec",   optional_argument, NULL, 'p'},
 };
 
 void print_usage(const char *program_name) {
     fprintf(
-        stderr,  
+        stderr,
         "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -i INDEX_PATH -s SEARCH_PHRASE\n",
         program_name);
 }
@@ -93,10 +92,9 @@ int picovoice_main(int argc, char *argv[]) {
     const char *access_key = NULL;
     const char *index_path = NULL;
     const char *search_phrase = NULL;
-    double performance_threshold_sec = 0;
 
     int c;
-    while ((c = getopt_long(argc, argv, "l:m:a:i:s:p:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "l:m:a:i:s:", long_options, NULL)) != -1) {
         switch (c) {
             case 'l':
                 library_path = optarg;
@@ -112,9 +110,6 @@ int picovoice_main(int argc, char *argv[]) {
                 break;
             case 's':
                 search_phrase = optarg;
-                break;
-            case 'p':
-                performance_threshold_sec = strtod(optarg, NULL);
                 break;
             default:
                 exit(1);
@@ -212,7 +207,7 @@ int picovoice_main(int argc, char *argv[]) {
 
     struct timeval after;
     gettimeofday(&after, NULL);
-   
+
     total_cpu_time_usec +=
         (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
 
@@ -232,14 +227,6 @@ int picovoice_main(int argc, char *argv[]) {
     }
 
     free(matches);
-
-    if (performance_threshold_sec > 0) {
-        const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
-        if (total_cpu_time_sec > performance_threshold_sec) {
-            fprintf(stderr, "Expected threshold (%.3fs), process took (%.3fs)\n", performance_threshold_sec, total_cpu_time_sec);
-            exit(1);
-        }
-    }
 
     return 0;
 }

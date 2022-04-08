@@ -41,7 +41,7 @@ public class PerformanceTest {
     String testResourcesPath;
     String accessKey;
 
-    int numTestIterations = 100;
+    int numTestIterations = 30;
 
     @After
     public void TearDown() {

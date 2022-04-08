@@ -8,3 +8,7 @@ end
 target 'OctopusAppTestUITests' do
     pod 'Octopus-iOS', '~> 1.1.0'
 end
+
+target 'PerformanceTest' do
+    pod 'Octopus-iOS', '~> 1.1.0'
+end

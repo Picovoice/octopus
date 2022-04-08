@@ -20,11 +20,8 @@
 		02447A8E26D94F75004A6CE9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		02447A9026D94F7C004A6CE9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02447A9526D94F7C004A6CE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		06946230EAE44F5F84E6EE64 /* Pods-OctopusDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		24507AE86738A9648654B975 /* libPods-OctopusDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		666EDA10662F0431AFA4AC40 /* libPods-OctopusDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69392B12452399E386294E71 /* Pods-OctopusDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemo.debug.xcconfig"; path = "Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		8BFDB05F1E5BF515CD2CB16F /* Pods-OctopusDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-OctopusDemoUITests/Pods-OctopusDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		92C92E6FE43BB148AF5E71F0 /* Pods-OctopusDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemo.release.xcconfig"; path = "Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo.release.xcconfig"; sourceTree = "<group>"; };
 		C76A415F2703B17000DB57D6 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,8 +73,6 @@
 			children = (
 				69392B12452399E386294E71 /* Pods-OctopusDemo.debug.xcconfig */,
 				92C92E6FE43BB148AF5E71F0 /* Pods-OctopusDemo.release.xcconfig */,
-				06946230EAE44F5F84E6EE64 /* Pods-OctopusDemoUITests.debug.xcconfig */,
-				8BFDB05F1E5BF515CD2CB16F /* Pods-OctopusDemoUITests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -86,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				666EDA10662F0431AFA4AC40 /* libPods-OctopusDemo.a */,
-				24507AE86738A9648654B975 /* libPods-OctopusDemoUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

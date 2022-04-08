@@ -47,12 +47,11 @@ android {
     sourceSets {
         androidTest {
             java {
-                System.out.println()
                 if (properties.getProperty("indexPerformanceThresholdSec", "").length() == 0 ||
                     properties.getProperty("searchPerformanceThresholdSec", "").length() == 0) {
                     exclude "**/PerformanceTest.java"
                 } else {
-                    exclude "**/CobraTest.java"
+                    exclude "**/OctopusTest.java"
                 }
             }
         }

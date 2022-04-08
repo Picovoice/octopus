@@ -89,7 +89,7 @@ public class PerformanceTest {
         double avgNSec = totalNSec / (double) numTestIterations;
         double avgSec = ((double) Math.round(avgNSec * 1e-6)) / 1000.0;
         assertTrue(
-                String.format("Expected threshold (%.3fs), process took (%.3fs)", indexPerformanceThresholdSec, avgSec),
+                String.format("Expected threshold (%.3fs), index took (%.3fs)", indexPerformanceThresholdSec, avgSec),
                 avgSec <= indexPerformanceThresholdSec
         );
     }
@@ -122,7 +122,7 @@ public class PerformanceTest {
         double avgNSec = totalNSec / (double) numTestIterations;
         double avgSec = ((double) Math.round(avgNSec * 1e-6)) / 1000.0;
         assertTrue(
-                String.format("Expected threshold (%.3fs), process took (%.3fs)", indexPerformanceThresholdSec, avgSec),
+                String.format("Expected threshold (%.3fs), search took (%.3fs)", indexPerformanceThresholdSec, avgSec),
                 avgSec <= indexPerformanceThresholdSec
         );
     }

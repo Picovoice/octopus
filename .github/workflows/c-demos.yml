@@ -28,17 +28,14 @@ jobs:
           platform: linux
           arch: x86_64
           ext: so
-          performance_threshold_sec: 1.5
         - os: windows-latest
           platform: windows
           arch: amd64
           ext: dll
-          performance_threshold_sec: 1.5
         - os: macos-latest
           platform: mac
           arch: x86_64
           ext: dylib
-          performance_threshold_sec: 1.5
 
     steps:
     - uses: actions/checkout@v2
@@ -59,4 +56,3 @@ jobs:
         audio_path: ../../res/audio/multiple_keywords.wav
         index_path: ../../index.oif
         search_phrase: picovoice
-        performance_threshold_sec: ${{ matrix.performance_threshold_sec }}

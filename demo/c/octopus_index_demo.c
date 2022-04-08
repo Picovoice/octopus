@@ -77,12 +77,11 @@ static struct option long_options[] = {
         {"access_key",                  required_argument, NULL, 'a'},
         {"audio_path",                  required_argument, NULL, 'w'},
         {"index_path",                  required_argument, NULL, 'i'},
-        {"performance_threshold_sec",   optional_argument, NULL, 'p'},
 };
 
 void print_usage(const char *program_name) {
     fprintf(
-        stderr,  
+        stderr,
         "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -w AUDIO_PATH -i INDEX_PATH\n",
         program_name);
 }
@@ -93,10 +92,9 @@ int picovoice_main(int argc, char *argv[]) {
     const char *access_key = NULL;
     const char *audio_path = NULL;
     const char *index_path = NULL;
-    double performance_threshold_sec = 0;
 
     int c;
-    while ((c = getopt_long(argc, argv, "l:m:a:w:i:p:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "l:m:a:w:i:", long_options, NULL)) != -1) {
         switch (c) {
             case 'l':
                 library_path = optarg;
@@ -112,9 +110,6 @@ int picovoice_main(int argc, char *argv[]) {
                 break;
             case 'i':
                 index_path = optarg;
-                break;
-            case 'p':
-                performance_threshold_sec = strtod(optarg, NULL);
                 break;
             default:
                 exit(1);
@@ -206,14 +201,6 @@ int picovoice_main(int argc, char *argv[]) {
 
     fclose(f);
     free(indices);
-
-    if (performance_threshold_sec > 0) {
-        const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
-        if (total_cpu_time_sec > performance_threshold_sec) {
-            fprintf(stderr, "Expected threshold (%.3fs), process took (%.3fs)\n", performance_threshold_sec, total_cpu_time_sec);
-            exit(1);
-        }
-    }
 
     return 0;
 }

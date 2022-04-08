@@ -13,14 +13,11 @@ inputs:
     required: true
   search_phrase:
     required: true
-  performance_threshold_sec:
-    required: false
-    type: number
 
 runs:
   using: "composite"
   steps:
-  - name: Indexding
+  - name: Indexing
     run: >
       ./build/octopus_index_demo
       -a ${{ inputs.access_key }}
@@ -28,7 +25,6 @@ runs:
       -m ${{ inputs.model_path }}
       -w ${{ inputs.audio_path }}
       -i ${{ inputs.index_path }}
-    if: "${{ inputs.performance_threshold_sec == '' }}"
     working-directory: demo/c
     shell: bash
 
@@ -40,32 +36,5 @@ runs:
       -m ${{ inputs.model_path }}
       -i ${{ inputs.index_path }}
       -s ${{ inputs.search_phrase }}
-    if: "${{ inputs.performance_threshold_sec == '' }}"
-    working-directory: demo/c
-    shell: bash
-
-  - name: Indexding with performace measuring
-    run: >
-      ./build/octopus_index_demo
-      -a ${{ inputs.access_key }}
-      -l ${{ inputs.library_path }}
-      -m ${{ inputs.model_path }}
-      -w ${{ inputs.audio_path }}
-      -i ${{ inputs.index_path }}
-      -p ${{ inputs.performance_threshold_sec }}
-    if: "${{ inputs.performance_threshold_sec != '' }}"
-    working-directory: demo/c
-    shell: bash
-
-  - name: Searching with performace measuring
-    run: >
-      ./build/octopus_search_demo
-      -a ${{ inputs.access_key }}
-      -l ${{ inputs.library_path }}
-      -m ${{ inputs.model_path }}
-      -s ${{ inputs.search_phrase }}
-      -i ${{ inputs.index_path }}
-      -p ${{ inputs.performance_threshold_sec }}
-    if: "${{ inputs.performance_threshold_sec != '' }}"
     working-directory: demo/c
     shell: bash

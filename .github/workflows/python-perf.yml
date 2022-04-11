@@ -38,10 +38,10 @@ jobs:
           index_performance_threshold_sec: 1.4
           search_performance_threshold_sec: 0.001
         - os: windows-latest
-          index_performance_threshold_sec: 1.3
+          index_performance_threshold_sec: 1.4
           search_performance_threshold_sec: 0.001
         - os: macos-latest
-          index_performance_threshold_sec: 1.3
+          index_performance_threshold_sec: 1.4
           search_performance_threshold_sec: 0.001
 
     steps:

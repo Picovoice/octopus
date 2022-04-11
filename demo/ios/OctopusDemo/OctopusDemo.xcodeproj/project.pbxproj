@@ -96,6 +96,8 @@
 				02447A8526D94F75004A6CE9 /* Sources */,
 				02447A8626D94F75004A6CE9 /* Frameworks */,
 				02447A8726D94F75004A6CE9 /* Resources */,
+				A4A8A4788A9BE14B5C7A1A0F /* [CP] Embed Pods Frameworks */,
+				A6EACA334D961CBD42F02A35 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -150,6 +152,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A4A8A4788A9BE14B5C7A1A0F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6EACA334D961CBD42F02A35 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		F41FFDAC131AF46FF8A5DDE4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -96,8 +96,6 @@
 				02447A8526D94F75004A6CE9 /* Sources */,
 				02447A8626D94F75004A6CE9 /* Frameworks */,
 				02447A8726D94F75004A6CE9 /* Resources */,
-				97803BFB8FEEF34F8A17768F /* [CP] Embed Pods Frameworks */,
-				BC48C652B01D158134A8C8DC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -152,40 +150,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		97803BFB8FEEF34F8A17768F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BC48C652B01D158134A8C8DC /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		F41FFDAC131AF46FF8A5DDE4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -348,7 +312,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 65723695GD;
+				DEVELOPMENT_TEAM = FLFJG588Q8;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OctopusDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -371,7 +335,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 65723695GD;
+				DEVELOPMENT_TEAM = FLFJG588Q8;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OctopusDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

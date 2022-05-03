@@ -212,7 +212,7 @@ public class Octopus {
     ///
     /// - Parameters:
     ///   - filePath: relative path of a file in the bundle.
-    /// - Throws: PorcupineIOError
+    /// - Throws: OctopusIOError
     /// - Returns: The full path of the resource.
     private func getResourcePath(_ filePath: String) throws -> String {
         if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {

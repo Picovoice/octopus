@@ -51,15 +51,15 @@ class ViewModel: ObservableObject {
             try octopus = Octopus(accessKey: ACCESS_KEY)
             statusText = "Start by recording some audio"
             isBusy = false
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             onOctopusInitFail("ACCESS_KEY '\(ACCESS_KEY)' is invalid")
-        } catch OctopusError.OctopusActivationError {
+        } catch is OctopusActivationError {
             errorMessage = "ACCESS_KEY activation error"
-        } catch OctopusError.OctopusActivationRefusedError {
+        } catch is OctopusActivationRefusedError {
             errorMessage = "ACCESS_KEY activation refused"
-        } catch OctopusError.OctopusActivationLimitError {
+        } catch is OctopusActivationLimitError {
             errorMessage = "ACCESS_KEY reached its limit"
-        } catch OctopusError.OctopusActivationThrottledError  {
+        } catch is OctopusActivationThrottledError  {
             errorMessage = "ACCESS_KEY is throttled"
         } catch {
             errorMessage = "\(error)"
@@ -161,8 +161,8 @@ class ViewModel: ObservableObject {
                 }
             }
         
-        } catch OctopusError.OctopusInvalidArgumentError(let errorMessage) {
-            showErrorAlert(errorMessage)
+        } catch let error as OctopusInvalidArgumentError {
+            showErrorAlert("\(error)")
         } catch {
             showErrorAlert("\(error)")
         }

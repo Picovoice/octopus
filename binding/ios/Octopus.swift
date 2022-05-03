@@ -22,21 +22,6 @@ public struct OctopusMatch {
     }
 }
 
-public enum OctopusError: Error {
-    case OctopusOutOfMemoryError(_ message:String)
-    case OctopusIOError(_ message:String)
-    case OctopusInvalidArgumentError(_ message:String)
-    case OctopusStopIterationError(_ message:String)
-    case OctopusKeyError(_ message:String)
-    case OctopusInvalidStateError(_ message:String)
-    case OctopusRuntimeError(_ message:String)
-    case OctopusActivationError(_ message:String)
-    case OctopusActivationLimitError(_ message:String)
-    case OctopusActivationThrottledError(_ message:String)
-    case OctopusActivationRefusedError(_ message:String)
-    case OctopusInternalError(_ message:String)
-}
-
 /// iOS binding for Octopus Speech-to-Index engine. It transforms audio into searchable metadata.
 public class Octopus {
     
@@ -62,14 +47,14 @@ public class Octopus {
         if (modelPath == nil) {
             let bundle = Bundle(for: type(of: self))
             
-            modelPathArg  = bundle.path(forResource: "octopus_params", ofType: "pv")
+            modelPathArg = bundle.path(forResource: "octopus_params", ofType: "pv")
             if modelPathArg == nil {
-                throw OctopusError.OctopusIOError("Could not retrieve default model from app bundle")
+                throw OctopusIOError("Could not retrieve default model from app bundle")
             }
         }
         
-        if !FileManager().fileExists(atPath: modelPathArg!){
-            throw OctopusError.OctopusIOError("Model file at does not exist at '\(modelPathArg!)'")
+        if !FileManager().fileExists(atPath: modelPathArg!) {
+            modelPathArg = try getResourcePath(modelPathArg!)
         }
         
         let status = pv_octopus_init(
@@ -103,7 +88,7 @@ public class Octopus {
     public func indexAudioData(pcm:[Int16]) throws -> OctopusMetadata {
         
         if handle == nil {
-            throw OctopusError.OctopusInvalidStateError("Octopus must be initialized before indexing")
+            throw OctopusInvalidStateError("Octopus must be initialized before indexing")
         }
         
         var cMetadata: UnsafeMutableRawPointer?
@@ -133,18 +118,19 @@ public class Octopus {
     /// - Returns: OctopusMetadata object that is used to perform searches
     public func indexAudioFile(path:String) throws -> OctopusMetadata {
         if handle == nil {
-            throw OctopusError.OctopusInvalidStateError("Octopus must be initialized before indexing")
+            throw OctopusInvalidStateError("Octopus must be initialized before indexing")
         }
-        
-        if !FileManager().fileExists(atPath: path){
-            throw OctopusError.OctopusIOError("Audio file at does not exist at '\(path)'")
+
+        var pathArg = path
+        if !FileManager().fileExists(atPath: pathArg){
+            pathArg = try getResourcePath(pathArg)
         }
         
         var cMetadata: UnsafeMutableRawPointer?
         var cNumMetadataBytes : Int32 = -1
         let status = pv_octopus_index_file(
             handle,
-            path,
+            pathArg,
             &cMetadata,
             &cNumMetadataBytes)
         
@@ -167,7 +153,7 @@ public class Octopus {
     /// - Returns: A dictionary of phrases and match arrays. Matches are represented by immutable `OctopusMatch` objects.
     public func search(metadata: OctopusMetadata, phrases:Set<String>) throws -> Dictionary<String, [OctopusMatch]> {
         if handle == nil {
-            throw OctopusError.OctopusInvalidStateError("Octopus must be initialized before searching")
+            throw OctopusInvalidStateError("Octopus must be initialized before searching")
         }
         
         var matches = Dictionary<String, [OctopusMatch]>()
@@ -181,11 +167,11 @@ public class Octopus {
                 .joined(separator: " ")
             
             if formattedPhrase.isEmpty {
-                throw OctopusError.OctopusInvalidArgumentError("Search phrase cannot be empty")
+                throw OctopusInvalidArgumentError("Search phrase cannot be empty")
             }
             
             if formattedPhrase.range(of: PHRASE_REGEX, options: .regularExpression) == nil {
-                throw OctopusError.OctopusInvalidArgumentError(
+                throw OctopusInvalidArgumentError(
                     "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
                     "\t12 >>> twelve\n" +
                     "\t2021 >>> twenty twenty one\n" +
@@ -221,34 +207,50 @@ public class Octopus {
         
         return matches
     }
+
+    /// Given a path, return the full path to the resource.
+    ///
+    /// - Parameters:
+    ///   - filePath: relative path of a file in the bundle.
+    /// - Throws: OctopusIOError
+    /// - Returns: The full path of the resource.
+    private func getResourcePath(_ filePath: String) throws -> String {
+        if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {
+            if (FileManager.default.fileExists(atPath: resourcePath)) {
+                return resourcePath
+            }
+        }
+
+        throw OctopusIOError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your xcode project.")
+    }
     
     private func pvStatusToOctopusError(_ status: pv_status_t, _ message: String) -> OctopusError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
-            return OctopusError.OctopusOutOfMemoryError(message)
+            return OctopusMemoryError(message)
         case PV_STATUS_IO_ERROR:
-            return OctopusError.OctopusIOError(message)
+            return OctopusIOError(message)
         case PV_STATUS_INVALID_ARGUMENT:
-            return OctopusError.OctopusInvalidArgumentError(message)
+            return OctopusInvalidArgumentError(message)
         case PV_STATUS_STOP_ITERATION:
-            return OctopusError.OctopusStopIterationError(message)
+            return OctopusStopIterationError(message)
         case PV_STATUS_KEY_ERROR:
-            return OctopusError.OctopusKeyError(message)
+            return OctopusKeyError(message)
         case PV_STATUS_INVALID_STATE:
-            return OctopusError.OctopusInvalidStateError(message)
+            return OctopusInvalidStateError(message)
         case PV_STATUS_RUNTIME_ERROR:
-            return OctopusError.OctopusRuntimeError(message)
+            return OctopusRuntimeError(message)
         case PV_STATUS_ACTIVATION_ERROR:
-            return OctopusError.OctopusActivationError(message)
+            return OctopusActivationError(message)
         case PV_STATUS_ACTIVATION_LIMIT_REACHED:
-            return OctopusError.OctopusActivationLimitError(message)
+            return OctopusActivationLimitError(message)
         case PV_STATUS_ACTIVATION_THROTTLED:
-            return OctopusError.OctopusActivationThrottledError(message)
+            return OctopusActivationThrottledError(message)
         case PV_STATUS_ACTIVATION_REFUSED:
-            return OctopusError.OctopusActivationRefusedError(message)
+            return OctopusActivationRefusedError(message)
         default:
             let pvStatusString = String(cString: pv_status_to_string(status))
-            return OctopusError.OctopusInternalError("\(pvStatusString): \(message)")
+            return OctopusError("\(pvStatusString): \(message)")
         }
     }
 }

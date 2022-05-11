@@ -77,6 +77,10 @@ class OctopusMetadata(object):
     def __init__(self, handle, size):
         self._inner = (handle, size)
 
+    @staticmethod
+    def create_owned(handle, size):
+        return OctopusMetadata.from_bytes(OctopusMetadata._to_bytes(handle, size))
+
     @property
     def handle(self):
         return self._inner[0]
@@ -93,9 +97,12 @@ class OctopusMetadata(object):
         return OctopusMetadata(handle=handle, size=size)
 
     def to_bytes(self):
-        byte_array = cast(self.handle, POINTER(c_byte * self.size.value))
-        return bytes(byte_array.contents)
+        return self._to_bytes(self.handle, self.size.value)
 
+    @staticmethod
+    def _to_bytes(pointer, size):
+        byte_array = cast(pointer, POINTER(c_byte * size))
+        return bytes(byte_array.contents)
 
 class Octopus(object):
     """
@@ -201,6 +208,10 @@ class Octopus(object):
 
         self._sample_rate = library.pv_sample_rate()
 
+        self._pv_free = library.pv_free
+        self._pv_free.argtypes = [c_void_p]
+        self._pv_free.restype = None
+
     def delete(self):
         """Releases resources acquired."""
 
@@ -251,7 +262,9 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size)
+        metadataObject = OctopusMetadata.create_owned(metadata, metadata_size.value)
+        self._pv_free(metadata)
+        return metadataObject
 
     Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
 

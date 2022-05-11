@@ -14,8 +14,9 @@
 // @ts-ignore
 import { Mutex } from 'async-mutex';
 
-import { 
-  aligned_alloc_type, 
+import {
+  aligned_alloc_type,
+  pv_free_type,
   buildWasm,
   arrayBufferToStringAtIndex,
   isAccessKeyValid
@@ -65,6 +66,7 @@ import { OCTOPUS_WASM_BASE64 } from './octopus_b64';
 type OctopusWasmOutput = {
   memory: WebAssembly.Memory;
   alignedAlloc: aligned_alloc_type;
+  pvFree: pv_free_type;
   objectAddress: number;
   pvOctopusDelete: pv_octopus_delete_type;
   pvOctopusIndex: pv_octopus_index_type;
@@ -82,6 +84,7 @@ const PV_STATUS_SUCCESS = 10000;
 
 export class Octopus implements OctopusEngine {
   private _allignedAlloc: aligned_alloc_type;
+  private _pvFree: pv_free_type;
 
   private _pvOctopusDelete: pv_octopus_delete_type;
   private _pvOctopusIndex: pv_octopus_index_type;
@@ -107,6 +110,7 @@ export class Octopus implements OctopusEngine {
     Octopus._version = handleWasm.version;
 
     this._allignedAlloc = handleWasm.alignedAlloc;
+    this._pvFree = handleWasm.pvFree;
 
     this._pvOctopusDelete = handleWasm.pvOctopusDelete;
     this._pvOctopusIndex = handleWasm.pvOctopusIndex;
@@ -129,6 +133,10 @@ export class Octopus implements OctopusEngine {
    */
   public async release(): Promise<void> {
     await this._pvOctopusDelete(this._objectAddress);
+    await this._pvFree(this._metadataAddressAddress);
+    await this._pvFree(this._metadataLengthAddress);
+    await this._pvFree(this._octopusMatchAddressAddress);
+    await this._pvFree(this._octopusMatchLengthAddress);
   }
 
   /**
@@ -160,6 +168,7 @@ export class Octopus implements OctopusEngine {
           this._metadataAddressAddress,
           this._metadataLengthAddress
         );
+        await this._pvFree(pcmAddress)
         if (status !== PV_STATUS_SUCCESS) {
           const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
           throw new Error(
@@ -235,6 +244,7 @@ export class Octopus implements OctopusEngine {
           this._octopusMatchAddressAddress,
           this._octopusMatchLengthAddress
         );
+        await this._pvFree(phraseAddress)
         if (status !== PV_STATUS_SUCCESS) {
           throw new Error(
             `search failed with status ${arrayBufferToStringAtIndex(
@@ -316,6 +326,7 @@ export class Octopus implements OctopusEngine {
     const exports = await buildWasm(memory, OCTOPUS_WASM_BASE64);
 
     const aligned_alloc = exports.aligned_alloc as aligned_alloc_type;
+    const pv_free = exports.pv_free as pv_free_type;
 
     const pv_octopus_version = exports.pv_octopus_version as pv_octopus_version_type;
     const pv_octopus_index = exports.pv_octopus_index as pv_octopus_index_type;
@@ -378,6 +389,7 @@ export class Octopus implements OctopusEngine {
     memoryBufferUint8[accessKeyAddress + accessKey.length] = 0;
 
     const status = await pv_octopus_init(accessKeyAddress, objectAddressAddress);
+    await pv_free(accessKeyAddress);
     if (status !== PV_STATUS_SUCCESS) {
       throw new Error(
         `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(
@@ -393,6 +405,7 @@ export class Octopus implements OctopusEngine {
       objectAddressAddress,
       true
     );
+    await pv_free(objectAddressAddress);
 
     const sampleRate = await pv_sample_rate();
     const versionAddress = await pv_octopus_version();
@@ -404,6 +417,7 @@ export class Octopus implements OctopusEngine {
     return {
       memory: memory,
       alignedAlloc: aligned_alloc,
+      pvFree: pv_free,
       pvOctopusDelete: pv_octopus_delete,
       pvOctopusIndex: pv_octopus_index,
       pvOctopusSearch: pv_octopus_search,

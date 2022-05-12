@@ -238,7 +238,9 @@ class Octopus(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        return OctopusMetadata(handle=metadata, size=metadata_size)
+        metadataObject = OctopusMetadata.create_owned(metadata, metadata_size.value)
+        self._pv_free(metadata)
+        return metadataObject
 
     def index_audio_file(self, path):
         """

@@ -109,7 +109,7 @@ class OctopusAppTestUITests: XCTestCase {
         var invalidArg = false
         do {
             let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             invalidArg = true
         }
         
@@ -130,7 +130,7 @@ class OctopusAppTestUITests: XCTestCase {
         var invalidArg = false
         do {
             let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             invalidArg = true
         }
         
@@ -151,7 +151,7 @@ class OctopusAppTestUITests: XCTestCase {
         var invalidArg = false
         do {
             let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             invalidArg = true
         }
         
@@ -172,7 +172,7 @@ class OctopusAppTestUITests: XCTestCase {
         var invalidArg = false
         do {
             let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             invalidArg = true
         }
         
@@ -193,7 +193,7 @@ class OctopusAppTestUITests: XCTestCase {
         var invalidArg = false
         do {
             let _ = try octopus.search(metadata: metadata, phrases: invalidPhrase)
-        } catch OctopusError.OctopusInvalidArgumentError {
+        } catch is OctopusInvalidArgumentError {
             invalidArg = true
         }
         

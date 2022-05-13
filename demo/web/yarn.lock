@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/octopus-web-core/-/octopus-web-core-1.0.0.tgz#f882038343e0bfdfd9f61a8407b39bd90f687bcc"
   integrity sha512-Ch8QuskCWv53uotp3wBJGycQLOpgEhXIsQlG0bXVvaBx/SQzdK2OrJmtEW5b2rYBOpt3BN8Ce6ktb67g0AfHNQ==
 
-"@picovoice/octopus-web-en-worker@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web-en-worker/-/octopus-web-en-worker-1.1.5.tgz#394baefeddabe9af5ba37da2a6220cae4ba176b7"
-  integrity sha512-8/Sl383N0A+I/8d8WQecvjxAN5Rw00+7D6wgd+HPzG7g/iz74OUZRVU/XL3rfhetx8hcpg2yFiYtPPQNYQJIww==
+"@picovoice/octopus-web-en-worker@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web-en-worker/-/octopus-web-en-worker-1.1.6.tgz#e10f95c35ff86c44589794b21ab9bd1fea218f9f"
+  integrity sha512-+2y2m6pA1Io6At1M0G4lJZ11x0OEhz9iH5FGLyh+bVrCvINHCQU4SDGOYAar66QJa/Qfjlqpr/FBY03C9u3NzQ==
   dependencies:
     "@picovoice/octopus-web-core" "^1.0.0"
 

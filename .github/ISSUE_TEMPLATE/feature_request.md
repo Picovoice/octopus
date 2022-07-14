@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Octopus suggestion
+about: Porcupine suggestion
 title: ''
 labels: enhancement
 assignees: ''

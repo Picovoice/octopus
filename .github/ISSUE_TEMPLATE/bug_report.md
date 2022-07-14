@@ -1,7 +1,7 @@
 ---
 name: Bug report
-about: Bugs in Octopus
-title: 'Octopus Issue: '
+about: Bugs in Porcupine
+title: 'Porcupine Issue: '
 labels: bug
 assignees: ''
 

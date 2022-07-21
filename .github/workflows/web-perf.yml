@@ -29,8 +29,8 @@ jobs:
         node-version: [lts/*]
         include:
         - python-version: 3.8
-          indexPerformanceThresholdSec: 1.5
-          searchPerformanceThresholdSec: 0.001
+          indexPerformanceThresholdSec: 2.0
+          searchPerformanceThresholdSec: 0.0015
 
     steps:
     - uses: actions/checkout@v2

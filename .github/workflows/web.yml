@@ -62,4 +62,4 @@ jobs:
         run: yarn setup-test
       
       - name: Test
-        run: python selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file ../../res/audio/multiple_keywords.wav
+        run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file ../../res/audio/multiple_keywords.wav

@@ -13,8 +13,9 @@
 <html lang="en">
   <head>
     <script src="node_modules/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
+    <script src="octopus_params.js"></script>
     <script type="application/javascript">
-      var audioContext = new (window.AudioContext || window.webKitAudioContext)(
+      let audioContext = new (window.AudioContext || window.webKitAudioContext)(
         { sampleRate: 16000 }
       );
 
@@ -34,17 +35,7 @@
 
       let octopusMetadata = undefined;
 
-      function octopusIndexCallback(metadata) {
-        document.getElementById("search").style.display = "block";
-        writeStatus("Audio indexed! Enter a phrase to search the index.");
-        octopusMetadata = metadata;
-      }
-
-      function octopusErrorCallback(error) {
-        writeStatus(error);
-      }
-
-      function octopusSearchCallback(matches) {
+      function octopusSearchHandler(matches) {
         document.getElementById("result").style.display = "block";
         document.getElementById("result-table").style.display = "block";
 
@@ -77,15 +68,13 @@
         let engineHandle = undefined;
         try {
           engineHandle =
-            await OctopusWebEnWorker.OctopusWorkerFactory.create(
+            await OctopusWeb.OctopusWorker.fromBase64(
               accessKey,
-              octopusIndexCallback,
-              octopusSearchCallback,
-              octopusErrorCallback
+              modelParams
             );
         } catch (err) {
           document.getElementById("accessKey").style.border = "1px solid red";
-          octopusErrorCallback(err);
+          console.error(err);
           return;
         }
         document.getElementById("accessKey").style.border = "";
@@ -99,7 +88,7 @@
           document.getElementById("result-table").style.display = "none";
           writeStatus("Indexing audio; please wait...");
           const fileList = event.target.files;
-          readAudioFile(fileList[0], (audioBuffer) => {
+          readAudioFile(fileList[0], async (audioBuffer) => {
             const f32PCM = audioBuffer.getChannelData(0);
             const i16PCM = new Int16Array(f32PCM.length);
 
@@ -113,15 +102,14 @@
                 return i;
               })
             );
-            engineHandle.postMessage({
-              command: "index",
-              input: i16PCM,
-            });
+            octopusMetadata = await engineHandle.index(i16PCM, { transfer: true });
+            document.getElementById("search").style.display = "block";
+            writeStatus("Audio indexed! Enter a phrase to search the index.");
           });
         });
 
         const searchForm = document.getElementById("search-form");
-        searchForm.addEventListener("submit", (event) => {
+        searchForm.addEventListener("submit", async (event) => {
           event.preventDefault();
           const searchText = document.getElementById("search-phrase").value;
           if (searchText.trim() === "") {
@@ -131,11 +119,8 @@
           } else if (octopusMetadata) {
             document.getElementById("search-phrase").style.border = "";
             writeStatus(`Searching for ${searchText}...`);
-            engineHandle.postMessage({
-              command: "search",
-              metadata: octopusMetadata,
-              searchPhrase: searchText.trim(),
-            });
+            let matches = await engineHandle.search(octopusMetadata, searchText);
+            octopusSearchHandler(matches);
           } else {
             writeStatus("Please index an audio file first");
           }

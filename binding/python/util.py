@@ -20,7 +20,7 @@ log.setLevel(logging.WARNING)
 def _pv_platform():
     pv_system = platform.system()
     if pv_system not in {'Darwin', 'Linux', 'Windows'}:
-        raise ValueError(f"Unsupported system '{pv_system}'.")
+        raise ValueError("Unsupported system '%s'." % pv_system)
 
     pv_machine = platform.machine()
 

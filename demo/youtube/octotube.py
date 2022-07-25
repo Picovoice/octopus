@@ -30,9 +30,9 @@ class ProgressAnimation(Thread):
         while True:
             for frame in self._frames:
                 if self._done:
-                    sys.stdout.write(f'\r{" " * (len(self._prefix) + 1 +len(frame))}\r')
+                    sys.stdout.write('\r%s\r' % " " * (len(self._prefix) + 1 +len(frame)))
                     return
-                sys.stdout.write(f'\r{self._prefix} {frame}')
+                sys.stdout.write('\r%s %s' % (self._prefix, frame))
                 time.sleep(self._step_sec)
 
     def stop(self):
@@ -40,9 +40,9 @@ class ProgressAnimation(Thread):
 
 
 def download(url, folder):
-    webm_path = os.path.join(folder, f'{url.split("watch?v=")[1]}.webm')
+    webm_path = os.path.join(folder, '%s.webm' % url.split("watch?v=")[1])
     if not os.path.exists(webm_path):
-        anime = ProgressAnimation(f'Downloading {url}')
+        anime = ProgressAnimation('Downloading %s' % url)
         anime.start()
         youtube = YouTube(url)
         audio_stream = youtube.streams.filter(only_audio=True, audio_codec='opus').order_by('bitrate').last()
@@ -54,7 +54,7 @@ def download(url, folder):
         anime = ProgressAnimation('Converting WebM to WAV format')
         anime.start()
         subprocess.check_output(
-            f'ffmpeg -y -i {webm_path} -f wav -fflags bitexact -ac 1 -ar 16000 -acodec pcm_s16le {wav_path}',
+            'ffmpeg -y -i %s -f wav -fflags bitexact -ac 1 -ar 16000 -acodec pcm_s16le %s' % (webm_path, wav_path),
             stderr=subprocess.STDOUT,
             shell=True)
         anime.stop()
@@ -87,7 +87,7 @@ def main():
         with open(metadata_path, 'wb') as f:
             f.write(metadata.to_bytes())
 
-        print(f'\rIndexed {int(length_sec)} seconds of audio in {time.time() - start_sec:.2f} seconds')
+        print('\rIndexed %d seconds of audio in %.2f seconds' % (int(length_sec), time.time() - start_sec))
 
     with open(metadata_path, 'rb') as f:
         metadata = pvoctopus.OctopusMetadata.from_bytes(f.read())
@@ -95,13 +95,13 @@ def main():
     start_sec = time.time()
     matches = o.search(metadata, phrases=args.phrases)
     print(
-        f'Searched {int(length_sec)} seconds of audio for {len(args.phrases)} phrases in {time.time() - start_sec:.5f} seconds')
+        'Searched %d seconds of audio for %d phrases in %.5f seconds', % (int(length_sec), len(args.phrases), time.time() - start_sec))
     for phrase, phrase_matches in matches.items():
         phrase_matches = [x for x in phrase_matches if x.probability >= args.min_prob]
         if len(phrase_matches) > 0:
-            print(f'{phrase} >>>')
+            print('%s >>>' % phrase)
             for phrase_match in phrase_matches:
-                print(f'[{int(phrase_match.probability * 100)}%] {args.url}&t={int(phrase_match.start_sec)}')
+                print('[%d%] %s&t=%d' % (int(phrase_match.probability * 100), args.url, int(phrase_match.start_sec)))
 
 
 if __name__ == '__main__':

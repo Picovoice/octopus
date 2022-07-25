@@ -50,7 +50,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/octopus",
     packages=["pvoctopus"],
-    install_requires=[],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",

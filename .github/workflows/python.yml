@@ -12,7 +12,6 @@ on:
       - 'lib/mac/**'
       - 'lib/windows/**'
       - 'res/audio/**'
-      - '!lib/common/light/**'
   pull_request:
     branches: [ main ]
     paths:
@@ -23,7 +22,6 @@ on:
       - 'lib/mac/**'
       - 'lib/windows/**'
       - 'res/audio/**'
-      - '!lib/common/light/**'
 
 defaults:
   run:

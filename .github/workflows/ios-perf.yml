@@ -8,14 +8,12 @@ on:
       - 'lib/ios/**'
       - 'lib/common/**'
       - '.github/workflows/ios-perf.yml'
-      - '!lib/common/light/**'
   pull_request:
     branches: [ main ]
     paths: 
       - 'lib/ios/**'
       - 'lib/common/**'
       - '.github/workflows/ios-perf.yml'
-      - '!lib/common/light/**'
       
 defaults:
   run:

@@ -8,12 +8,14 @@ on:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
+      - 'lib/common/light/**'
   pull_request:
     branches: [ main ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
+      - 'lib/common/light/**'
 
 defaults:
   run:
@@ -55,13 +57,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: build
-        run: |
-          yarn build
-          cd octopus-web-en-factory
-          yarn
-          yarn build
-          yarn lint
+      - name: Build
+        run: yarn build
+
+      - name: Prepare Test
+        run: yarn setup-test
       
       - name: Test
-        run: python octopus-web-en-factory/test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file ../../res/audio/multiple_keywords.wav
+        run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_root_path ../../res/audio/

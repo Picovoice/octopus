@@ -8,12 +8,14 @@ on:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
+      - 'lib/common/light/**'
   pull_request:
     branches: [ main ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
+      - 'lib/common/light/**'
 
 defaults:
   run:

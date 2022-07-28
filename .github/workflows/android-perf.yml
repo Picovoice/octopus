@@ -8,12 +8,14 @@ on:
       - 'lib/android/**'
       - 'lib/common/**'
       - '.github/workflows/android-perf.yml'
+      - '!lib/common/light/**'
   pull_request:
     branches: [ main ]
     paths: 
       - 'lib/android/**'
       - 'lib/common/**'
       - '.github/workflows/android-perf.yml'
+      - '!lib/common/light/**'
 
 defaults:
   run:

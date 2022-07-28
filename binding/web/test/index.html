@@ -2,9 +2,11 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
   <title>unit test - OctopusWeb</title>
   <script src="../dist/iife/index.js"></script>
   <script src="octopus_params.js"></script>
+  <script src="test_results.js"></script>
   <script type="application/javascript">
     let pcm = null;
 
@@ -69,64 +71,55 @@
       writeMessage("Starting test...");
 
       const accessKey = document.getElementById("accessKey").value;
+      const language = document.getElementById("language").value;
+      const modelFile = (language === "en") ? "octopus_params.pv" : `octopus_params_${language}.pv`
 
       if (!pcm) {
         writeMessage("Audio file not provided...");
         return
       }
 
-      try {
-        writeMessage("Init from public directory...");
-        let o = await OctopusWeb.Octopus.fromPublicDirectory(accessKey, "octopus_params.pv", {forceWrite: true});
-        o.release();
-        writeMessage("Init from public directory... done!")
+      writeMessage(`Testing for language: ${language}`);
 
-        writeMessage("Init from public directory...");
-        o = await OctopusWeb.Octopus.fromPublicDirectory(accessKey, "octopus_params.pv", {forceWrite: true});
-        o.release();
-        writeMessage("Init from public directory... done!")
+      try {
+        if (language === "en") {
+          writeMessage("Init from base64...");
+          let o = await OctopusWeb.Octopus.fromBase64(accessKey, modelParams, {forceWrite: true});
+          o.release();
+          writeMessage("Init from base64... done!")
+
+          writeMessage("Init from public directory...");
+          o = await OctopusWeb.Octopus.fromPublicDirectory(accessKey, modelFile, {forceWrite: true});
+          o.release();
+          writeMessage("Init from public directory... done!")
+
+          writeMessage("Init worker from base64...");
+          o = await OctopusWeb.OctopusWorker.fromBase64(accessKey, modelParams, {forceWrite: true});
+          o.terminate();
+          writeMessage("Init worker from base64... done!");
+        }
 
         writeMessage("Init worker from public directory...");
-        o = await OctopusWeb.OctopusWorker.fromPublicDirectory(accessKey, "octopus_params.pv", {forceWrite: true});
-        o.terminate();
-        writeMessage("Init worker from public directory... done!")
-
-        writeMessage("Init worker from base64...");
-        const handle = await OctopusWeb.OctopusWorker.fromBase64(accessKey, modelParams, {forceWrite: true});
-        writeMessage("Init worker from base64... done!");
+        const handle = await OctopusWeb.OctopusWorker.fromPublicDirectory(accessKey, modelFile, {forceWrite: true});
+        writeMessage("Init worker from public directory... done!");
 
         writeMessage("Indexing audio files...");
         const metadata = await handle.index(pcm);
         writeMessage("Indexing audio files... done!");
 
-        writeMessage("Checking metadata...");
-        assertEquals(227360, metadata.metadataLength, 0, "Received incorrect metadata length.");
-        writeMessage("Checking metadata... done!");
-
-        writeMessage("Checking keyword: alexa...");
-        const [alexa] = await handle.search(metadata, "alexa");
-
-        assertEquals(7.616000175476074, alexa.startSec, 0.01, "Alexa start did not match.");
-        assertEquals(8.35200023651123, alexa.endSec, 0.01, "Alexa end did not match.");
-        assertEquals(1, alexa.probability, 0, "Alexa probability did not match.");
-        writeMessage("Checking keyword: alexa... done!");
-
-        writeMessage("Checking keyword: porcupine...");
-        const [ppn1, ppn2] = await handle.search(metadata, "porcupine");
-
-        assertEquals(5.727999687194824, ppn1.startSec, 0.01, "Ppn1 start did not match.");
-        assertEquals(6.751999855041504, ppn1.endSec, 0.01, "Ppn1 end did not match.");
-        assertEquals(1, ppn1.probability, 0, "Ppn1 probability did not match.");
-
-        assertEquals(35.36000061035156, ppn2.startSec, 0.01, "Ppn2 start did not match.");
-        assertEquals(36.41600036621094, ppn2.endSec, 0.01, "Ppn2 end did not match.");
-        assertEquals(1, ppn2.probability, 0, "Ppn2 probability did not match.");
-        writeMessage("Checking keyword: porcupine... done!");
-
-        writeMessage("Checking keyword: hello...");
-        const hello = await handle.search(metadata, "hello");
-        assertEquals(0, hello.length, 0, "Hello should not be detected.");
-        writeMessage("Checking keyword: hello... done!");
+        for (const { phrase, expected } of testResults[language]) {
+          writeMessage(`Checking keyword: ${phrase}...`);
+          const res = await handle.search(metadata, phrase);
+          if (res.length !== expected.length) {
+            throw new Error(`Result length of ${res.length} did not match expected length of ${expected.length}`);
+          }
+          for (let i = 0; i < expected.length; i++) {
+            assertEquals(expected[0].startSec, res[0].startSec, 0.001, `${phrase} start did not match, expected ${expected[0].startSec} got ${res[0].startSec}`);
+            assertEquals(expected[0].endSec, res[0].endSec, 0.001, `${phrase} end did not match, expected ${expected[0].endSec} got ${res[0].endSec}`);
+            assertEquals(expected[0].probability, res[0].probability, 0.001, `${phrase} probability did not match, expected ${expected[0].probability} got ${res[0].probability}`);
+          }
+          writeMessage(`Checking keyword: ${phrase}... done!`);
+        }
 
         writeMessage("Test passed!")
 
@@ -182,11 +175,16 @@
 </p>
 
 <p>
+  <label for="language">Language to test:</label>
+  <input type="text" id="language" name="language" value="en" />
+</p>
+
+<p>
   <label for="audioFile">Select audio file located on {PROJECT_ROOT}/res/audio/multiple_keywords.wav:</label>
   <input type="file" id="audioFile" name="audioFile" accept="audio/*" />
 </p>
 
-<input type="button" id="sumbit" value="Test Octopus" onclick="startTest()" />
+<input type="button" id="submit" value="Test Octopus" onclick="startTest()" />
 <input type="button" id="perfTest" value="Test Leopard Performance" onclick="performanceTest()"/>
 
 <br>

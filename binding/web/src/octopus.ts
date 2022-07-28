@@ -306,17 +306,13 @@ export class Octopus {
         const searchPhraseCleaned = searchPhrase.trim();
         if (searchPhraseCleaned === '') {
           throw new Error('The search phrase cannot be empty');
-        } else if (searchPhraseCleaned.replace(/\s/g, '').search(/[^A-Za-z' \s]/) !== -1) {
-          throw new Error("Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
-            "\t12 >>> twelve\n" +
-            "\t2021 >>> twenty twenty one\n" +
-            "\tmother-in-law >>> mother in law\n" +
-            "\t5-minute meeting >>> five minute meeting");
         }
+
+        const encoded = new TextEncoder().encode(searchPhraseCleaned);
 
         const phraseAddress = await this._alignedAlloc(
           Uint8Array.BYTES_PER_ELEMENT,
-          (searchPhraseCleaned.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+          (encoded.length + 1) * Uint8Array.BYTES_PER_ELEMENT
         );
 
         if (phraseAddress === 0) {
@@ -324,10 +320,8 @@ export class Octopus {
         }
 
         const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-        for (let i = 0; i < searchPhraseCleaned.length; i++) {
-          memoryBufferUint8[phraseAddress + i] = searchPhraseCleaned.charCodeAt(i);
-        }
-        memoryBufferUint8[phraseAddress + searchPhraseCleaned.length] = 0;
+        memoryBufferUint8.set(encoded, phraseAddress);
+        memoryBufferUint8[phraseAddress + encoded.length] = 0;
 
         const status = await this._pvOctopusSearch(
           this._objectAddress,
@@ -387,7 +381,6 @@ export class Octopus {
 
   private static async initWasm(accessKey: string, wasmBase64: string, modelPath: string, initConfig: OctopusInitConfig): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 1MiB ~= 16 pages
-    // minimum memory requirements for init: 512 pages
     const memory = new WebAssembly.Memory({ initial: 512 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);

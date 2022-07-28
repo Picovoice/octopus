@@ -1,5 +1,4 @@
 node_modules
 dist
 lib/pv_octopus*.wasm
-test/octopus_params.js
-test/octopus_params.pv
+test/octopus_params*

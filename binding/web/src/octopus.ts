@@ -61,7 +61,7 @@ type OctopusWasmOutput = {
 };
 
 const PV_STATUS_SUCCESS = 10000;
-const MAX_PCM_SIZE = 15000000;
+const MAX_PCM_LENGTH_SEC = 60 * 15;
 
 export class Octopus {
   private readonly _pvOctopusDelete: pv_octopus_delete_type;
@@ -237,8 +237,9 @@ export class Octopus {
     if (!(pcm instanceof Int16Array)) {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
     }
-    if (pcm.length > MAX_PCM_SIZE) {
-      throw new Error(`'pcm' size cannot be greater than ${MAX_PCM_SIZE}`);
+    const maxSize = MAX_PCM_LENGTH_SEC * Octopus._sampleRate * 2;
+    if (pcm.length > maxSize) {
+      throw new Error(`'pcm' size must be smaller than ${maxSize}`);
     }
 
     const returnPromise = new Promise<OctopusMetadata>((resolve, reject) => {

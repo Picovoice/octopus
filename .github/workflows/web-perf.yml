@@ -30,7 +30,7 @@ jobs:
         include:
         - python-version: 3.8
           indexPerformanceThresholdSec: 1.5
-          searchPerformanceThresholdSec: 0.003
+          searchPerformanceThresholdSec: 0.005
 
     steps:
     - uses: actions/checkout@v2

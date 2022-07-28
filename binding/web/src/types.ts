@@ -25,10 +25,8 @@ export type OctopusInputConfig = {
 export type OctopusConfig = OctopusInitConfig & OctopusInputConfig;
 
 export type OctopusMetadata = {
-  /** Int32 memory address that points to the metadata location */
-  metadataAddress: number;
-  /** Length in bytes of the metadata */
-  metadataLength: number;
+  /** Buffer containing Octopus metadata. */
+  buffer: Uint8Array;
 };
 
 export type OctopusMatch = {

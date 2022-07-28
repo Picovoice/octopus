@@ -12,6 +12,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
     <script src="node_modules/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
     <script src="octopus_params.js"></script>
     <script type="application/javascript">
@@ -53,9 +54,9 @@
           const end = row.insertCell(1);
           const probability = row.insertCell(2);
 
-          start.innerHTML = `${match.startSec.toFixed(2)}`;
-          end.innerHTML = `${match.endSec.toFixed(2)}`;
-          probability.innerHTML = `${match.probability.toFixed(2)}`;
+          start.innerHTML = `${match.startSec.toFixed(3)}`;
+          end.innerHTML = `${match.endSec.toFixed(3)}`;
+          probability.innerHTML = `${match.probability.toFixed(3)}`;
         });
       }
 
@@ -70,7 +71,7 @@
           engineHandle =
             await OctopusWeb.OctopusWorker.fromBase64(
               accessKey,
-              modelParams
+              modelParams,
             );
         } catch (err) {
           document.getElementById("accessKey").style.border = "1px solid red";
@@ -102,6 +103,7 @@
                 return i;
               })
             );
+
             octopusMetadata = await engineHandle.index(i16PCM, { transfer: true });
             document.getElementById("search").style.display = "block";
             writeStatus("Audio indexed! Enter a phrase to search the index.");

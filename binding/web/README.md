@@ -1,7 +1,5 @@
 # octopus-web
 
-**NOTE**: This is a beta build.
-
 The Picovoice Octopus library for web browsers, powered by WebAssembly.
 
 This library transcribes audio samples in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread.
@@ -40,8 +38,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ### Octopus Models
 
-Octopus requires a model file on initialization. Create a custom model file from [Picovoice Console](https://console.picovoice.ai/cat)
-or you can use the [default model file](/lib/common/octopus_params.pv).
+Octopus requires a model file on initialization. You can use one the model files located in [/lib/common/light/](/lib/common/light) matching the required language code.
 
 For the web packages, there are two methods to initialize Octopus.
 
@@ -52,7 +49,7 @@ For the web packages, there are two methods to initialize Octopus.
 This method fetches the model file from the public directory and feeds it to Octopus. Copy the model file into the public directory:
 
 ```console
-cp ${LEOPARD_MODEL_FILE} ${PATH_TO_PUBLIC_DIRECTORY}
+cp ${OCTOPUS_MODEL_FILE} ${PATH_TO_PUBLIC_DIRECTORY}
 ```
 
 #### Base64
@@ -63,7 +60,7 @@ This method uses a base64 string of the model file and feeds it to Octopus. Use 
 base64 your model file:
 
 ```console
-npx pvbase64 -i ${LEOPARD_MODEL_FILE} -o ${OUTPUT_DIRECTORY}/${MODEL_NAME}.js
+npx pvbase64 -i ${OCTOPUS_MODEL_FILE} -o ${OUTPUT_DIRECTORY}/${MODEL_NAME}.js
 ```
 
 The output will be a js file which you can import into any file of your project. For detailed information about `pvbase64`,
@@ -87,7 +84,6 @@ If the model file (`.pv`) changes, `version` should be incremented to force the 
 const options = {
   modelPath: "octopus_model",
   forceWrite: false,
-  enableAutomaticPunctuation: true,
   version: 1
 }
 ```
@@ -107,7 +103,7 @@ const handle = await Octopus.fromPublicDirectory(
 or initialize using a base64 string:
 
 ```typescript
-import octopusParams from "${PATH_TO_BASE64_LEOPARD_PARAMS}";
+import octopusParams from "${PATH_TO_BASE64_OCTOPUS_PARAMS}";
 
 const handle = await Octopus.fromBase64(
   ${ACCESS_KEY},
@@ -131,7 +127,7 @@ const handle = await OctopusWorker.fromPublicDirectory(
 or initialize using a base64 string:
 
 ```typescript
-import octopusParams from "${PATH_TO_BASE64_LEOPARD_PARAMS}";
+import octopusParams from "${PATH_TO_BASE64_OCTOPUS_PARAMS}";
 
 const handle = await OctopusWorker.fromBase64(
   ${ACCESS_KEY},
@@ -140,12 +136,10 @@ const handle = await OctopusWorker.fromBase64(
 )
 ```
 
-#### Process Audio Frames
+#### Index Audio Frames
 
-The process result is an object with:
-- `transcription`: A string containing the transcribed data.
-- `words`: A list of objects containing a `word`, `startSec`, and `endSec`. Each object indicates
-the start and end time of the word.
+The index result is an object holding the metadata information of your audio file. This is used later
+to search for a phrase.
 
 ```typescript
 function getAudioData(): Int16Array {
@@ -153,21 +147,33 @@ function getAudioData(): Int16Array {
   return new Int16Array();
 }
 
-const result = await handle.process(getAudioData());
-console.log(result.transcription);
-console.log(result.words);
+const octopusMetadata = await handle.index(getAudioData());
 ```
 
-For processing using worker, you may consider transferring the buffer instead for performance:
+For processing using **worker**, you may consider transferring the buffer instead for performance:
 
 ```typescript
 const pcm = new Int16Array();
-const result = await handle.process(pcm, {
+const octopusMetadata = await handle.index(pcm, {
   transfer: true,
   transferCB: (data) => {pcm = data}
 });
-console.log(result.transcription);
-console.log(result.words);
+```
+
+#### Search
+
+Using the metadata from the previous step, you can search for a phrase. The result is a list of objects
+with each element containing the following properties:
+
+- `startSec`: Start of the matched audio in seconds.
+- `endSec`: End of the matched audio in seconds.
+- `probability`:  Probability (confidence) that this matches the search phrase (between 0 and 1).
+
+```typescript
+const result = await handle.search(octopusMetadata, "${SEARCH_PHRASE}");
+for (const elem of result) {
+  console.log(elem.startSec, elem.endSec, elem.probability);
+}
 ```
 
 #### Clean Up

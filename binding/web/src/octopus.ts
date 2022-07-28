@@ -61,6 +61,7 @@ type OctopusWasmOutput = {
 };
 
 const PV_STATUS_SUCCESS = 10000;
+const MAX_PCM_SIZE = 15000000;
 
 export class Octopus {
   private readonly _pvOctopusDelete: pv_octopus_delete_type;
@@ -236,6 +237,9 @@ export class Octopus {
     if (!(pcm instanceof Int16Array)) {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
     }
+    if (pcm.length > MAX_PCM_SIZE) {
+      throw new Error(`'pcm' size cannot be greater than ${MAX_PCM_SIZE}`);
+    }
 
     const returnPromise = new Promise<OctopusMetadata>((resolve, reject) => {
       this._processMutex.runExclusive(async () => {
@@ -279,7 +283,13 @@ export class Octopus {
           true
         );
 
-        return { metadataAddress, metadataLength };
+        const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer, metadataAddress, metadataLength);
+        const buffer = new Uint8Array(metadataLength);
+        buffer.set(memoryBufferUint8, 0);
+
+        await this._pvFree(metadataAddress);
+
+        return { buffer };
       }).then((result: OctopusMetadata) => {
         resolve(result);
       }).catch((error: any) => {
@@ -323,10 +333,17 @@ export class Octopus {
         memoryBufferUint8.set(encoded, phraseAddress);
         memoryBufferUint8[phraseAddress + encoded.length] = 0;
 
+        const metadataAddress = await this._alignedAlloc(
+          Uint8Array.BYTES_PER_ELEMENT,
+          octopusMetadata.buffer.length * Uint8Array.BYTES_PER_ELEMENT
+        );
+
+        memoryBufferUint8.set(octopusMetadata.buffer, metadataAddress);
+
         const status = await this._pvOctopusSearch(
           this._objectAddress,
-          octopusMetadata.metadataAddress,
-          octopusMetadata.metadataLength,
+          metadataAddress,
+          octopusMetadata.buffer.length,
           phraseAddress,
           this._octopusMatchAddressAddress,
           this._octopusMatchLengthAddress
@@ -359,6 +376,9 @@ export class Octopus {
           });
         }
 
+        await this._pvFree(octopusMatchAddress);
+        await this._pvFree(metadataAddress);
+
         return matches;
       }).then((result: OctopusMatch[]) => {
         resolve(result);
@@ -381,7 +401,7 @@ export class Octopus {
 
   private static async initWasm(accessKey: string, wasmBase64: string, modelPath: string, initConfig: OctopusInitConfig): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 1MiB ~= 16 pages
-    const memory = new WebAssembly.Memory({ initial: 512 });
+    const memory = new WebAssembly.Memory({ initial: 1024 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
 

@@ -90,7 +90,7 @@ export type OctopusWorkerIndexResponse = OctopusWorkerFailureResponse | {
 
 export type OctopusWorkerSearchResponse = OctopusWorkerFailureResponse | {
   command: 'ok';
-  result: OctopusMatch;
+  result: OctopusMatch[];
 };
 
 export type OctopusWorkerReleaseResponse = OctopusWorkerFailureResponse | {

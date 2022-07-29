@@ -229,8 +229,8 @@ export class OctopusWorker {
    * @param searchPhrase - The text phrase to search the metadata (indexed audio) for.
    * @return An array of OctopusMatch objects.
    */
-  public search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch> {
-    const returnPromise: Promise<OctopusMatch> = new Promise((resolve, reject) => {
+  public search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch[]> {
+    const returnPromise: Promise<OctopusMatch[]> = new Promise((resolve, reject) => {
       this._worker.onmessage = (event: MessageEvent<OctopusWorkerSearchResponse>): void => {
         switch (event.data.command) {
           case "ok":

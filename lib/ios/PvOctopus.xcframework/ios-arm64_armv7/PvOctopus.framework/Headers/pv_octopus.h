@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -69,8 +69,6 @@ PV_API pv_status_t pv_octopus_index(
         void **indices,
         int32_t *num_indices_bytes);
 
-#ifndef __PV_PLATFORM_WASM__
-
 /**
  * Indexes an audio file.
  *
@@ -87,8 +85,6 @@ PV_API pv_status_t pv_octopus_index_file(
         const char *path,
         void **indices,
         int32_t *num_indices_bytes);
-
-#endif
 
 /**
  * Container representing a matched utterance.

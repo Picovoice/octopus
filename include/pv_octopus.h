@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -30,7 +30,7 @@ typedef struct pv_octopus pv_octopus_t;
 /**
  * Constructor.
  *
- * @param access_key AccessKey provided by Picovoice Console (https://picovoice.ai/console/)
+ * @param access_key AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
  * @param model_path Absolute path to the file containing model parameters.
  * @param[out] object Constructed instance of Octopus.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', 'PV_STATUS_OUT_OF_MEMORY',
@@ -58,9 +58,9 @@ PV_API void pv_octopus_delete(pv_octopus_t *object);
  * @param num_samples Number of audio samples to index.
  * @param indices Index metadata.
  * @param num_indices_bytes Size of index metadata in bytes.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY',
- * 'PV_STATUS_RUNTIME_ERROR', 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED',
- * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_OUT_OF_MEMORY', 'PV_STATUS_RUNTIME_ERROR',
+ * 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED', 'PV_STATUS_ACTIVATION_THROTTLED', or
+ * 'PV_STATUS_ACTIVATION_REFUSED' on failure
  */
 PV_API pv_status_t pv_octopus_index(
         pv_octopus_t *object,
@@ -122,7 +122,6 @@ PV_API pv_status_t pv_octopus_search(
 PV_API const char *pv_octopus_version(void);
 
 #ifdef __cplusplus
-
 }
 
 #endif

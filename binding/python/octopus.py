@@ -13,7 +13,6 @@
 #
 
 import os
-import re
 from collections import namedtuple
 from ctypes import *
 from enum import Enum
@@ -74,28 +73,29 @@ class OctopusMetadata(object):
     """
 
     def __init__(self, handle: c_void_p, size: int) -> None:
-        self._inner = (handle, size)
-
-    @staticmethod
-    def create_owned(handle: c_void_p, size: int) -> 'OctopusMetadata':
-        return OctopusMetadata.from_bytes(OctopusMetadata._to_bytes(handle, size))
+        self._handle = handle
+        self._size = size
 
     @property
     def handle(self) -> c_void_p:
-        return self._inner[0]
+        return self._handle
 
     @property
     def size(self) -> int:
-        return self._inner[1]
-
-    @staticmethod
-    def from_bytes(metadata_bytes: bytes) -> 'OctopusMetadata':
-        byte_ptr = (c_byte * len(metadata_bytes)).from_buffer_copy(metadata_bytes)
-        handle = cast(byte_ptr, c_void_p)
-        return OctopusMetadata(handle=handle, size=len(metadata_bytes))
+        return self._size
 
     def to_bytes(self) -> bytes:
         return self._to_bytes(self.handle, self.size)
+
+    @classmethod
+    def create_owned(cls, handle: c_void_p, size: int) -> 'OctopusMetadata':
+        return cls.from_bytes(cls._to_bytes(handle, size))
+
+    @classmethod
+    def from_bytes(cls, metadata_bytes: bytes) -> 'OctopusMetadata':
+        byte_ptr = (c_byte * len(metadata_bytes)).from_buffer_copy(metadata_bytes)
+        handle = cast(byte_ptr, c_void_p)
+        return cls(handle=handle, size=len(metadata_bytes))
 
     @staticmethod
     def _to_bytes(ptr: c_void_p, size: int) -> bytes:

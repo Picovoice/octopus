@@ -31,3 +31,8 @@ def read_wav_file(file_name, sample_rate):
         print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
 
     return frames[::channels]
+
+
+__all__ = [
+    'read_wav_file'
+]

@@ -336,3 +336,21 @@ class Octopus(object):
         """Audio sample rate accepted by `index_audio_data`."""
 
         return self._sample_rate
+
+
+__all__ = [
+    'OctopusError',
+    'OctopusMemoryError',
+    'OctopusIOError',
+    'OctopusInvalidArgumentError',
+    'OctopusStopIterationError',
+    'OctopusKeyError',
+    'OctopusInvalidStateError',
+    'OctopusRuntimeError',
+    'OctopusActivationError',
+    'OctopusActivationLimitError',
+    'OctopusActivationThrottledError',
+    'OctopusActivationRefusedError',
+    'OctopusMetadata',
+    'Octopus',
+]

@@ -274,7 +274,7 @@ class Octopus(object):
             ("end_sec", c_float),
             ("probability", c_float)]
 
-    _PHRASE_REGEX = re.compile(r"^[a-zA-Z' ]+$")
+    # _PHRASE_REGEX = re.compile(r"^[a-zA-Z' ]+$")
 
     def search(self, metadata: OctopusMetadata, phrases: Sequence[str]) -> Dict[str, Sequence[Match]]:
         """
@@ -290,14 +290,14 @@ class Octopus(object):
         if any(len(x) == 0 for x in phrases_set):
             raise OctopusInvalidArgumentError("Search phrase cannot be empty")
 
-        if any(not bool(self._PHRASE_REGEX.match(x)) for x in phrases_set):
-            raise OctopusInvalidArgumentError(
-                "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n"
-                "\t12 >>> twelve\n"
-                "\t2021 >>> twenty twenty one\n"
-                "\tmother-in-law >>> mother in law\n"
-                "\t5-minute meeting >>> five minute meeting"
-            )
+        # if any(not bool(self._PHRASE_REGEX.match(x)) for x in phrases_set):
+        #     raise OctopusInvalidArgumentError(
+        #         "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n"
+        #         "\t12 >>> twelve\n"
+        #         "\t2021 >>> twenty twenty one\n"
+        #         "\tmother-in-law >>> mother in law\n"
+        #         "\t5-minute meeting >>> five minute meeting"
+        #     )
 
         matches = dict()
 

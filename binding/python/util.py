@@ -45,8 +45,11 @@ def pv_library_path(relative_path):
     raise NotImplementedError('Unsupported platform.')
 
 
-def pv_model_path(relative_path):
-    return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/param/octopus_params.pv')
+def pv_model_path(relative_path: str, language: str) -> str:
+    return os.path.join(
+        os.path.dirname(__file__),
+        relative_path,
+        'lib/common/param/octopus_params%s.pv' % ('' if language == 'en' else ('_' + language)))
 
 
 __all__ = [

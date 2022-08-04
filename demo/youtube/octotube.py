@@ -10,10 +10,8 @@
 #
 
 import os
-import subprocess
 import sys
 import time
-import wave
 from argparse import ArgumentParser
 from threading import Thread
 
@@ -50,7 +48,7 @@ class ProgressAnimation(Thread):
         self._done = True
 
 
-def download(url, folder):
+def download(url: str, folder: str) -> str:
     webm_path = os.path.join(folder, '%s.webm' % url.split("watch?v=")[1])
     if not os.path.exists(webm_path):
         anime = ProgressAnimation('Downloading %s' % url)
@@ -60,17 +58,7 @@ def download(url, folder):
         audio_stream.download(output_path=folder, filename=os.path.basename(webm_path), skip_existing=True)
         anime.stop()
 
-    wav_path = webm_path.replace('.webm', '.wav')
-    if not os.path.exists(wav_path):
-        anime = ProgressAnimation('Converting WebM to WAV format')
-        anime.start()
-        subprocess.check_output(
-            'ffmpeg -y -i %s -f wav -fflags bitexact -ac 1 -ar 16000 -acodec pcm_s16le %s' % (webm_path, wav_path),
-            stderr=subprocess.STDOUT,
-            shell=True)
-        anime.stop()
-
-    return wav_path
+    return webm_path
 
 
 def main():
@@ -82,32 +70,23 @@ def main():
     parser.add_argument('--work-folder', default=os.path.expanduser('~/'))
     args = parser.parse_args()
 
-    wav_path = download(url=args.url, folder=args.work_folder)
-    with wave.open(wav_path) as f:
-        length_sec = f.getnframes() / f.getframerate()
+    webm_path = download(url=args.url, folder=args.work_folder)
 
     o = pvoctopus.create(access_key=args.access_key)
 
-    metadata_path = wav_path.replace('.wav', '.oif')
+    metadata_path = webm_path.replace('.webm', '.oif')
     if not os.path.exists(metadata_path):
-        start_sec = time.time()
         anime = ProgressAnimation('Indexing')
         anime.start()
-        metadata = o.index_audio_file(wav_path)
+        metadata = o.index_audio_file(webm_path)
         anime.stop()
         with open(metadata_path, 'wb') as f:
             f.write(metadata.to_bytes())
 
-        print('\rIndexed %d seconds of audio in %.2f seconds' % (int(length_sec), time.time() - start_sec))
-
     with open(metadata_path, 'rb') as f:
         metadata = pvoctopus.OctopusMetadata.from_bytes(f.read())
 
-    start_sec = time.time()
     matches = o.search(metadata, phrases=args.phrases)
-    print(
-        'Searched %d seconds of audio for %d phrases in %.5f seconds' %
-        (int(length_sec), len(args.phrases), time.time() - start_sec))
     for phrase, phrase_matches in matches.items():
         phrase_matches = [x for x in phrase_matches if x.probability >= args.min_prob]
         if len(phrase_matches) > 0:

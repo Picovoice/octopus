@@ -11,9 +11,10 @@
 
 import struct
 import wave
+from typing import Sequence
 
 
-def read_wav_file(file_name, sample_rate):
+def read_wav_file(file_name: str, sample_rate: int) -> Sequence[int]:
     wav_file = wave.open(file_name, mode="rb")
     channels = wav_file.getnchannels()
     num_frames = wav_file.getnframes()

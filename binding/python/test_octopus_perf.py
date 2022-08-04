@@ -39,7 +39,7 @@ class OctopusTestCase(unittest.TestCase):
 
         cls.audio = read_wav_file(
             os.path.join(os.path.dirname(__file__), '../../res/audio/multiple_keywords.wav'),
-            cls.octopus.pcm_sample_rate)
+            cls.octopus.sample_rate)
 
     @classmethod
     def tearDownClass(cls):

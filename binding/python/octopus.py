@@ -148,13 +148,13 @@ class Octopus(object):
         :param library_path: Absolute path to Octopus' dynamic library.
         """
 
-        if not os.path.exists(library_path):
-            raise IOError("Couldn't find Octopus' dynamic library at '%s'." % library_path)
-
-        library = cdll.LoadLibrary(library_path)
-
         if not os.path.exists(model_path):
             raise IOError("Couldn't find model file at `%s`." % model_path)
+
+        if not os.path.exists(library_path):
+            raise IOError("Couldn't find dynamic library at '%s'." % library_path)
+
+        library = cdll.LoadLibrary(library_path)
 
         init_func = library.pv_octopus_init
         init_func.argtypes = [c_char_p, c_char_p, POINTER(POINTER(self.COctopus))]
@@ -232,7 +232,7 @@ class Octopus(object):
             byref(c_metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         metadata = OctopusMetadata.create_owned(c_metadata, metadata_size.value)
         self._pv_free(c_metadata)
@@ -321,7 +321,7 @@ class Octopus(object):
         return self._version
 
     @property
-    def pcm_sample_rate(self) -> int:
+    def sample_rate(self) -> int:
         """Audio sample rate accepted by `index_audio_data`."""
 
         return self._sample_rate

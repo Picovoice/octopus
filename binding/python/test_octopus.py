@@ -53,7 +53,7 @@ class OctopusTestCase(unittest.TestCase):
             audio_path = os.path.join(
                 os.path.dirname(__file__),
                 '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
-            metadata = octopus.index_audio_data(read_wav_file(audio_path, octopus.pcm_sample_rate))
+            metadata = octopus.index_audio_data(read_wav_file(audio_path, octopus.sample_rate))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
             for phrase, occurrences in phrase_occurrences.items():
                 self.assertIn(phrase, phrase_matches)

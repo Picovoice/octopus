@@ -9,7 +9,7 @@ hypothesis (e.g. homophones)
 ## Compatibility
 
 - Python 3.5+
-- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64, arm64), Windows (x86_64)
 
 ## Installation
 
@@ -39,7 +39,7 @@ searches can be run against.
 
 Octopus indexing has two modes of operation: indexing PCM audio data, or indexing an audio file.
 
-When indexing PCM audio data, the valid audio sample rate is given by `handle.pcm_sample_rate`.
+When indexing PCM audio data, the valid audio sample rate is given by `handle.sample_rate`.
 The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio:
 
 ```python

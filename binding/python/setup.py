@@ -17,7 +17,7 @@ shutil.copy(os.path.join(os.path.dirname(__file__), 'util.py'), os.path.join(pac
 platforms = ('linux', 'mac', 'windows')
 
 os.mkdir(os.path.join(package_folder, 'lib'))
-for platform in ('common',) + platforms:
+for platform in ('common/param',) + platforms:
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
@@ -42,7 +42,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvoctopus",
-    version="1.1.6",
+    version="1.2.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Octopus Speech-to-Index engine.",
@@ -60,5 +60,5 @@ setuptools.setup(
         "Topic :: Multimedia :: Sound/Audio :: Speech"
     ],
     python_requires='>=3.5',
-    keywords="Speech-to-Index, voice indexing, speech recognition"
+    keywords="Speech-to-Index, voice search, voice indexing, speech recognition"
 )

@@ -13,7 +13,7 @@ on:
       - 'lib/windows/**'
       - 'res/audio/**'
   pull_request:
-    branches: [ main ]
+    branches: [ main, v1.2 ]
     paths:
       - 'binding/python/**'
       - '!binding/python/README.md'

@@ -25,7 +25,7 @@ def create(access_key: str, model_path: Optional[str] = None, library_path: Opti
 
     :param access_key: AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
     :param model_path: Absolute path to the file containing model parameters. If not set it will be set to the default
-    location.
+    location for English model.
     :param library_path: Absolute path to Octopus' dynamic library. If not set it will be set to the default
     location.
     :return An instance of Octopus Speech-to-Index engine.

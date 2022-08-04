@@ -31,6 +31,7 @@ class OctopusTestCase(unittest.TestCase):
         cls.num_test_iterations = int(sys.argv[2])
         cls.index_performance_threshold_sec = float(sys.argv[3])
         cls.search_performance_threshold_sec = float(sys.argv[4])
+
         cls.octopus = Octopus(
             access_key=access_key,
             library_path=pv_library_path('../..'),
@@ -77,10 +78,10 @@ class OctopusTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print(sys.argv)
     if len(sys.argv) != 5:
-        print("usage: test_octopus_perf.py ${ACCESS_KEY} ${NUM_TEST_INTERVALS} "
-              "${INDEX_PERFORMANCE_THRESHOLD_SEC} ${SEARCH_PERFORMANCE_THRESHOLD_SEC}")
+        print(
+            "usage: test_octopus_perf.py ${ACCESS_KEY} ${NUM_TEST_INTERVALS} ${INDEX_PERFORMANCE_THRESHOLD_SEC} "
+            "${SEARCH_PERFORMANCE_THRESHOLD_SEC}")
         exit(1)
 
     unittest.main(argv=sys.argv[:1])

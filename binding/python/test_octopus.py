@@ -23,7 +23,7 @@ from octopus import *
 from test_util import *
 from util import *
 
-INDEX_PARAMS = [
+TEST_PARAMS = [
     ["en", {"alexa": [(7.648, 8.352, 1)], "porcupine": [(5.728, 6.752, 1), (35.360, 36.416, 1)]}],
     ["de", {"ananas": [(0.000, 0.704, 0.954)]}],
     ["es", {"manzana": [(5.184, 5.984, 1)]}],
@@ -40,8 +40,8 @@ class OctopusTestCase(unittest.TestCase):
     def setUpClass(cls):
         cls._access_key = sys.argv[1]
 
-    @parameterized.expand(INDEX_PARAMS)
-    def test_index_xx(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
+    @parameterized.expand(TEST_PARAMS)
+    def test_index(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
 
         try:
@@ -50,10 +50,7 @@ class OctopusTestCase(unittest.TestCase):
                 library_path=pv_library_path('../..'),
                 model_path=pv_model_path('../..', language))
 
-            audio_path = os.path.join(
-                os.path.dirname(__file__),
-                '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
-            metadata = octopus.index_audio_data(read_wav_file(audio_path, octopus.sample_rate))
+            metadata = octopus.index_audio_data(read_wav_file(self._audio_path(language), octopus.sample_rate))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
             for phrase, occurrences in phrase_occurrences.items():
                 self.assertIn(phrase, phrase_matches)
@@ -66,8 +63,8 @@ class OctopusTestCase(unittest.TestCase):
             if octopus is not None:
                 octopus.delete()
 
-    @parameterized.expand(INDEX_PARAMS)
-    def _test_index_file_xx(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
+    @parameterized.expand(TEST_PARAMS)
+    def _test_index_file(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
 
         try:
@@ -76,10 +73,7 @@ class OctopusTestCase(unittest.TestCase):
                 library_path=pv_library_path('../..'),
                 model_path=pv_model_path('../..', language))
 
-            audio_path = os.path.join(
-                os.path.dirname(__file__),
-                '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
-            metadata = octopus.index_audio_file(audio_path)
+            metadata = octopus.index_audio_file(self._audio_path(language))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
             for phrase, occurrences in phrase_occurrences.items():
                 self.assertIn(phrase, phrase_matches)
@@ -197,7 +191,7 @@ class OctopusTestCase(unittest.TestCase):
             os.path.dirname(__file__),
             '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
 
-    @parameterized.expand(INDEX_PARAMS)
+    @parameterized.expand(TEST_PARAMS)
     def test_to_from_bytes(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
 
@@ -223,7 +217,7 @@ class OctopusTestCase(unittest.TestCase):
             if octopus is not None:
                 octopus.delete()
 
-    @parameterized.expand(INDEX_PARAMS)
+    @parameterized.expand(TEST_PARAMS)
     def test_to_from_bytes_file(
             self,
             language: str,

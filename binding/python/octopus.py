@@ -16,7 +16,7 @@ import os
 from collections import namedtuple
 from ctypes import *
 from enum import Enum
-from typing import Dict, Sequence
+from typing import Dict, Iterable, Sequence
 
 
 class OctopusError(Exception):
@@ -274,16 +274,16 @@ class Octopus(object):
             ("end_sec", c_float),
             ("probability", c_float)]
 
-    def search(self, metadata: OctopusMetadata, phrases: Sequence[str]) -> Dict[str, Sequence[Match]]:
+    def search(self, metadata: OctopusMetadata, phrases: Iterable[str]) -> Dict[str, Sequence[Match]]:
         """
-        Searches metadata for occurrences of a given phrase.
+        Searches metadata for occurrences of given phrases.
 
-        :param metadata: Metadata object
-        :param phrases: An iterable of phrases to search the index for
-        :return matches: A dictionary map of found matches
+        :param metadata: Metadata object.
+        :param phrases: An iterable of phrases to search the index for.
+        :return matches: A dictionary map of found matches.
         """
 
-        phrases_set = set([' '.join(x.strip().split()) for x in phrases])
+        phrases_set = set(' '.join(x.strip().split()) for x in phrases)
 
         if any(len(x) == 0 for x in phrases_set):
             raise OctopusInvalidArgumentError("Search phrase cannot be empty")
@@ -303,8 +303,8 @@ class Octopus(object):
             if status is not self.PicovoiceStatuses.SUCCESS:
                 raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
             if num_phrase_matches.value > 0:
-                phrase_matches = []
-                for i in range(0, num_phrase_matches.value):
+                phrase_matches = list()
+                for i in range(num_phrase_matches.value):
                     match = self.Match(
                         start_sec=c_phrase_matches[i].start_sec,
                         end_sec=c_phrase_matches[i].end_sec,
@@ -322,7 +322,7 @@ class Octopus(object):
 
     @property
     def sample_rate(self) -> int:
-        """Audio sample rate accepted by `index_audio_data`."""
+        """Audio sample rate accepted by `.index_audio_data`."""
 
         return self._sample_rate
 

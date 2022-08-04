@@ -30,7 +30,7 @@ class ProgressAnimation(Thread):
         while True:
             for frame in self._frames:
                 if self._done:
-                    sys.stdout.write('\r%s\r' % " " * (len(self._prefix) + 1 +len(frame)))
+                    sys.stdout.write('\r%s\r' % " " * (len(self._prefix) + 1 + len(frame)))
                     return
                 sys.stdout.write('\r%s %s' % (self._prefix, frame))
                 time.sleep(self._step_sec)
@@ -95,13 +95,14 @@ def main():
     start_sec = time.time()
     matches = o.search(metadata, phrases=args.phrases)
     print(
-        'Searched %d seconds of audio for %d phrases in %.5f seconds', % (int(length_sec), len(args.phrases), time.time() - start_sec))
+        'Searched %d seconds of audio for %d phrases in %.5f seconds' %
+        (int(length_sec), len(args.phrases), time.time() - start_sec))
     for phrase, phrase_matches in matches.items():
         phrase_matches = [x for x in phrase_matches if x.probability >= args.min_prob]
         if len(phrase_matches) > 0:
             print('%s >>>' % phrase)
             for phrase_match in phrase_matches:
-                print('[%d%] %s&t=%d' % (int(phrase_match.probability * 100), args.url, int(phrase_match.start_sec)))
+                print('[%d%%] %s&t=%d' % (int(phrase_match.probability * 100), args.url, int(phrase_match.start_sec)))
 
 
 if __name__ == '__main__':

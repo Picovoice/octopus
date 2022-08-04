@@ -43,7 +43,7 @@ When indexing PCM audio data, the valid audio sample rate is given by `handle.sa
 The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio:
 
 ```python
-audio_data = [..]
+audio_data = [...]
 metadata = handle.index(audio_data)
 ```
 
@@ -87,7 +87,7 @@ metadata_bytes = metadata.to_bytes()
 # ... Write & load `metadata_bytes` from cache/filesystem/etc.
 
 cached_metadata = pvoctopus.OctopusMetadata.from_bytes(metadata_bytes)
-matches = self.octopus.search(cached_metadata, ['avocado'])
+matches = octopus.search(cached_metadata, ['avocado'])
 ```
 
 When done the handle resources have to be released explicitly:

@@ -17,17 +17,22 @@ shutil.copy(os.path.join(os.path.dirname(__file__), 'util.py'), os.path.join(pac
 platforms = ('linux', 'mac', 'windows')
 
 os.mkdir(os.path.join(package_folder, 'lib'))
-for platform in ('common/param',) + platforms:
+for platform in platforms:
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
+
+os.makedirs(os.path.join(package_folder, 'lib/common/param'))
+shutil.copy(
+    os.path.join(os.path.dirname(__file__), '../../lib/common/param/octopus_params.pv'),
+    os.path.join(package_folder, 'lib/common/param/octopus_params.pv'))
 
 MANIFEST_IN = """
 include pvoctopus/LICENSE
 include pvoctopus/__init__.py
 include pvoctopus/octopus.py
 include pvoctopus/util.py
-include pvoctopus/lib/common/octopus_params.pv
+include pvoctopus/lib/common/param/octopus_params.pv
 include pvoctopus/lib/linux/x86_64/libpv_octopus.so
 include pvoctopus/lib/mac/x86_64/libpv_octopus.dylib
 include pvoctopus/lib/mac/arm64/libpv_octopus.dylib

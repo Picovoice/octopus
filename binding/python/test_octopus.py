@@ -40,25 +40,32 @@ class OctopusTestCase(unittest.TestCase):
     def setUpClass(cls):
         cls._access_key = sys.argv[1]
 
+    def _create_octopus(self, language: str) -> Octopus:
+        return Octopus(
+            access_key=self._access_key,
+            library_path=pv_library_path('../..'),
+            model_path=pv_model_path('../..', language))
+
+    def _check_matches(
+            self, phrase_matches: Dict[str, Sequence[Octopus.Match]],
+            phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]) -> None:
+        for phrase, occurrences in phrase_occurrences.items():
+            self.assertIn(phrase, phrase_matches)
+            self.assertEqual(len(phrase_matches[phrase]), len(occurrences))
+            for match, occurrence in zip(phrase_matches[phrase], occurrences):
+                self.assertAlmostEqual(match.start_sec, occurrence[0], delta=0.01)
+                self.assertAlmostEqual(match.end_sec, occurrence[1], delta=0.01)
+                self.assertAlmostEqual(match.probability, occurrence[2], delta=0.1)
+
     @parameterized.expand(TEST_PARAMS)
     def test_index(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', language))
-
+            octopus = self._create_octopus(language)
             metadata = octopus.index_audio_data(read_wav_file(self._audio_path(language), octopus.sample_rate))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
-            for phrase, occurrences in phrase_occurrences.items():
-                self.assertIn(phrase, phrase_matches)
-                self.assertEqual(len(phrase_matches[phrase]), len(occurrences))
-                for match, occurrence in zip(phrase_matches[phrase], occurrences):
-                    self.assertAlmostEqual(match.start_sec, occurrence[0], delta=0.01)
-                    self.assertAlmostEqual(match.end_sec, occurrence[1], delta=0.01)
-                    self.assertAlmostEqual(match.probability, occurrence[2], delta=0.1)
+            self._check_matches(phrase_matches, phrase_occurrences)
         finally:
             if octopus is not None:
                 octopus.delete()
@@ -68,98 +75,40 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', language))
-
+            octopus = self._create_octopus(language)
             metadata = octopus.index_audio_file(self._audio_path(language))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
-            for phrase, occurrences in phrase_occurrences.items():
-                self.assertIn(phrase, phrase_matches)
-                self.assertEqual(len(phrase_matches[phrase]), len(occurrences))
-                for match, occurrence in zip(phrase_matches[phrase], occurrences):
-                    self.assertAlmostEqual(match.start_sec, occurrence[0], delta=0.01)
-                    self.assertAlmostEqual(match.end_sec, occurrence[1], delta=0.01)
-                    self.assertAlmostEqual(match.probability, occurrence[2], delta=0.1)
+            self._check_matches(phrase_matches, phrase_occurrences)
+        finally:
+            if octopus is not None:
+                octopus.delete()
+
+    def _test_invalid(self, phrase: str) -> None:
+        octopus = None
+
+        try:
+            octopus = self._create_octopus('en')
+            metadata = octopus.index_audio_file(self._audio_path('en'))
+            with self.assertRaises(OctopusInvalidArgumentError):
+                octopus.search(metadata, [phrase])
         finally:
             if octopus is not None:
                 octopus.delete()
 
     def test_empty_search_phrase(self):
-        octopus = None
-
-        try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
-            metadata = octopus.index_audio_file(self._audio_path('en'))
-            with self.assertRaises(OctopusInvalidArgumentError):
-                octopus.search(metadata, [''])
-        finally:
-            if octopus is not None:
-                octopus.delete()
+        self._test_invalid('')
 
     def test_whitespace_search_phrase(self):
-        octopus = None
-
-        try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
-            metadata = octopus.index_audio_file(self._audio_path('en'))
-            with self.assertRaises(OctopusInvalidArgumentError):
-                octopus.search(metadata, ['   '])
-        finally:
-            if octopus is not None:
-                octopus.delete()
+        self._test_invalid('   ')
 
     def test_numeric_search_phrase(self):
-        octopus = None
-
-        try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
-            metadata = octopus.index_audio_file(self._audio_path('en'))
-            with self.assertRaises(OctopusInvalidArgumentError):
-                octopus.search(metadata, ['12'])
-        finally:
-            if octopus is not None:
-                octopus.delete()
+        self._test_invalid('12')
 
     def test_hyphen_in_search_phrase(self):
-        octopus = None
-
-        try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
-            metadata = octopus.index_audio_file(self._audio_path('en'))
-            with self.assertRaises(OctopusInvalidArgumentError):
-                octopus.search(metadata, ['real-time'])
-        finally:
-            if octopus is not None:
-                octopus.delete()
+        self._test_invalid('real-time')
 
     def test_invalid_search_phrase(self):
-        octopus = None
-
-        try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
-            metadata = octopus.index_audio_file(self._audio_path('en'))
-            with self.assertRaises(OctopusInvalidArgumentError):
-                octopus.search(metadata, ['@@!%$'])
-        finally:
-            if octopus is not None:
-                octopus.delete()
+        self._test_invalid('@@!%$')
 
     def test_index_with_spaces(self):
         octopus = None
@@ -255,10 +204,7 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
+            octopus = self._create_octopus('en')
             self.assertIsInstance(octopus.version, str)
         finally:
             if octopus is not None:

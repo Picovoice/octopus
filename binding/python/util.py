@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Picovoice Inc.
+# Copyright 2021-2022 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -46,4 +46,4 @@ def pv_library_path(relative_path):
 
 
 def pv_model_path(relative_path):
-    return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/octopus_params.pv')
+    return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/param/octopus_params.pv')

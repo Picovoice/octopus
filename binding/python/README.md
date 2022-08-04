@@ -30,7 +30,7 @@ Create an instance of the engine:
 ```python
 import pvoctopus
 
-access_key = ""  # AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
+access_key = ""  # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 handle = pvoctopus.create(access_key=access_key)
 ```
 
@@ -95,3 +95,13 @@ When done the handle resources have to be released explicitly:
 ```python
 handle.delete()
 ```
+
+## Non-English Models
+
+In order to search non-English phrases you need to use the corresponding model file. The model files for all supported
+languages are available [here](/lib/common/param).
+
+## Demos
+
+[pvoctopusdemo](https://pypi.org/project/pvoctopusdemo/) provides command-line utilities for searching audio files using
+Octopus.

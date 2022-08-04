@@ -114,10 +114,7 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', 'en'))
+            octopus = self._create_octopus('en')
             metadata = octopus.index_audio_file(self._audio_path('en'))
             search_term = ' americano   avocado    '
             normalized_search_term = 'americano avocado'
@@ -145,23 +142,14 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', language))
+            octopus = self._create_octopus(language)
             original_metadata = octopus.index_audio_file(self._audio_path(language))
 
             metadata_bytes = original_metadata.to_bytes()
             metadata = OctopusMetadata.from_bytes(metadata_bytes)
 
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
-            for phrase, occurrences in phrase_occurrences.items():
-                self.assertIn(phrase, phrase_matches)
-                self.assertEqual(len(phrase_matches[phrase]), len(occurrences))
-                for match, occurrence in zip(phrase_matches[phrase], occurrences):
-                    self.assertAlmostEqual(match.start_sec, occurrence[0], delta=0.01)
-                    self.assertAlmostEqual(match.end_sec, occurrence[1], delta=0.01)
-                    self.assertAlmostEqual(match.probability, occurrence[2], delta=0.1)
+            self._check_matches(phrase_matches, phrase_occurrences)
         finally:
             if octopus is not None:
                 octopus.delete()
@@ -175,10 +163,7 @@ class OctopusTestCase(unittest.TestCase):
         cache_path = 'original_metadata.oif'
 
         try:
-            octopus = Octopus(
-                access_key=self._access_key,
-                library_path=pv_library_path('../..'),
-                model_path=pv_model_path('../..', language))
+            octopus = self._create_octopus(language)
             original_metadata = octopus.index_audio_file(self._audio_path(language))
 
             with open(cache_path, 'wb') as f:
@@ -187,13 +172,7 @@ class OctopusTestCase(unittest.TestCase):
                 metadata = OctopusMetadata.from_bytes(f.read())
 
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
-            for phrase, occurrences in phrase_occurrences.items():
-                self.assertIn(phrase, phrase_matches)
-                self.assertEqual(len(phrase_matches[phrase]), len(occurrences))
-                for match, occurrence in zip(phrase_matches[phrase], occurrences):
-                    self.assertAlmostEqual(match.start_sec, occurrence[0], delta=0.01)
-                    self.assertAlmostEqual(match.end_sec, occurrence[1], delta=0.01)
-                    self.assertAlmostEqual(match.probability, occurrence[2], delta=0.1)
+            self._check_matches(phrase_matches, phrase_occurrences)
         finally:
             if octopus is not None:
                 octopus.delete()

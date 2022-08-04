@@ -180,24 +180,16 @@ class OctopusTestCase(unittest.TestCase):
             normalized_search_term = 'americano avocado'
             matches = octopus.search(metadata, [search_term])
             norm_matches = octopus.search(metadata, [normalized_search_term])
-            # self.assertEqual(len(matches), len(norm_matches))
-            # for match, norm_match in zip(matches, norm_matches):
-            #     self.assertAlmostEqual(match.start_sec)
+            self.assertEqual(set(matches.keys()), set(norm_matches.keys()))
+            for phrase in matches.keys():
+                self.assertEqual(len(matches[phrase]), len(norm_matches[phrase]))
+                for match, norm_match in zip(matches[phrase], norm_matches[phrase]):
+                    self.assertEqual(match.start_sec, norm_match.start_sec)
+                    self.assertEqual(match.end_sec, norm_match.end_sec)
+                    self.assertEqual(match.probability, norm_match.probability)
         finally:
             if octopus is not None:
                 octopus.delete()
-
-        # metadata = self.octopus.index_audio_data(self.audio)
-        # search_term = ' americano   avocado    '
-        # normalized_search_term = 'americano avocado'
-        # matches = self.octopus.search(metadata, [search_term])
-        # self.assertIn(normalized_search_term, matches)
-        # self.assertEqual(len(matches[normalized_search_term]), 1)
-        #
-        # match = matches[normalized_search_term][0]
-        # expected_match = Octopus.Match(start_sec=9.47, end_sec=12.25, probability=.33)
-        # self.assertAlmostEqual(match.start_sec, expected_match.start_sec, places=1)
-        # self.assertAlmostEqual(match.end_sec, expected_match.end_sec, places=1)
 
     @staticmethod
     def _audio_path(language: str) -> str:

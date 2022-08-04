@@ -47,5 +47,5 @@ setuptools.setup(
         ],
     ),
     python_requires='>=3.5',
-    keywords="Speech-to-Index, voice indexing, speech recognition",
+    keywords="Speech-to-Index, Voice Search, Keyword Spotting, Speech Recognition, Voice Recognition",
 )

@@ -48,11 +48,12 @@ class OctopusTestCase(unittest.TestCase):
 
     def test_index(self):
         perf_results = []
-        for i in range(self.num_test_iterations):
+        for i in range(self.num_test_iterations + 1):
             start = time.time()
             self.octopus.index_audio_data(self.audio)
             index_time = time.time() - start
 
+            # Exclude the first run to avoid cold start side effects
             if i > 0:
                 perf_results.append(index_time)
 
@@ -64,11 +65,12 @@ class OctopusTestCase(unittest.TestCase):
         metadata = self.octopus.index_audio_data(self.audio)
 
         perf_results = []
-        for i in range(self.num_test_iterations):
+        for i in range(self.num_test_iterations + 1):
             start = time.time()
             self.octopus.search(metadata, ['avocado'])
             index_time = time.time() - start
 
+            # Exclude the first run to avoid cold start side effects
             if i > 0:
                 perf_results.append(index_time)
 

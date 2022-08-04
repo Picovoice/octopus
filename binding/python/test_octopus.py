@@ -46,6 +46,12 @@ class OctopusTestCase(unittest.TestCase):
             library_path=pv_library_path('../..'),
             model_path=pv_model_path('../..', language))
 
+    @staticmethod
+    def _audio_path(language: str) -> str:
+        return os.path.join(
+            os.path.dirname(__file__),
+            '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
+
     def _check_matches(
             self, phrase_matches: Dict[str, Sequence[Octopus.Match]],
             phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]) -> None:
@@ -131,12 +137,6 @@ class OctopusTestCase(unittest.TestCase):
             if octopus is not None:
                 octopus.delete()
 
-    @staticmethod
-    def _audio_path(language: str) -> str:
-        return os.path.join(
-            os.path.dirname(__file__),
-            '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
-
     @parameterized.expand(TEST_PARAMS)
     def test_to_from_bytes(self, language: str, phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
@@ -158,7 +158,7 @@ class OctopusTestCase(unittest.TestCase):
     def test_to_from_bytes_file(
             self,
             language: str,
-            phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]) -> None:
+            phrase_occurrences: Dict[str, Sequence[Tuple[float, float, float]]]):
         octopus = None
         cache_path = 'original_metadata.oif'
 

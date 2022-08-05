@@ -289,125 +289,40 @@ handle.delete();
 
 ### Web
 
-Octopus is available on modern web browsers (i.e., not Internet Explorer) via [WebAssembly](https://webassembly.org/).
-Octopus is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
-to allow it to perform processing off the main thread.
-
-#### Vanilla JavaScript and HTML (CDN Script Tag)
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <script src="https://unpkg.com/@picovoice/octopus-web-en-worker/dist/iife/index.js"></script>
-  <script type="application/javascript">
-    // The metadata object to save the result of indexing for later searches
-    let octopusMetadata = undefined
-
-    function octopusIndexCallback(metadata) {
-      octopusMetadata = metadata
-    }
-
-    function octopusSearchCallback(matches) {
-      console.log(`Search results (${matches.length}):`)
-      console.log(`Start: ${match.startSec}s -> End: ${match.endSec}s (Probability: ${match.probability})`)
-    }
-
-    async function startOctopus() {
-      // Create an Octopus Worker
-      // Note: you receive a Worker object, _not_ an individual Octopus instance
-      const accessKey = ... // AccessKey string provided by Picovoice Console (https://console.picovoice.ai/)
-      const OctopusWorker = await OctopusWorkerFactory.create(
-        accessKey,
-        octopusIndexCallback,
-        octopusSearchCallback
-      )
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      startOctopus();
-      // Send Octopus the audio signal
-      const audioSignal = new Int16Array(/* Provide data with correct format*/)
-      OctopusWorker.postMessage({
-        command: "index",
-        input: audioSignal,
-      });
-    });
-
-    const searchText = ...
-    OctopusWorker.postMessage({
-      command: "search",
-      metadata: octopusMetadata,
-      searchPhrase: searchText,
-    });
-  </script>
-</head>
-
-<body></body>
-
-</html>
-```
-
-#### Vanilla JavaScript and HTML (ES Modules)
+Install the web SDK using yarn:
 
 ```console
-yarn add @picovoice/octopus-web-en-worker
+yarn add @picovoice/octopus-web
 ```
 
-(or)
+or using npm:
 
 ```console
-npm install @picovoice/octopus-web-en-worker
+npm install --save @picovoice/octopus-web
 ```
 
-```javascript
-import { OctopusWebEnWorker } from "@picovoice/octopus-web-en-worker";
+Create an instance of the engine using `OctopusWorker` and transcribe an audio file:
 
-// The metadata object to save the result of indexing for later searches
-let octopusMetadata = undefined;
+```typescript
+import { Octopus } from "@picovoice/octopus-web";
+import octopusParams from "${PATH_TO_BASE64_OCTOPUS_PARAMS}";
 
-function octopusIndexCallback(metadata) {
-  octopusMetadata = metadata;
+function getAudioData(): Int16Array {
+... // function to get audio data
+  return new Int16Array();
 }
 
-function octopusSearchCallback(matches) {
-  console.log(`Search results (${matches.length}):`);
-  console.log(`Start: ${match.startSec}s -> End: ${match.endSec}s (Probability: ${match.probability})`);
-}
+const octopus = await OctopusWorker.fromBase64(
+  "${ACCESS_KEY}", 
+  octopusParams
+);
 
-
-async function startOctopus() {
-  // Create an Octopus Worker
-  // Note: you receive a Worker object, _not_ an individual Octopus instance
-  const accessKey = // .. AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
-  const OctopusWorker = await OctopusWorkerFactory.create(
-    accessKey,
-    octopusIndexCallback,
-    octopusSearchCallback
-  );
-}
-
-startOctopus()
-
-...
-
-// Send Octopus the audio signal
-const audioSignal = new Int16Array(/* Provide data with correct format*/)
-OctopusWorker.postMessage({
-  command: "index",
-  input: audioSignal,
-});
-
-...
-
-const searchText = ...;
-OctopusWorker.postMessage({
-  command: "search",
-  metadata: octopusMetadata,
-  searchPhrase: searchText,
-});
+const octopusMetadata = await octopus.index(getAudioData());
+const searchResult = await octopus.search(octopusMetadata, "${SEARCH_PHRASE}");
+console.log(searchResult);
 ```
+
+Replace `${ACCESS_KEY}` with yours obtained from [Picovoice Console]((https://console.picovoice.ai/)). Finally, when done release the resources using `octopus.release()`.
 
 ## Releases
 

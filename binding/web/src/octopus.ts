@@ -25,7 +25,7 @@ import {
   fromPublicDirectory
 } from "@picovoice/web-utils";
 
-import {OctopusInitConfig, OctopusConfig, OctopusMetadata, OctopusMatch} from "./types";
+import { OctopusOptions, OctopusMetadata, OctopusMatch } from "./types";
 
 /**
  * WebAssembly function types
@@ -143,7 +143,7 @@ export class Octopus {
   public static async fromBase64(
     accessKey: string,
     modelBase64: string,
-    options: OctopusConfig = {}
+    options: OctopusOptions = {}
   ): Promise<Octopus> {
     const {modelPath = "octopus_model", forceWrite = false, version = 1, ...rest} = options;
     await fromBase64(modelPath, modelBase64, forceWrite, version);
@@ -168,7 +168,7 @@ export class Octopus {
   public static async fromPublicDirectory(
     accessKey: string,
     publicPath: string,
-    options: OctopusConfig = {}
+    options: OctopusOptions = {}
   ): Promise<Octopus> {
     const {modelPath = "octopus_model", forceWrite = false, version = 1, ...rest} = options;
     await fromPublicDirectory(modelPath, publicPath, forceWrite, version);
@@ -202,11 +202,11 @@ export class Octopus {
    *
    * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
    * @param modelPath Path to the model saved in indexedDB.
-   * @param initConfig Flag to enable automatic punctuation insertion.
+   * @param options Optional configuration arguments.
    *
    * @returns An instance of the Octopus engine.
    */
-  public static async create(accessKey: string, modelPath: string, initConfig: OctopusInitConfig): Promise<Octopus> {
+  public static async create(accessKey: string, modelPath: string, options: OctopusOptions): Promise<Octopus> {
     if (!isAccessKeyValid(accessKey)) {
       throw new Error('Invalid AccessKey');
     }
@@ -214,7 +214,7 @@ export class Octopus {
       Octopus._octopusMutex
         .runExclusive(async () => {
           const isSimd = await simd();
-          const wasmOutput = await Octopus.initWasm(accessKey.trim(), (isSimd) ? this._wasmSimd : this._wasm, modelPath, initConfig);
+          const wasmOutput = await Octopus.initWasm(accessKey.trim(), (isSimd) ? this._wasmSimd : this._wasm, modelPath, options);
           return new Octopus(wasmOutput);
         })
         .then((result: Octopus) => {
@@ -400,7 +400,7 @@ export class Octopus {
     this._wasmMemory = undefined;
   }
 
-  private static async initWasm(accessKey: string, wasmBase64: string, modelPath: string, initConfig: OctopusInitConfig): Promise<any> {
+  private static async initWasm(accessKey: string, wasmBase64: string, modelPath: string, options: OctopusOptions): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 1MiB ~= 16 pages
     const memory = new WebAssembly.Memory({ initial: 1024 });
 

@@ -99,7 +99,7 @@ handle.delete()
 ## Non-English Models
 
 In order to search non-English phrases you need to use the corresponding model file. The model files for all supported
-languages are available [here](/lib/common/param).
+languages are available [here](https://github.com/Picovoice/octopus/tree/main/lib/common/param).
 
 ## Demos
 

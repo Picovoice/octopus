@@ -2,7 +2,7 @@ import { Octopus } from "./octopus";
 import { OctopusWorker } from "./octopus_worker";
 
 import {
-  OctopusConfig,
+  OctopusOptions,
   OctopusMetadata,
   OctopusMatch,
   OctopusWorkerInitRequest,
@@ -28,7 +28,7 @@ OctopusWorker.setWasmSimd(octopusWasmSimd);
 
 export {
   Octopus,
-  OctopusConfig,
+  OctopusOptions,
   OctopusMetadata,
   OctopusMatch,
   OctopusWorker,

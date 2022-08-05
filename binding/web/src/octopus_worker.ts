@@ -14,8 +14,7 @@ import { fromBase64, fromPublicDirectory } from "@picovoice/web-utils";
 import PvWorker from "web-worker:./octopus_worker_handler.ts";
 
 import {
-  OctopusConfig,
-  OctopusInitConfig,
+  OctopusOptions,
   OctopusMatch,
   OctopusMetadata,
   OctopusWorkerInitResponse,
@@ -77,7 +76,7 @@ export class OctopusWorker {
   public static async fromBase64(
     accessKey: string,
     modelBase64: string,
-    options: OctopusConfig = {}
+    options: OctopusOptions = {}
   ): Promise<OctopusWorker> {
     const {modelPath = "octopus_model", forceWrite = false, version = 1, ...rest} = options;
     await fromBase64(modelPath, modelBase64, forceWrite, version);
@@ -102,7 +101,7 @@ export class OctopusWorker {
   public static async fromPublicDirectory(
     accessKey: string,
     publicPath: string,
-    options: OctopusConfig = {}
+    options: OctopusOptions = {}
   ): Promise<OctopusWorker> {
     const {modelPath = "octopus_model", forceWrite = false, version = 1, ...rest} = options;
     await fromPublicDirectory(modelPath, publicPath, forceWrite, version);
@@ -136,11 +135,11 @@ export class OctopusWorker {
    *
    * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
    * @param modelPath Path to the model saved in indexedDB.
-   * @param initConfig Flag to enable automatic punctuation insertion.
+   * @param options Optional configuration arguments.
    *
    * @returns An instance of OctopusWorker.
    */
-  private static async create(accessKey: string, modelPath: string, initConfig: OctopusInitConfig): Promise<OctopusWorker> {
+  private static async create(accessKey: string, modelPath: string, options: OctopusOptions): Promise<OctopusWorker> {
     const worker = new PvWorker();
     const returnPromise: Promise<OctopusWorker> = new Promise((resolve, reject) => {
       // @ts-ignore - block from GC
@@ -165,7 +164,7 @@ export class OctopusWorker {
       command: "init",
       accessKey: accessKey,
       modelPath: modelPath,
-      initConfig: initConfig,
+      options: options,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
     });

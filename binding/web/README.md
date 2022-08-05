@@ -1,10 +1,12 @@
-# octopus-web
+# Octopus Binding for Web
 
-The Picovoice Octopus library for web browsers, powered by WebAssembly.
+## Octopus Speech-to-Text Engine
 
-This library transcribes audio samples in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread.
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Looking for Octopus on NodeJS? See the [@picovoice/octopus-node](https://www.npmjs.com/package/@picovoice/octopus-node) package.
+Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech without relying on a text representation. This
+acoustic-only approach boosts accuracy by removing out-of-vocabulary limitation and eliminating the problem of competing
+hypothesis (e.g. homophones)
 
 ## Compatibility
 
@@ -12,13 +14,9 @@ Looking for Octopus on NodeJS? See the [@picovoice/octopus-node](https://www.npm
 - Firefox
 - Safari
 
-This library requires several modern browser features: `WebAssembly`, `Web Workers`, `IndexedDB` and `Promise`. Internet Explorer will _not_ work.
+## Installation
 
-## Installation & Usage
-
-### Package
-
-Install the [Octopus-Web package](https://www.npmjs.com/package/@picovoice/octopus-web) using `yarn`:
+Using `yarn`:
 
 ```console
 yarn add @picovoice/octopus-web
@@ -36,11 +34,9 @@ Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` ac
 You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
-### Octopus Models
+### Usage
 
-Octopus requires a model file on initialization. You can use one the model files located in [/lib/common/light/](/lib/common/light) matching the required language code.
-
-For the web packages, there are two methods to initialize Octopus.
+For the web packages, there are two methods to initialize Cheetah.
 
 #### Public Directory
 
@@ -69,8 +65,6 @@ run:
 ```console
 npx pvbase64 -h
 ```
-
-### Usage
 
 #### Init options
 
@@ -192,13 +186,6 @@ Terminate `OctopusWorker` instance:
 await handle.terminate();
 ```
 
-## Build from source (IIFE + ESM outputs)
+## Demo
 
-This library uses Rollup and TypeScript along with Babel and other popular rollup plugins. There are two outputs: an IIFE version intended for script tags / CDN usage, and a JavaScript module version intended for use with modern JavaScript/TypeScript development (e.g. Angular, Create React App, Webpack).
-
-```console
-yarn
-yarn build
-```
-
-The output will appear in the ./dist/ folder.
+For example usage refer to our [Web demo application](https://github.com/Picovoice/octopus/tree/master/demo/web).

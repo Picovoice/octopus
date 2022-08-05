@@ -36,7 +36,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ### Usage
 
-For the web packages, there are two methods to initialize Cheetah.
+For the web packages, there are two methods to initialize Octopus.
 
 #### Public Directory
 

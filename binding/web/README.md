@@ -1,6 +1,6 @@
 # Octopus Binding for Web
 
-## Octopus Speech-to-Text Engine
+## Octopus Speech-to-Index Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 

@@ -36,7 +36,7 @@ Create an instance of the engine with the Octopus Builder class by passing in th
 ```java
 import ai.picovoice.octopus.*;
 
-final String accessKey = "..."; // AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
+final String accessKey = "..."; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 try {
     Octopus handle = new Octopus.Builder().setAccessKey(accessKey).build(appContext);
 } catch (OctopusException ex) { }
@@ -59,7 +59,7 @@ The engine accepts 16-bit linearly-encoded PCM and operates on single-channel au
 ```java
 import ai.picovoice.octopus.*;
 
-short[] audioData = [..];
+short[] audioData = [...];
 try {
     OctopusMetadata metadata = handle.indexAudioData(audioData);
 } catch (OctopusException ex) { }
@@ -110,3 +110,7 @@ When done resources have to be released explicitly:
 metadata.delete();
 handle.delete();
 ```
+
+## Non-English Models
+
+In order to search non-English phrases you need to use the corresponding model file (file with `.pv` extension). The model files for all supported languages are available [here](https://github.com/Picovoice/octopus/tree/main/lib/common/param).

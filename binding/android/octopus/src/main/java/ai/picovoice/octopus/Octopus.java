@@ -43,10 +43,10 @@ public class Octopus {
      * Constructor.
      *
      * @param accessKey AccessKey obtained from Picovoice Console
-     * @param modelPath Absolute path to the file containing Octopus model parameters.*
+     * @param modelPath Absolute path to the file containing Octopus model parameters.
      * @throws OctopusException if there is an error while initializing Octopus.
      */
-    public Octopus(String accessKey, String modelPath) throws OctopusException {
+    private Octopus(String accessKey, String modelPath) throws OctopusException {
         handle = init(accessKey, modelPath);
     }
 
@@ -88,7 +88,7 @@ public class Octopus {
      *
      * @param pcm An array of audio samples. The audio needs to have a sample rate
      *            equal to {@link #getPcmDataSampleRate()} and be single-channel, 16-bit linearly-encoded.
-     * @return OctopusMetadata object that is used to perform searches
+     * @return OctopusMetadata object that is used to perform searches.
      * @throws OctopusException if there is an error while processing the audio data.
      */
     public OctopusMetadata indexAudioData(short[] pcm) throws OctopusException {
@@ -99,7 +99,7 @@ public class Octopus {
      * Reads and indexes a given audio file.
      *
      * @param path Absolute path to an audio file.
-     * @return OctopusMetadata object that is used to perform searches
+     * @return OctopusMetadata object that is used to perform searches.
      * @throws OctopusException if there is an error while processing the audio data.
      */
     public OctopusMetadata indexAudioFile(String path) throws OctopusException {
@@ -117,7 +117,7 @@ public class Octopus {
      *
      * @param metadata An OctopusMetata object obtained via {@link #indexAudioData(short[])} or
      *                 {@link #indexAudioFile(String)}.
-     * @param phrases  A set of phrases to search for in the metadata
+     * @param phrases  A set of phrases to search for in the metadata.
      * @return a map of phrases and match arrays. Matches are represented by immutable OctopusMatch objects.
      * @throws OctopusException if there is an error while performing the search query.
      */

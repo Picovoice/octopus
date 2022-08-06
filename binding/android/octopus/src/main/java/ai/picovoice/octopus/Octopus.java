@@ -36,7 +36,6 @@ public class Octopus {
         System.loadLibrary("pv_octopus");
     }
 
-    private final Pattern PHRASE_REGEX = Pattern.compile("^[a-zA-Z' ]+$");
     private final long handle;
 
     /**
@@ -136,15 +135,6 @@ public class Octopus {
             final String formattedPhrase = formattedPhraseBuilder.toString().trim();
             if (formattedPhrase.isEmpty()) {
                 throw new OctopusInvalidArgumentException("Search phrase cannot be empty");
-            }
-
-            if(!PHRASE_REGEX.matcher(formattedPhrase).matches()) {
-                throw new OctopusInvalidArgumentException(
-                        "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
-                                "\t12 >>> twelve\n" +
-                                "\t2021 >>> twenty twenty one\n" +
-                                "\tmother-in-law >>> mother in law\n" +
-                                "\t5-minute meeting >>> five minute meeting");
             }
 
             OctopusMatch[] searchResult = search(

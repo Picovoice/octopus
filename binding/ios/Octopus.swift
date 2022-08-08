@@ -31,7 +31,6 @@ public class Octopus {
     /// Octopus version
     public static let version = String(cString: pv_octopus_version())
     
-    private let PHRASE_REGEX = "^[a-zA-Z' ]+$"
     private var handle: OpaquePointer?
     
     /// Constructor.
@@ -168,15 +167,6 @@ public class Octopus {
             
             if formattedPhrase.isEmpty {
                 throw OctopusInvalidArgumentError("Search phrase cannot be empty")
-            }
-            
-            if formattedPhrase.range(of: PHRASE_REGEX, options: .regularExpression) == nil {
-                throw OctopusInvalidArgumentError(
-                    "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n" +
-                    "\t12 >>> twelve\n" +
-                    "\t2021 >>> twenty twenty one\n" +
-                    "\tmother-in-law >>> mother in law\n" +
-                    "\t5-minute meeting >>> five minute meeting")
             }
             
             var cMatches:UnsafeMutablePointer<pv_octopus_match_t>?

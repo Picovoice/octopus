@@ -3,13 +3,13 @@ name: iOS Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, v1.2 ]
     paths: 
       - 'lib/ios/**'
       - 'lib/common/**'
       - '.github/workflows/ios-perf.yml'
   pull_request:
-    branches: [ main ]
+    branches: [ main, v1.2 ]
     paths: 
       - 'lib/ios/**'
       - 'lib/common/**'

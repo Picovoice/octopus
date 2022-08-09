@@ -68,7 +68,7 @@ npx pvbase64 -h
 
 #### Init options
 
-Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `modelPath` variable
+Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `customWritePath` variable
 to hold multiple models and set the `forceWrite` value to true to force re-save a model file. Set `enableAutomaticPunctuation`
 to false, if you do not wish to enable capitalization and punctuation in transcription.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
@@ -76,7 +76,7 @@ If the model file (`.pv`) changes, `version` should be incremented to force the 
 ```typescript
 // these are default
 const options = {
-  modelPath: "octopus_model",
+  customWritePath: "octopus_model",
   forceWrite: false,
   version: 1
 }
@@ -89,7 +89,7 @@ Use `Octopus` to initialize from public directory:
 ```typescript
 const handle = await Octopus.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${MODEL_FILE_RELATIVE_TO_PUBLIC_DIRECTORY},
+  ${MODEL_RELATIVE_PATH},
   options // optional options
 );
 ```
@@ -113,7 +113,7 @@ Use `OctopusWorker` to initialize from public directory:
 ```typescript
 const handle = await OctopusWorker.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${MODEL_FILE_RELATIVE_TO_PUBLIC_DIRECTORY},
+  ${MODEL_RELATIVE_PATH},
   options // optional options
 );
 ```

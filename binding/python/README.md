@@ -9,7 +9,7 @@ hypothesis (e.g. homophones)
 ## Compatibility
 
 - Python 3.5+
-- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64, arm64), Windows (x86_64)
 
 ## Installation
 
@@ -30,7 +30,7 @@ Create an instance of the engine:
 ```python
 import pvoctopus
 
-access_key = ""  # AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
+access_key = ""  # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 handle = pvoctopus.create(access_key=access_key)
 ```
 
@@ -39,11 +39,11 @@ searches can be run against.
 
 Octopus indexing has two modes of operation: indexing PCM audio data, or indexing an audio file.
 
-When indexing PCM audio data, the valid audio sample rate is given by `handle.pcm_sample_rate`.
+When indexing PCM audio data, the valid audio sample rate is given by `handle.sample_rate`.
 The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio:
 
 ```python
-audio_data = [..]
+audio_data = [...]
 metadata = handle.index(audio_data)
 ```
 
@@ -87,7 +87,7 @@ metadata_bytes = metadata.to_bytes()
 # ... Write & load `metadata_bytes` from cache/filesystem/etc.
 
 cached_metadata = pvoctopus.OctopusMetadata.from_bytes(metadata_bytes)
-matches = self.octopus.search(cached_metadata, ['avocado'])
+matches = octopus.search(cached_metadata, ['avocado'])
 ```
 
 When done the handle resources have to be released explicitly:
@@ -95,3 +95,13 @@ When done the handle resources have to be released explicitly:
 ```python
 handle.delete()
 ```
+
+## Non-English Models
+
+In order to search non-English phrases you need to use the corresponding model file. The model files for all supported
+languages are available [here](https://github.com/Picovoice/octopus/tree/main/lib/common/param).
+
+## Demos
+
+[pvoctopusdemo](https://pypi.org/project/pvoctopusdemo/) provides command-line utilities for searching audio files using
+Octopus.

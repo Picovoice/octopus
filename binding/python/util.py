@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Picovoice Inc.
+# Copyright 2021-2022 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -12,12 +12,13 @@
 import logging
 import os
 import platform
+from typing import Tuple
 
 log = logging.getLogger('OCT')
 log.setLevel(logging.WARNING)
 
 
-def _pv_platform():
+def _pv_platform() -> Tuple[str, str]:
     pv_system = platform.system()
     if pv_system not in {'Darwin', 'Linux', 'Windows'}:
         raise ValueError("Unsupported system '%s'." % pv_system)
@@ -30,7 +31,7 @@ def _pv_platform():
 _PV_SYSTEM, _PV_MACHINE = _pv_platform()
 
 
-def pv_library_path(relative_path):
+def pv_library_path(relative_path: str) -> str:
     if _PV_SYSTEM == 'Darwin':
         if _PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_octopus.dylib')
@@ -45,5 +46,14 @@ def pv_library_path(relative_path):
     raise NotImplementedError('Unsupported platform.')
 
 
-def pv_model_path(relative_path):
-    return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/octopus_params.pv')
+def pv_model_path(relative_path: str, language: str) -> str:
+    return os.path.join(
+        os.path.dirname(__file__),
+        relative_path,
+        'lib/common/param/octopus_params%s.pv' % ('' if language == 'en' else ('_' + language)))
+
+
+__all__ = [
+    'pv_library_path',
+    'pv_model_path',
+]

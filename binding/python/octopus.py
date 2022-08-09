@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Picovoice Inc.
+# Copyright 2021-2022 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license.
 # A copy of the license is located in the "LICENSE" file accompanying this
@@ -13,12 +13,10 @@
 #
 
 import os
-import platform
-import re
 from collections import namedtuple
 from ctypes import *
-from ctypes.util import find_library
 from enum import Enum
+from typing import Dict, Iterable, Sequence
 
 
 class OctopusError(Exception):
@@ -74,35 +72,36 @@ class OctopusMetadata(object):
     Python representation of the metadata object.
     """
 
-    def __init__(self, handle, size):
-        self._inner = (handle, size)
-
-    @staticmethod
-    def create_owned(handle, size):
-        return OctopusMetadata.from_bytes(OctopusMetadata._to_bytes(handle, size))
+    def __init__(self, handle: c_void_p, size: int) -> None:
+        self._handle = handle
+        self._size = size
 
     @property
-    def handle(self):
-        return self._inner[0]
+    def handle(self) -> c_void_p:
+        return self._handle
 
     @property
-    def size(self):
-        return self._inner[1]
+    def size(self) -> int:
+        return self._size
 
-    @staticmethod
-    def from_bytes(metadata_bytes):
-        size = c_int(len(metadata_bytes))
-        byte_ptr = (c_byte * size.value).from_buffer_copy(metadata_bytes)
+    def to_bytes(self) -> bytes:
+        return self._to_bytes(self.handle, self.size)
+
+    @classmethod
+    def create_owned(cls, handle: c_void_p, size: int) -> 'OctopusMetadata':
+        return cls.from_bytes(cls._to_bytes(handle, size))
+
+    @classmethod
+    def from_bytes(cls, metadata_bytes: bytes) -> 'OctopusMetadata':
+        byte_ptr = (c_byte * len(metadata_bytes)).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
-        return OctopusMetadata(handle=handle, size=size)
-
-    def to_bytes(self):
-        return self._to_bytes(self.handle, self.size.value)
+        return cls(handle=handle, size=len(metadata_bytes))
 
     @staticmethod
-    def _to_bytes(pointer, size):
-        byte_array = cast(pointer, POINTER(c_byte * size))
-        return bytes(byte_array.contents)
+    def _to_bytes(ptr: c_void_p, size: int) -> bytes:
+        # noinspection PyTypeChecker
+        return bytes(cast(ptr, POINTER(c_byte * size)).contents)
+
 
 class Octopus(object):
     """
@@ -140,22 +139,22 @@ class Octopus(object):
     class COctopus(Structure):
         pass
 
-    def __init__(self, access_key, library_path, model_path):
+    def __init__(self, access_key: str, model_path: str, library_path: str) -> None:
         """
         Constructor.
 
-        :param library_path: Absolute path to Octopus' dynamic library.
         :param access_key: AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
         :param model_path: Absolute path to file containing model parameters.
+        :param library_path: Absolute path to Octopus' dynamic library.
         """
 
+        if not os.path.exists(model_path):
+            raise IOError("Couldn't find model file at `%s`." % model_path)
+
         if not os.path.exists(library_path):
-            raise IOError("Couldn't find Octopus' dynamic library at '%s'." % library_path)
+            raise IOError("Couldn't find dynamic library at '%s'." % library_path)
 
         library = cdll.LoadLibrary(library_path)
-
-        if not os.path.exists(model_path):
-            raise IOError("Couldn't find model file at '%s'." % model_path)
 
         init_func = library.pv_octopus_init
         init_func.argtypes = [c_char_p, c_char_p, POINTER(POINTER(self.COctopus))]
@@ -163,10 +162,7 @@ class Octopus(object):
 
         self._handle = POINTER(self.COctopus)()
 
-        status = init_func(
-            access_key.encode('utf-8'),
-            model_path.encode('utf-8'),
-            byref(self._handle))
+        status = init_func(access_key.encode('utf-8'), model_path.encode('utf-8'), byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
@@ -212,37 +208,38 @@ class Octopus(object):
         self._pv_free.argtypes = [c_void_p]
         self._pv_free.restype = None
 
-    def delete(self):
-        """Releases resources acquired."""
+    def delete(self) -> None:
+        """Releases resources acquired by Octopus."""
 
         self._delete_func(self._handle)
 
-    def index_audio_data(self, pcm):
+    def index_audio_data(self, pcm: Sequence[int]) -> OctopusMetadata:
         """
         Indexes audio data.
 
-        :param pcm: Audio data. The audio needs to have a sample rate equal to 'pcm_sample_rate()' and be 16-bit
+        :param pcm: Audio data. The audio needs to have a sample rate equal to `.sample_rate` and be 16-bit
         linearly-encoded. Octopus operates on single-channel audio.
         :return metadata: An immutable metadata object.
         """
 
-        metadata = c_void_p()
+        c_metadata = c_void_p()
         metadata_size = c_int32()
 
         status = self._index_func(
             self._handle,
             (c_short * len(pcm))(*pcm),
             c_int32(len(pcm)),
-            byref(metadata),
+            byref(c_metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-        metadataObject = OctopusMetadata.create_owned(metadata, metadata_size.value)
-        self._pv_free(metadata)
-        return metadataObject
+        metadata = OctopusMetadata.create_owned(c_metadata, metadata_size.value)
+        self._pv_free(c_metadata)
 
-    def index_audio_file(self, path):
+        return metadata
+
+    def index_audio_file(self, path: str) -> OctopusMetadata:
         """
         Indexes audio file.
 
@@ -251,22 +248,23 @@ class Octopus(object):
         """
 
         if not os.path.exists(path):
-            raise IOError("Couldn't find input file at '%s'." % path)
+            raise IOError("Couldn't find input file at `%s`." % path)
 
-        metadata = c_void_p()
+        c_metadata = c_void_p()
         metadata_size = c_int32()
 
         status = self._index_file_func(
             self._handle,
             path.encode('utf-8'),
-            byref(metadata),
+            byref(c_metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](status.name)
 
-        metadataObject = OctopusMetadata.create_owned(metadata, metadata_size.value)
-        self._pv_free(metadata)
-        return metadataObject
+        metadata = OctopusMetadata.create_owned(c_metadata, metadata_size.value)
+        self._pv_free(c_metadata)
+
+        return metadata
 
     Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
 
@@ -276,30 +274,19 @@ class Octopus(object):
             ("end_sec", c_float),
             ("probability", c_float)]
 
-    _PHRASE_REGEX = re.compile(r"^[a-zA-Z' ]+$")
-
-    def search(self, metadata, phrases):
+    def search(self, metadata: OctopusMetadata, phrases: Iterable[str]) -> Dict[str, Sequence[Match]]:
         """
-        Searches metadata for occurrences of a given phrase.
+        Searches metadata for occurrences of given phrases.
 
-        :param metadata: Metadata object
-        :param phrases: An iterable of phrases to search the index for
-        :return matches: A dictionary map of found matches
+        :param metadata: Metadata object.
+        :param phrases: An iterable of phrases to search the index for.
+        :return matches: A dictionary map of found matches.
         """
 
-        phrases_set = set([' '.join(x.strip().split()) for x in phrases])
+        phrases_set = set(' '.join(x.strip().split()) for x in phrases)
 
         if any(len(x) == 0 for x in phrases_set):
             raise OctopusInvalidArgumentError("Search phrase cannot be empty")
-
-        if any(not bool(self._PHRASE_REGEX.match(x)) for x in phrases_set):
-            raise OctopusInvalidArgumentError(
-                "Search phrases should only consist of alphabetic characters, apostrophes, and spaces:\n"
-                "\t12 >>> twelve\n"
-                "\t2021 >>> twenty twenty one\n"
-                "\tmother-in-law >>> mother in law\n"
-                "\t5-minute meeting >>> five minute meeting"
-            )
 
         matches = dict()
 
@@ -316,8 +303,8 @@ class Octopus(object):
             if status is not self.PicovoiceStatuses.SUCCESS:
                 raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
             if num_phrase_matches.value > 0:
-                phrase_matches = []
-                for i in range(0, num_phrase_matches.value):
+                phrase_matches = list()
+                for i in range(num_phrase_matches.value):
                     match = self.Match(
                         start_sec=c_phrase_matches[i].start_sec,
                         end_sec=c_phrase_matches[i].end_sec,
@@ -328,13 +315,31 @@ class Octopus(object):
         return matches
 
     @property
-    def version(self):
+    def version(self) -> str:
         """Version."""
 
         return self._version
 
     @property
-    def pcm_sample_rate(self):
-        """Audio sample rate accepted by Octopus when processing PCM audio data."""
+    def sample_rate(self) -> int:
+        """Audio sample rate accepted by `.index_audio_data`."""
 
         return self._sample_rate
+
+
+__all__ = [
+    'OctopusError',
+    'OctopusMemoryError',
+    'OctopusIOError',
+    'OctopusInvalidArgumentError',
+    'OctopusStopIterationError',
+    'OctopusKeyError',
+    'OctopusInvalidStateError',
+    'OctopusRuntimeError',
+    'OctopusActivationError',
+    'OctopusActivationLimitError',
+    'OctopusActivationThrottledError',
+    'OctopusActivationRefusedError',
+    'OctopusMetadata',
+    'Octopus',
+]

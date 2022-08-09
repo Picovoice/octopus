@@ -8,25 +8,15 @@
 //
 
 import XCTest
+
 import Octopus
 
-class OctopusAppTestUITests: XCTestCase {
-    let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
-    let thresholdString: String = "{PERFORMANCE_THRESHOLD_SEC}"
-
+class OctopusAppTestUITests: BaseTest {
     let phrases: Set<String> = ["gorilla", "terminator"]
     let expectedMatch = OctopusMatch(
         startSec: 39.168,
         endSec: 40.128,
         probability: 1.0)
-    
-    override func setUpWithError() throws {
-        continueAfterFailure = true
-    }
-
-    override func tearDownWithError() throws {
-        
-    }
 
     func testIndexAndSearchFile() throws {
         let bundle = Bundle(for: type(of: self))
@@ -217,7 +207,7 @@ class OctopusAppTestUITests: XCTestCase {
         XCTAssert(matches[normalizedSearchPhrase]!.count == 1)
         
         let match = matches[normalizedSearchPhrase]![0]
-        let expected = OctopusMatch(startSec: 9.47, endSec: 12.25, probability: 0.33)
+        let expected = OctopusMatch(startSec: 9.47, endSec: 12.25, probability: 0.43)
         XCTAssertEqual(match.startSec, expected.startSec, accuracy: 0.01)
         XCTAssertEqual(match.endSec, expected.endSec, accuracy: 0.01)
         XCTAssertEqual(match.probability, expected.probability, accuracy: 0.01)

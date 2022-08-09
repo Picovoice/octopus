@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Octopus-iOS'
     s.module_name = 'Octopus'
-    s.version = '1.1.2'
+    s.version = '1.2.0'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS binding for Picovoice\'s Octopus Speech-to-Index engine'
     s.description = 
@@ -12,11 +12,11 @@ Pod::Spec.new do |s|
     DESC
     s.homepage = 'https://github.com/Picovoice/octopus/tree/master/binding/ios'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
-    s.source = { :git => "https://github.com/Picovoice/octopus.git", :tag => "Octopus-iOS-v1.1.2" }
+    s.source = { :git => "https://github.com/Picovoice/octopus.git", :branch => "v1.2-ios" }
     s.ios.deployment_target = '9.0'
     s.swift_version = '5.0'
     s.vendored_frameworks = 'lib/ios/PvOctopus.xcframework'
-    s.resources = 'lib/common/octopus_params.pv'
+    s.resources = 'lib/common/param/octopus_params.pv'
     s.source_files = 'binding/ios/*.{swift}'
     s.exclude_files = 'binding/ios/OctopusTestApp/**'
   end

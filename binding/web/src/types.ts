@@ -12,7 +12,7 @@
 
 export type OctopusOptions = {
   /** @defaultValue 'octopus_model' */
-  modelPath?: string;
+  customWritePath?: string;
   /** @defaultValue false */
   forceWrite?: boolean;
   /** @defaultValue 1 */

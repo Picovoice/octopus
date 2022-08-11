@@ -2,7 +2,6 @@
 
 ## Prerequisite
 
-- [FFmpeg](https://www.ffmpeg.org/) (On Windows you need to add FFmpeg to your `PATH`)
 - Python 3.5+
 
 ## AccessKey

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -27,23 +27,6 @@ extern "C" {
  */
 typedef struct pv_octopus pv_octopus_t;
 
-#ifdef __PV_NO_FILE_SYSTEM__
-
-/**
- * Constructor.
- *
- * @param access_id AppID provided by Picovoice Console (https://picovoice.ai/console/)
- * @param object Constructed instance of Octopus.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' 'PV_STATUS_OUT_OF_MEMORY',
- * 'PV_STATUS_RUNTIME_ERROR', 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED',
- * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
- */
-PV_API pv_status_t pv_octopus_init(
-        const char* access_id,
-        pv_octopus_t **object);
-
-#else
-
 /**
  * Constructor.
  *
@@ -58,8 +41,6 @@ PV_API pv_status_t pv_octopus_init(
         const char* access_key,
         const char *model_path,
         pv_octopus_t **object);
-
-#endif
 
 /**
  * Destructor.
@@ -88,8 +69,6 @@ PV_API pv_status_t pv_octopus_index(
         void **indices,
         int32_t *num_indices_bytes);
 
-#ifndef __PV_NO_FILE_SYSTEM__
-
 /**
  * Indexes an audio file.
  *
@@ -106,8 +85,6 @@ PV_API pv_status_t pv_octopus_index_file(
         const char *path,
         void **indices,
         int32_t *num_indices_bytes);
-
-#endif
 
 /**
  * Container representing a matched utterance.

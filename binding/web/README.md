@@ -1,10 +1,12 @@
-# octopus-web
+# Octopus Binding for Web
 
-The Picovoice Octopus library for web browsers, powered by WebAssembly.
+## Octopus Speech-to-Index Engine
 
-This library transcribes audio samples in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread.
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Looking for Octopus on NodeJS? See the [@picovoice/octopus-node](https://www.npmjs.com/package/@picovoice/octopus-node) package.
+Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech without relying on a text representation. This
+acoustic-only approach boosts accuracy by removing out-of-vocabulary limitation and eliminating the problem of competing
+hypothesis (e.g. homophones)
 
 ## Compatibility
 
@@ -12,13 +14,9 @@ Looking for Octopus on NodeJS? See the [@picovoice/octopus-node](https://www.npm
 - Firefox
 - Safari
 
-This library requires several modern browser features: `WebAssembly`, `Web Workers`, `IndexedDB` and `Promise`. Internet Explorer will _not_ work.
+## Installation
 
-## Installation & Usage
-
-### Package
-
-Install the [Octopus-Web package](https://www.npmjs.com/package/@picovoice/octopus-web) using `yarn`:
+Using `yarn`:
 
 ```console
 yarn add @picovoice/octopus-web
@@ -36,9 +34,7 @@ Octopus requires a valid Picovoice `AccessKey` at initialization. `AccessKey` ac
 You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
-### Octopus Models
-
-Octopus requires a model file on initialization. You can use one the model files located in [/lib/common/light/](/lib/common/light) matching the required language code.
+### Usage
 
 For the web packages, there are two methods to initialize Octopus.
 
@@ -70,11 +66,9 @@ run:
 npx pvbase64 -h
 ```
 
-### Usage
-
 #### Init options
 
-Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `modelPath` variable
+Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `customWritePath` variable
 to hold multiple models and set the `forceWrite` value to true to force re-save a model file. Set `enableAutomaticPunctuation`
 to false, if you do not wish to enable capitalization and punctuation in transcription.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
@@ -82,7 +76,7 @@ If the model file (`.pv`) changes, `version` should be incremented to force the 
 ```typescript
 // these are default
 const options = {
-  modelPath: "octopus_model",
+  customWritePath: "octopus_model",
   forceWrite: false,
   version: 1
 }
@@ -95,7 +89,7 @@ Use `Octopus` to initialize from public directory:
 ```typescript
 const handle = await Octopus.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${MODEL_FILE_RELATIVE_TO_PUBLIC_DIRECTORY},
+  ${MODEL_RELATIVE_PATH},
   options // optional options
 );
 ```
@@ -119,7 +113,7 @@ Use `OctopusWorker` to initialize from public directory:
 ```typescript
 const handle = await OctopusWorker.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${MODEL_FILE_RELATIVE_TO_PUBLIC_DIRECTORY},
+  ${MODEL_RELATIVE_PATH},
   options // optional options
 );
 ```
@@ -192,13 +186,6 @@ Terminate `OctopusWorker` instance:
 await handle.terminate();
 ```
 
-## Build from source (IIFE + ESM outputs)
+## Demo
 
-This library uses Rollup and TypeScript along with Babel and other popular rollup plugins. There are two outputs: an IIFE version intended for script tags / CDN usage, and a JavaScript module version intended for use with modern JavaScript/TypeScript development (e.g. Angular, Create React App, Webpack).
-
-```console
-yarn
-yarn build
-```
-
-The output will appear in the ./dist/ folder.
+For example usage refer to our [Web demo application](https://github.com/Picovoice/octopus/tree/master/demo/web).

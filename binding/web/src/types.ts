@@ -9,20 +9,15 @@
   specific language governing permissions and limitations under the License.
 */
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type OctopusInitConfig = {}
 
-
-export type OctopusInputConfig = {
+export type OctopusOptions = {
   /** @defaultValue 'octopus_model' */
-  modelPath?: string;
+  customWritePath?: string;
   /** @defaultValue false */
   forceWrite?: boolean;
   /** @defaultValue 1 */
   version?: number;
 }
-
-export type OctopusConfig = OctopusInitConfig & OctopusInputConfig;
 
 export type OctopusMetadata = {
   /** Buffer containing Octopus metadata. */
@@ -42,7 +37,7 @@ export type OctopusWorkerInitRequest = {
   command: 'init';
   accessKey: string;
   modelPath: string;
-  initConfig: OctopusInitConfig;
+  options: OctopusOptions;
   wasm: string;
   wasmSimd: string;
 };

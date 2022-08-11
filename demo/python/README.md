@@ -11,7 +11,7 @@ Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech withou
 ## Compatibility
 
 - Python 3
-- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64).
+- Runs on Linux (x86_64), macOS (x86_64, arm64), Windows (x86_64).
 
 ## AccessKey
 

@@ -62,6 +62,6 @@ jobs:
 
       - name: Prepare Test
         run: yarn setup-test
-      
+
       - name: Test
         run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_root_path ../../res/audio/

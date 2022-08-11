@@ -3,22 +3,22 @@ name: iOS Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ main, v1.2 ]
-    paths: 
+    branches: [ main ]
+    paths:
       - 'lib/ios/**'
       - 'lib/common/**'
       - '.github/workflows/ios-perf.yml'
   pull_request:
-    branches: [ main, v1.2 ]
-    paths: 
+    branches: [ main ]
+    paths:
       - 'lib/ios/**'
       - 'lib/common/**'
       - '.github/workflows/ios-perf.yml'
-      
+
 defaults:
   run:
     working-directory: binding/ios/OctopusAppTest
-    
+
 jobs:
   build:
     name: Run iOS Tests on AppCenter
@@ -71,19 +71,19 @@ jobs:
           PerformanceTest/PerformanceTest.swift
 
       - name: XCode Build
-        run: xcrun xcodebuild build-for-testing 
-          -configuration Debug 
+        run: xcrun xcodebuild build-for-testing
+          -configuration Debug
           -workspace OctopusAppTest.xcworkspace
-          -sdk iphoneos 
+          -sdk iphoneos
           -scheme PerformanceTest
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
       - name: Run Tests on AppCenter
-        run: appcenter test run xcuitest 
+        run: appcenter test run xcuitest
           --token ${{secrets.APPCENTERAPITOKEN}}
           --app "Picovoice/Octopus-iOS"
-          --devices "Picovoice/${{ matrix.device }}" 
+          --devices "Picovoice/${{ matrix.device }}"
           --test-series "octopus-ios"
-          --locale "en_US" 
+          --locale "en_US"
           --build-dir ddp/Build/Products/Debug-iphoneos

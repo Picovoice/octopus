@@ -12,7 +12,7 @@ on:
       - 'lib/windows/**'
       - 'res/audio/**'
   pull_request:
-    branches: [ main, v1.2 ]
+    branches: [ main ]
     paths:
       - 'binding/python/test_octopus_perf.py'
       - 'lib/common/**'

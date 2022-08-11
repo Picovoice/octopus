@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
     s.version = '1.2.0'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS binding for Picovoice\'s Octopus Speech-to-Index engine'
-    s.description = 
+    s.description =
     <<-DESC
     Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech without relying on a text representation. This
     acoustic-only approach boosts accuracy by removing out-of-vocabulary limitation and eliminating the problem of competing
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
     DESC
     s.homepage = 'https://github.com/Picovoice/octopus/tree/master/binding/ios'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
-    s.source = { :git => "https://github.com/Picovoice/octopus.git", :branch => "v1.2-ios" }
+    s.source = { :git => "https://github.com/Picovoice/octopus.git", :branch => "v1.2" }
     s.ios.deployment_target = '9.0'
     s.swift_version = '5.0'
     s.vendored_frameworks = 'lib/ios/PvOctopus.xcframework'

@@ -326,5 +326,15 @@ Replace `${ACCESS_KEY}` with yours obtained from [Picovoice Console]((https://co
 
 ## Releases
 
-### v1.0.0 Oct 8th, 2021
-- Initial release.
+### v1.2.0 August 11th, 2022
+
+* added language support for French, German, Spanish, Japanese, Korean, Italian, and Portuguese
+* improved testing infrastructure
+
+### v1.1.0 May 12th, 2022
+
+* various bug fixes and improvements
+
+### v1.0.0 October 8th, 2021
+
+* Initial release.

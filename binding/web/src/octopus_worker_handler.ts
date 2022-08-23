@@ -34,7 +34,7 @@ self.onmessage = async function (
       try {
         Octopus.setWasm(event.data.wasm);
         Octopus.setWasmSimd(event.data.wasmSimd);
-        octopus = await Octopus.create(event.data.accessKey, event.data.modelPath, event.data.options);
+        octopus = await Octopus._init(event.data.accessKey, event.data.modelPath, event.data.options);
         self.postMessage({
           command: "ok",
           version: octopus.version,

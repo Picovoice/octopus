@@ -66,68 +66,46 @@ run:
 npx pvbase64 -h
 ```
 
-#### Init options
+#### Octopus Model
 
 Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `customWritePath` variable
-to hold multiple models and set the `forceWrite` value to true to force re-save a model file. Set `enableAutomaticPunctuation`
-to false, if you do not wish to enable capitalization and punctuation in transcription.
+to hold multiple models and set the `forceWrite` value to true to force re-save a model file.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
+Either `base64` or `publicPath` must be set to instantiate Octopus. If both are set, Leopard will use the `base64` model.
+
 ```typescript
-// these are default
-const options = {
-  customWritePath: "octopus_model",
-  forceWrite: false,
-  version: 1
+const octopusModel = {
+  publicPath: ${MODEL_RELATIVE_PATH}, // or
+  base64: ${MODEL_BASE64_STRING},
+  customWritePath: "octopus_model", // Optional
+  forceWrite: false, // Optional
+  version: 1, // Optional
 }
 ```
 
 #### Initialize in Main Thread
 
-Use `Octopus` to initialize from public directory:
+Create an instance of `Octopus`:
 
 ```typescript
-const handle = await Octopus.fromPublicDirectory(
+const handle = await Octopus.create(
   ${ACCESS_KEY},
-  ${MODEL_RELATIVE_PATH},
+  octopusModel,
   options // optional options
 );
-```
-
-or initialize using a base64 string:
-
-```typescript
-import octopusParams from "${PATH_TO_BASE64_OCTOPUS_PARAMS}";
-
-const handle = await Octopus.fromBase64(
-  ${ACCESS_KEY},
-  octopusParams,
-  options // optional options
-)
 ```
 
 #### Initialize in Worker Thread
 
-Use `OctopusWorker` to initialize from public directory:
+Create an instance of `LeopardWorker`:
 
 ```typescript
-const handle = await OctopusWorker.fromPublicDirectory(
+const handle = await OctopusWorker.create(
   ${ACCESS_KEY},
-  ${MODEL_RELATIVE_PATH},
+  octopusModel,
   options // optional options
 );
-```
-
-or initialize using a base64 string:
-
-```typescript
-import octopusParams from "${PATH_TO_BASE64_OCTOPUS_PARAMS}";
-
-const handle = await OctopusWorker.fromBase64(
-  ${ACCESS_KEY},
-  octopusParams,
-  options // optional options
-)
 ```
 
 #### Index Audio Frames

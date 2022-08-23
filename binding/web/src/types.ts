@@ -9,15 +9,14 @@
   specific language governing permissions and limitations under the License.
 */
 
+import { PvModel } from '@picovoice/web-utils';
 
-export type OctopusOptions = {
-  /** @defaultValue 'octopus_model' */
-  customWritePath?: string;
-  /** @defaultValue false */
-  forceWrite?: boolean;
-  /** @defaultValue 1 */
-  version?: number;
-}
+/**
+ * LeopardModel types
+ */
+export type OctopusModel = PvModel;
+
+export type OctopusOptions = Record<string, never>;
 
 export type OctopusMetadata = {
   /** Buffer containing Octopus metadata. */

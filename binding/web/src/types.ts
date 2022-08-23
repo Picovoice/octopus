@@ -12,7 +12,7 @@
 import { PvModel } from '@picovoice/web-utils';
 
 /**
- * LeopardModel types
+ * OctopusModel types
  */
 export type OctopusModel = PvModel;
 

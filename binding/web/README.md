@@ -72,15 +72,18 @@ Octopus saves and caches your model file in IndexedDB to be used by WebAssembly.
 to hold multiple models and set the `forceWrite` value to true to force re-save a model file.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
-Either `base64` or `publicPath` must be set to instantiate Octopus. If both are set, Leopard will use the `base64` model.
+Either `base64` or `publicPath` must be set to instantiate Octopus. If both are set, Octopus will use the `base64` model.
 
 ```typescript
 const octopusModel = {
-  publicPath: ${MODEL_RELATIVE_PATH}, // or
+  publicPath: ${MODEL_RELATIVE_PATH},
+  // or
   base64: ${MODEL_BASE64_STRING},
-  customWritePath: "octopus_model", // Optional
-  forceWrite: false, // Optional
-  version: 1, // Optional
+
+  // Optionals
+  customWritePath: "octopus_model",
+  forceWrite: false,
+  version: 1,
 }
 ```
 
@@ -98,7 +101,7 @@ const handle = await Octopus.create(
 
 #### Initialize in Worker Thread
 
-Create an instance of `LeopardWorker`:
+Create an instance of `OctopusWorker`:
 
 ```typescript
 const handle = await OctopusWorker.create(

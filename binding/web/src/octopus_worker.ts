@@ -88,7 +88,7 @@ export class OctopusWorker {
    * @param model.customWritePath Custom path to save the model in storage.
    * Set to a different name to use multiple models across `octopus` instances.
    * @param model.forceWrite Flag to overwrite the model in storage even if it exists.
-   * @param model.version Octopus model version. Set to a higher number to update the model file.
+   * @param model.version Version of the model file. Increment to update the model file in storage.
    * @param options Optional configuration arguments.
    *
    * @returns An instance of OctopusWorker.

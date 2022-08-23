@@ -69,7 +69,7 @@ npx pvbase64 -h
 #### Octopus Model
 
 Octopus saves and caches your model file in IndexedDB to be used by WebAssembly. Use a different `customWritePath` variable
-to hold multiple models and set the `forceWrite` value to true to force re-save a model file.
+to store multiple models and set the `forceWrite` value to true to force overwrite a model file in storage.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
 Either `base64` or `publicPath` must be set to instantiate Octopus. If both are set, Octopus will use the `base64` model.

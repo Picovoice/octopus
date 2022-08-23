@@ -87,9 +87,9 @@ const octopusModel = {
 }
 ```
 
-#### Initialize in Main Thread
+#### Initialize Octopus
 
-Create an instance of `Octopus`:
+Create an instance of `Octopus` in the main thread:
 
 ```typescript
 const handle = await Octopus.create(
@@ -99,9 +99,7 @@ const handle = await Octopus.create(
 );
 ```
 
-#### Initialize in Worker Thread
-
-Create an instance of `OctopusWorker`:
+Or create an instance of `Octopus` in a worker thread:
 
 ```typescript
 const handle = await OctopusWorker.create(

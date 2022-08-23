@@ -93,7 +93,7 @@ export class OctopusWorker {
    *
    * @returns An instance of OctopusWorker.
    */
-  private static async create(accessKey: string, model: OctopusModel, options: OctopusOptions): Promise<OctopusWorker> {
+  public static async create(accessKey: string, model: OctopusModel, options: OctopusOptions): Promise<OctopusWorker> {
     const customWritePath = (model.customWritePath) ? model.customWritePath : 'octopus_model';
     const modelPath = await loadModel({ ...model, customWritePath });
 

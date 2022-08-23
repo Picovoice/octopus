@@ -10,6 +10,11 @@
   <script type="application/javascript">
     let pcm = null;
 
+    const modelBase64 = {
+      base64: modelParams,
+      forceWrite: true,
+    }
+
     window.onload = function() {
       const audioContext = new (window.AudioContext || window.webKitAudioContext)(
               { sampleRate: 16000 }
@@ -74,6 +79,11 @@
       const language = document.getElementById("language").value;
       const modelFile = (language === "en") ? "octopus_params.pv" : `octopus_params_${language}.pv`
 
+      const modelPublicPath = {
+        publicPath: modelFile,
+        forceWrite: true,
+      }
+
       if (!pcm) {
         writeMessage("Audio file not provided...");
         return
@@ -84,23 +94,23 @@
       try {
         if (language === "en") {
           writeMessage("Init from base64...");
-          let o = await OctopusWeb.Octopus.fromBase64(accessKey, modelParams, {forceWrite: true});
+          let o = await OctopusWeb.Octopus.create(accessKey, modelBase64);
           o.release();
           writeMessage("Init from base64... done!")
 
           writeMessage("Init from public directory...");
-          o = await OctopusWeb.Octopus.fromPublicDirectory(accessKey, modelFile, {forceWrite: true});
+          o = await OctopusWeb.Octopus.create(accessKey, modelPublicPath);
           o.release();
           writeMessage("Init from public directory... done!")
 
           writeMessage("Init worker from base64...");
-          o = await OctopusWeb.OctopusWorker.fromBase64(accessKey, modelParams, {forceWrite: true});
+          o = await OctopusWeb.OctopusWorker.create(accessKey, modelBase64);
           o.terminate();
           writeMessage("Init worker from base64... done!");
         }
 
         writeMessage("Init worker from public directory...");
-        const handle = await OctopusWeb.OctopusWorker.fromPublicDirectory(accessKey, modelFile, {forceWrite: true});
+        const handle = await OctopusWeb.OctopusWorker.create(accessKey, modelPublicPath);
         writeMessage("Init worker from public directory... done!");
 
         writeMessage("Indexing audio files...");
@@ -136,7 +146,7 @@
       document.getElementById("testComplete").style.display = "none";
 
       const accessKey = document.getElementById("accessKey").value;
-      const handle = await OctopusWeb.OctopusWorker.fromBase64(accessKey, modelParams, {forceWrite: true});
+      const handle = await OctopusWeb.OctopusWorker.create(accessKey, modelBase64);
       let metadata = null;
 
       try {

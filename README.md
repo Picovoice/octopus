@@ -312,9 +312,9 @@ function getAudioData(): Int16Array {
   return new Int16Array();
 }
 
-const octopus = await OctopusWorker.fromBase64(
-  "${ACCESS_KEY}", 
-  octopusParams
+const octopus = await OctopusWorker.create(
+  "${ACCESS_KEY}",
+  { base64: octopusParams }
 );
 
 const octopusMetadata = await octopus.index(getAudioData());

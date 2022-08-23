@@ -69,9 +69,9 @@
         let engineHandle = undefined;
         try {
           engineHandle =
-            await OctopusWeb.OctopusWorker.fromBase64(
+            await OctopusWeb.OctopusWorker.create(
               accessKey,
-              modelParams,
+              { base64: modelParams },
             );
         } catch (err) {
           document.getElementById("accessKey").style.border = "1px solid red";

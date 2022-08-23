@@ -2,9 +2,10 @@ import { Octopus } from "./octopus";
 import { OctopusWorker } from "./octopus_worker";
 
 import {
-  OctopusOptions,
   OctopusMetadata,
   OctopusMatch,
+  OctopusModel,
+  OctopusOptions,
   OctopusWorkerInitRequest,
   OctopusWorkerIndexRequest,
   OctopusWorkerSearchRequest,
@@ -28,6 +29,7 @@ OctopusWorker.setWasmSimd(octopusWasmSimd);
 
 export {
   Octopus,
+  OctopusModel,
   OctopusOptions,
   OctopusMetadata,
   OctopusMatch,

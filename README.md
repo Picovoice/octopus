@@ -160,7 +160,7 @@ handle.delete()
 
 ### C
 
-[pv_octopus.h](/include/pv_octopus.h) header file contains relevant information. Build an instance of the object:
+[pv_octopus.h](include/pv_octopus.h) header file contains relevant information. Build an instance of the object:
 
 ```c
     const char *model_path = "..."; // absolute path to the model file available at `lib/common/octopus_params.pv`
@@ -322,7 +322,7 @@ const searchResult = await octopus.search(octopusMetadata, "${SEARCH_PHRASE}");
 console.log(searchResult);
 ```
 
-Replace `${ACCESS_KEY}` with yours obtained from [Picovoice Console]((https://console.picovoice.ai/)). Finally, when done release the resources using `octopus.release()`.
+Replace `${ACCESS_KEY}` with yours obtained from [Picovoice Console](https://console.picovoice.ai/). Finally, when done release the resources using `octopus.release()`.
 
 ## Releases
 

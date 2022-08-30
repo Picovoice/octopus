@@ -154,19 +154,8 @@ metadata = handle.index_audio_data(audio_data)
 
 audio_file_path = "/path/to/my/audiofile.wav"
 metadata = handle.index_audio_file(audio_file_path)
-```
 
-Then search the metadata for phrases:
-
-```python
-import pvoctopus
-
-# AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-access_key = "${ACCESS_KEY}"
-
-handle = pvoctopus.create(access_key=access_key)
-
-metadata = ...
+# Then search the metadata for phrases
 
 matches = handle.search(metadata, phrases=['avocado'])
 

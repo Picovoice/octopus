@@ -130,33 +130,52 @@ Create an instance of the engine:
 
 ```python
 import pvoctopus
-access_key = ""  # AccessKey provided by Picovoice Console (https://console.picovoice.ai/)
+
+# AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+access_key = "${ACCESS_KEY}"
+
 handle = pvoctopus.create(access_key=access_key)
 ```
 
 Index your raw audio data or file:
 
 ```python
-audio_data = [..]
-metadata = handle.index(audio_data)
+import pvoctopus
+
+# AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+access_key = "${ACCESS_KEY}"
+
+handle = pvoctopus.create(access_key=access_key)
+
+audio_data = [...]
+metadata = handle.index_audio_data(audio_data)
+
 # or
+
 audio_file_path = "/path/to/my/audiofile.wav"
-metadata = handle.index_file(audio_file_path)
+metadata = handle.index_audio_file(audio_file_path)
 ```
 
 Then search the metadata for phrases:
 
 ```python
+import pvoctopus
+
+# AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+access_key = "${ACCESS_KEY}"
+
+handle = pvoctopus.create(access_key=access_key)
+
+metadata = ...
+
+matches = handle.search(metadata, phrases=['avocado'])
+
 avocado_matches = matches['avocado']
 for match in avocado_matches:
     print(f"Match for `avocado`: {match.start_sec} -> {match.end_sec} ({match.probablity})")
 ```
 
-When done the handle resources have to be released explicitly:
-
-```python
-handle.delete()
-```
+When done the handle resources have to be released explicitly `handle.delete()`.
 
 ### C
 

@@ -12,7 +12,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 ```console
 pod install
 ```
-2. Replace `"YOUR_ACCESS_KEY_HERE"` inside [`ViewModel.swift`](/demo/ios/OctopusDemo/OctopusDemo/ViewModel.swift) with
+2. Replace `"YOUR_ACCESS_KEY_HERE"` inside [`ViewModel.swift`](OctopusDemo/OctopusDemo/ViewModel.swift) with
 your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/).
 
 ## Usage

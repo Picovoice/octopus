@@ -4,7 +4,7 @@
 
 - An `x86_64` machine running `Linux`, `macOS`, or `Windows`
 - [CMake](https://cmake.org/) version `3.4` or higher.
-- [Mingw-w64](http://mingw-w64.org/doku.php) (Windows Only)
+- [Mingw-w64](http://mingw-w64.org/) (Windows Only)
 - This doc assumes commands are run from the [root](../..) of the repository.
 
 ## AccessKey

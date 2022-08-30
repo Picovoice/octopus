@@ -32,7 +32,7 @@ public class OctopusMetadata {
         self.delete()
     }
     
-    /// Releases resources aquired by `OctopusMetadata`
+    /// Releases resources acquired by `OctopusMetadata`
     public func delete() {
         if handle != nil {
             handle!.deallocate()

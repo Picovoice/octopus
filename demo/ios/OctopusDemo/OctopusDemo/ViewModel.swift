@@ -191,7 +191,7 @@ class ViewModel: ObservableObject {
                                      options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
         
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let audioFilename = documentPath.appendingPathComponent("OctupusDemo.wav")
+        let audioFilename = documentPath.appendingPathComponent("OctopusDemo.wav")
         
         var formatDescription = AudioStreamBasicDescription(
             mSampleRate: Float64(Octopus.pcmDataSampleRate),

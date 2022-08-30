@@ -68,14 +68,14 @@ matches = octopus.search(metadata, ['picovoice', 'Octopus', 'rhino'])
 ```
 
 The `matches` object is a dictionary where the `key` is the `phrase`, and the `value` is a `list` of `Match` objects.
-The `Match` object contains the `start_sec`, `end_sec` and `probablity` of each match:
+The `Match` object contains the `start_sec`, `end_sec` and `probability` of each match:
 
 ```python
 matches = octopus.search(metadata, ['avocado'])
 
 avocado_matches = matches['avocado']
 for match in avocado_matches:
-    print(f"Match for `avocado`: {match.start_sec} -> {match.end_sec} ({match.probablity})")
+    print(f"Match for `avocado`: {match.start_sec} -> {match.end_sec} ({match.probability})")
 ```
 
 The `Metadata` object can be cached or stored to skip the indexing step on subsequent searches.

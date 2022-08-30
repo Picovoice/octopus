@@ -37,7 +37,7 @@ do {
 } catch { }
 ```
 
-Octpus consists of two steps: Indexing and Searching.
+Octopus consists of two steps: Indexing and Searching.
 Indexing transforms audio data into searchable `OctopusMetadata` object. 
 
 Octopus indexing has two input options: raw PCM audio data, or an audio file.

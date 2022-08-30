@@ -114,7 +114,7 @@ public class Octopus {
     /**
      * Searches metadata for a given set of phrases.
      *
-     * @param metadata An OctopusMetata object obtained via {@link #indexAudioData(short[])} or
+     * @param metadata An OctopusMetadata object obtained via {@link #indexAudioData(short[])} or
      *                 {@link #indexAudioFile(String)}.
      * @param phrases  A set of phrases to search for in the metadata.
      * @return a map of phrases and match arrays. Matches are represented by immutable OctopusMatch objects.

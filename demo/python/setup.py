@@ -16,7 +16,7 @@ shutil.copy(
 
 with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
     f.write('include pvoctopusdemo/LICENSE\n')
-    f.write('include pvoctopusdemo/otcopus_demo.py\n')
+    f.write('include pvoctopusdemo/octopus_demo.py\n')
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
     long_description = f.read()

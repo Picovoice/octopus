@@ -131,6 +131,15 @@
           writeMessage(`Checking keyword: ${phrase}... done!`);
         }
 
+        writeMessage("Test UTF-8 path...");
+        let o = await OctopusWeb.OctopusWorker.create(accessKey, {
+          base64: modelParams,
+          forceWrite: true,
+          customWritePath: "테스트"
+        });
+        o.terminate();
+        writeMessage("Test UTF-8 path... done!")
+
         writeMessage("Test passed!")
 
       } catch (error) {

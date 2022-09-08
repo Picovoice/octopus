@@ -445,7 +445,7 @@ export class Octopus {
       throw new Error('malloc failed: Cannot allocate memory');
     }
     memoryBufferUint8.set(encodedModelPath, modelPathAddress);
-    memoryBufferUint8[modelPathAddress + modelPath.length] = 0;
+    memoryBufferUint8[modelPathAddress + encodedModelPath.length] = 0;
 
     const status = await pv_octopus_init(accessKeyAddress, modelPathAddress, objectAddressAddress);
     await pv_free(accessKeyAddress);

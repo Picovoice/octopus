@@ -436,17 +436,16 @@ export class Octopus {
     }
     memoryBufferUint8[accessKeyAddress + accessKey.length] = 0;
 
+    const encodedModelPath = new TextEncoder().encode(modelPath);
     const modelPathAddress = await aligned_alloc(
       Uint8Array.BYTES_PER_ELEMENT,
-      (modelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+      (encodedModelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (modelPathAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
-    for (let i = 0; i < modelPath.length; i++) {
-      memoryBufferUint8[modelPathAddress + i] = modelPath.charCodeAt(i);
-    }
-    memoryBufferUint8[modelPathAddress + modelPath.length] = 0;
+    memoryBufferUint8.set(encodedModelPath, modelPathAddress);
+    memoryBufferUint8[modelPathAddress + encodedModelPath.length] = 0;
 
     const status = await pv_octopus_init(accessKeyAddress, modelPathAddress, objectAddressAddress);
     await pv_free(accessKeyAddress);

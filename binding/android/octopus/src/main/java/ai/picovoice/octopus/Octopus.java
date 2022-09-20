@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 
 /**
  * Android binding for Octopus Speech-to-Index engine. It transforms audio into searchable metadata.
@@ -36,7 +35,7 @@ public class Octopus {
         System.loadLibrary("pv_octopus");
     }
 
-    private final long handle;
+    private long handle;
 
     /**
      * Constructor.
@@ -46,7 +45,7 @@ public class Octopus {
      * @throws OctopusException if there is an error while initializing Octopus.
      */
     private Octopus(String accessKey, String modelPath) throws OctopusException {
-        handle = init(accessKey, modelPath);
+        handle = OctopusNative.init(accessKey, modelPath);
     }
 
     private static void extractPackageResources(Context context) throws OctopusException {
@@ -79,7 +78,10 @@ public class Octopus {
      * Releases resources acquired by Octopus.
      */
     public void delete() {
-        delete(handle);
+        if (handle != 0) {
+            OctopusNative.delete(handle);
+            handle = 0;
+        }
     }
 
     /**
@@ -91,7 +93,13 @@ public class Octopus {
      * @throws OctopusException if there is an error while processing the audio data.
      */
     public OctopusMetadata indexAudioData(short[] pcm) throws OctopusException {
-        return index(handle, pcm, pcm.length);
+        if (handle == 0) {
+            throw new OctopusInvalidStateException("Attempted to call Octopus index after delete.");
+        }
+        if (pcm == null) {
+            throw new OctopusInvalidArgumentException("Passed null frame to Octopus index.");
+        }
+        return new OctopusMetadata(OctopusNative.index(handle, pcm, pcm.length));
     }
 
     /**
@@ -102,13 +110,21 @@ public class Octopus {
      * @throws OctopusException if there is an error while processing the audio data.
      */
     public OctopusMetadata indexAudioFile(String path) throws OctopusException {
+        if (handle == 0) {
+            throw new OctopusInvalidStateException("Attempted to call Octopus index after delete.");
+        }
+
+        if (path == null || path.equals("")) {
+            throw new OctopusInvalidArgumentException("Passed empty path to Octopus index.");
+        }
+
         File audioFile = new File(path);
         if (!audioFile.exists()) {
             throw new OctopusInvalidArgumentException(
                     String.format("No valid audio file found at '%s'", path));
         }
 
-        return indexFile(handle, path);
+        return new OctopusMetadata(OctopusNative.indexFile(handle, path));
     }
 
     /**
@@ -124,6 +140,10 @@ public class Octopus {
             OctopusMetadata metadata,
             HashSet<String> phrases) throws OctopusException {
 
+        if (handle == 0) {
+            throw new OctopusInvalidStateException("Attempted to call Octopus search after delete.");
+        }
+
         HashMap<String, OctopusMatch[]> searchResults = new HashMap<>();
         for (String phrase : phrases) {
 
@@ -137,10 +157,10 @@ public class Octopus {
                 throw new OctopusInvalidArgumentException("Search phrase cannot be empty");
             }
 
-            OctopusMatch[] searchResult = search(
+            OctopusMatch[] searchResult = OctopusNative.search(
                     handle,
-                    metadata.handle,
-                    metadata.numBytes,
+                    metadata.metadataNative.handle,
+                    metadata.metadataNative.numBytes,
                     formattedPhrase);
             searchResults.put(formattedPhrase, searchResult);
         }
@@ -152,33 +172,18 @@ public class Octopus {
      *
      * @return Required audio sample rate for PCM data.
      */
-    public native int getPcmDataSampleRate();
+    public int getPcmDataSampleRate() {
+        return OctopusNative.getPcmDataSampleRate();
+    }
 
     /**
      * Getter for Octopus version.
      *
      * @return Octopus version.
      */
-    public native String getVersion();
-
-    private native long init(String accessKey, String modelPath);
-
-    private native void delete(long object);
-
-    private native OctopusMetadata index(
-            long object,
-            short[] pcm,
-            int numSamples);
-
-    private native OctopusMetadata indexFile(
-            long object,
-            String path);
-
-    private native OctopusMatch[] search(
-            long object,
-            long metadataPtr,
-            int numMetadataBytes,
-            String phrase);
+    public String getVersion() {
+        return OctopusNative.getVersion();
+    }
 
     public static class Builder {
 

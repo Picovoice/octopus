@@ -16,12 +16,10 @@ public class OctopusMetadata {
         System.loadLibrary("pv_octopus");
     }
 
-    final long handle;
-    final int numBytes;
+    final OctopusMetadataNative metadataNative;
 
-    OctopusMetadata(long handle, int numBytes) {
-        this.handle = handle;
-        this.numBytes = numBytes;
+    OctopusMetadata(OctopusMetadataNative metadataNative) {
+        this.metadataNative = metadataNative;
     }
 
     /**
@@ -30,8 +28,7 @@ public class OctopusMetadata {
      * @param metadataBytes a byte array previously obtained via {@link #getBytes()}.
      */
     public OctopusMetadata(byte[] metadataBytes) {
-        this.handle = setBytes(metadataBytes, metadataBytes.length);
-        this.numBytes = metadataBytes.length;
+        metadataNative = new OctopusMetadataNative(metadataBytes);
     }
 
     /**
@@ -40,19 +37,13 @@ public class OctopusMetadata {
      * @return the metadata in the form of a byte array.
      */
     public byte[] getBytes(){
-        return getBytes(this.handle, this.numBytes);
+        return metadataNative.getBytes();
     }
 
     /**
      * Releases resources acquired by OctopusMetadata.
      */
     public void delete() {
-        delete(this.handle);
+        metadataNative.delete();
     }
-
-    private native void delete(long handle);
-
-    private native byte[] getBytes(long handle, int numBytes);
-
-    private native long setBytes(byte[] metadataBytes, int numBytes);
 }

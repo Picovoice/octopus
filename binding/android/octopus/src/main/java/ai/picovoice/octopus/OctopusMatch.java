@@ -11,6 +11,7 @@
 package ai.picovoice.octopus;
 
 public class OctopusMatch {
+
     private final float startSec;
     private final float endSec;
     private final float probability;

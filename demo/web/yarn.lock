@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@picovoice/octopus-web@^1.2.8":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web/-/octopus-web-1.2.8.tgz#755ba65657efd2006540005ff6d96462487a3e7f"
-  integrity sha512-HXVSQMoOmSQEoL6DH/CvdD2zze2lgeSP8ce6JTa7rSORumCBb7uaWVrtmXVVsCwIoB2tyDHx4DSGtrUqabWn5w==
+"@picovoice/octopus-web@latest":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web/-/octopus-web-1.2.10.tgz#e7cbd4bcd43316b1e2bc0da38d654270a46e2b0e"
+  integrity sha512-/H0/be/vA7XIy1TBPjgasErtuLZ/7KkoGcyrP6HAGwIHoA7reGdrVVM3n/sKMhaIHAngL2VCEt57c1QUqbAHVQ==
   dependencies:
     "@picovoice/web-utils" "=1.2.8"
 

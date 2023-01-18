@@ -219,7 +219,6 @@ int picovoice_main(int argc, char *argv[]) {
 
     free(indices);
     pv_octopus_delete_func(o);
-    pv_close_dl(dl);
 
     fprintf(stdout, "# matches: %d\n", num_matches);
     for (int32_t i = 0; i < num_matches; i++) {
@@ -233,6 +232,7 @@ int picovoice_main(int argc, char *argv[]) {
     }
 
     pv_free_func(matches);
+    pv_close_dl(dl);
 
     return 0;
 }

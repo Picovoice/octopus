@@ -12,6 +12,7 @@ on:
       - 'lib/mac/**'
       - 'lib/windows/**'
       - 'res/audio/**'
+      - '.github/workflows/python.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -22,6 +23,7 @@ on:
       - 'lib/mac/**'
       - 'lib/windows/**'
       - 'res/audio/**'
+      - '.github/workflows/python.yml'
 
 defaults:
   run:

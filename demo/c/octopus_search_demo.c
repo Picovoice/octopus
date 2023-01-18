@@ -163,6 +163,12 @@ int picovoice_main(int argc, char *argv[]) {
         exit(1);
     }
 
+    void (*pv_free_func)(void *) = pv_load_sym(dl, "pv_free");
+    if (!pv_free_func) {
+        print_dl_error("failed to load `pv_free`");
+        exit(1);
+    }
+
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
@@ -226,7 +232,7 @@ int picovoice_main(int argc, char *argv[]) {
                 matches[i].probability);
     }
 
-    free(matches);
+    pv_free_func(matches);
 
     return 0;
 }

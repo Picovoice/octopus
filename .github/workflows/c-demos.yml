@@ -52,7 +52,7 @@ jobs:
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
         library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_octopus.${{ matrix.ext }}
-        model_path: ../../lib/common/octopus_params.pv
+        model_path: ../../lib/common/param/octopus_params.pv
         audio_path: ../../res/audio/multiple_keywords.wav
         index_path: ../../index.oif
         search_phrase: picovoice

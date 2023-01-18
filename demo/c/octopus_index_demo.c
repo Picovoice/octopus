@@ -161,7 +161,6 @@ int picovoice_main(int argc, char *argv[]) {
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
-        perror("failed to init");
         fprintf(stderr, "failed to init with '%s'.\n", pv_status_to_string_func(status));
         exit(1);
     }

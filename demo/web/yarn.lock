@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@picovoice/octopus-web@latest":
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web/-/octopus-web-1.2.11.tgz#12776a11b184116671f8163700eeadb32ed182cf"
-  integrity sha512-tfLekdSca0TsWzXQioUnGfYMXLGI3WPeN11YQAoLEj4qB6s3LqRSKH6qveZ7mT4JEdl50FzXTtbWZeKzw82g4g==
+"@picovoice/octopus-web@~1.2.12":
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/@picovoice/octopus-web/-/octopus-web-1.2.12.tgz#ca45fb1cff72fe6c5c20498499936895acb6b57d"
+  integrity sha512-aDitl1AEzBke66oJfTKqRi7iBNJOBbgdA2qDE/xcAGZ32vpOoR7M9chcBL1wZ+l3VQ7R+fMexzytsUCjPVFl6Q==
   dependencies:
-    "@picovoice/web-utils" "=1.2.9"
+    "@picovoice/web-utils" "=1.2.11"
 
-"@picovoice/web-utils@=1.2.9":
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.9.tgz#080bc377e2fa71388f40655904d2485ef586f517"
-  integrity sha512-vYAV/izQuzy/+3QF/6LlSSJh7l9cIIvD4t9ZJ91vYg2XA9yk0k7V5S+6jxPcyiVMSy8Zlc9kBwCOWZchhlSMwA==
+"@picovoice/web-utils@=1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.11.tgz#4a9564eacbacf1b74ba9d0df27c78646fe200e7d"
+  integrity sha512-DtgRXr618LjNLHvcIMKehy7THiJm6Lm1DFaHjHEDLFmIh9NrfYrbw9yosytHq1+n/mV2VfePQPhWsrPMI1JlVw==
   dependencies:
     commander "^9.2.0"
 

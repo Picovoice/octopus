@@ -21,7 +21,8 @@ import {
   buildWasm,
   arrayBufferToStringAtIndex,
   isAccessKeyValid,
-  loadModel
+  loadModel,
+  PvError
 } from "@picovoice/web-utils";
 
 import { OctopusMetadata, OctopusMatch, OctopusModel, OctopusOptions } from "./types";
@@ -57,6 +58,7 @@ type OctopusWasmOutput = {
   metadataLengthAddress: number;
   octopusMatchAddressAddress: number;
   octopusMatchLengthAddress: number;
+  pvError: PvError;
 };
 
 const PV_STATUS_SUCCESS = 10000;
@@ -87,6 +89,8 @@ export class Octopus {
 
   private static _octopusMutex = new Mutex();
 
+  private readonly _pvError = new PvError();
+
   private constructor(handleWasm: OctopusWasmOutput) {
     Octopus._sampleRate = handleWasm.sampleRate;
     Octopus._version = handleWasm.version;
@@ -108,6 +112,8 @@ export class Octopus {
 
     this._memoryBufferView = new DataView(handleWasm.memory.buffer);
     this._processMutex = new Mutex();
+
+    this._pvError = handleWasm.pvError;
   }
 
   /**
@@ -231,11 +237,13 @@ export class Octopus {
         await this._pvFree(pcmAddress);
         if (status !== PV_STATUS_SUCCESS) {
           const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+          const msg = `process failed with status ${arrayBufferToStringAtIndex(
+            memoryBufferUint8,
+            await this._pvStatusToString(status),
+          )}`;
+
           throw new Error(
-            `index failed with status ${arrayBufferToStringAtIndex(
-              memoryBufferUint8,
-              await this._pvStatusToString(status)
-            )}`
+            `${msg}\nDetails: ${this._pvError.getErrorString()}`
           );
         }
 
@@ -316,11 +324,13 @@ export class Octopus {
         );
         await this._pvFree(phraseAddress);
         if (status !== PV_STATUS_SUCCESS) {
+          const msg = `process failed with status ${arrayBufferToStringAtIndex(
+            memoryBufferUint8,
+            await this._pvStatusToString(status),
+          )}`;
+
           throw new Error(
-            `search failed with status ${arrayBufferToStringAtIndex(
-              memoryBufferUint8,
-              await this._pvStatusToString(status)
-            )}`
+            `${msg}\nDetails: ${this._pvError.getErrorString()}`
           );
         }
 
@@ -371,7 +381,9 @@ export class Octopus {
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
 
-    const exports = await buildWasm(memory, wasmBase64);
+    const pvError = new PvError();
+
+    const exports = await buildWasm(memory, wasmBase64, pvError);
 
     const aligned_alloc = exports.aligned_alloc as aligned_alloc_type;
     const pv_free = exports.pv_free as pv_free_type;
@@ -450,11 +462,13 @@ export class Octopus {
     const status = await pv_octopus_init(accessKeyAddress, modelPathAddress, objectAddressAddress);
     await pv_free(accessKeyAddress);
     if (status !== PV_STATUS_SUCCESS) {
+      const msg = `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(
+        memoryBufferUint8,
+        await pv_status_to_string(status)
+      )}`;
+
       throw new Error(
-        `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          await pv_status_to_string(status)
-        )}`
+        `${msg}\nDetails: ${pvError.getErrorString()}`
       );
     }
 
@@ -491,6 +505,7 @@ export class Octopus {
       metadataLengthAddress: metadataLengthAddress,
       octopusMatchAddressAddress: octopusMatchAddressAddress,
       octopusMatchLengthAddress: octopusMatchLengthAddress,
+      pvError: pvError
     };
   }
 }

@@ -40,3 +40,17 @@ if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
+
+task copyLibs(type: Copy) {
+    from("${rootDir}/../../lib/android")
+    into("${rootDir}/octopus/src/main/jniLibs")
+}
+
+task copyParams(type: Copy) {
+    from("${rootDir}/../../lib/common/param")
+    include('octopus_params.pv')
+    into("${rootDir}/octopus/src/main/res/raw")
+}
+
+preBuild.dependsOn(copyLibs)
+preBuild.dependsOn(copyParams)

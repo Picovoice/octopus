@@ -26,12 +26,9 @@ jobs:
 
     strategy:
       matrix:
-        device: [iOS-14.5, iOS-32bit]
+        device: [ ios-perf ]
         include:
-        - device: iOS-14.5
-          indexPerformanceThresholdSec: 1.5
-          searchPerformanceThresholdSec: 0.001
-        - device: iOS-32bit
+        - device: ios-perf
           indexPerformanceThresholdSec: 1.5
           searchPerformanceThresholdSec: 0.001
 

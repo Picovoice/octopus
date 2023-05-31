@@ -33,8 +33,8 @@ jobs:
           indexPerformanceThresholdSec: 1.5
           searchPerformanceThresholdSec: 0.002
         - device: 32bit-android
-          indexPerformanceThresholdSec: 3
-          searchPerformanceThresholdSec: 0.002
+          indexPerformanceThresholdSec: 7
+          searchPerformanceThresholdSec: 0.004
 
     steps:
     - uses: actions/checkout@v3

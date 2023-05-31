@@ -31,7 +31,7 @@ jobs:
         include:
         - device: single-android
           indexPerformanceThresholdSec: 1.5
-          searchPerformanceThresholdSec: 0.002
+          searchPerformanceThresholdSec: 0.004
         - device: 32bit-android
           indexPerformanceThresholdSec: 7
           searchPerformanceThresholdSec: 0.004

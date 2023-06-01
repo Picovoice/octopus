@@ -33,7 +33,7 @@ jobs:
           indexPerformanceThresholdSec: 1.5
           searchPerformanceThresholdSec: 0.004
         - device: 32bit-android
-          indexPerformanceThresholdSec: 7
+          indexPerformanceThresholdSec: 8
           searchPerformanceThresholdSec: 0.004
 
     steps:

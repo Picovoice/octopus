@@ -7,13 +7,15 @@ on:
     paths:
       - 'demo/c/**'
       - '!demo/c/README.md'
+      - 'res/audio/**'
       - '.github/workflows/c-demos.yml'
 
   pull_request:
-    branches: [ main ]
+    branches: [ main, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'demo/c/**'
       - '!demo/c/README.md'
+      - 'res/audio/**'
       - '.github/workflows/c-demos.yml'
 
 jobs:
@@ -38,7 +40,7 @@ jobs:
           ext: dylib
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 

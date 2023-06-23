@@ -334,7 +334,7 @@ export class Octopus {
           );
         }
 
-        const matches = [];
+        const matches: OctopusMatch[] = [];
         const octopusMatchAddress = this._memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
         const octopusMatchLength = this._memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
 

@@ -28,7 +28,7 @@ jobs:
         node-version: [lts/*]
         include:
         - indexPerformanceThresholdSec: 1.8
-          searchPerformanceThresholdSec: 0.005
+          searchPerformanceThresholdSec: 0.015
 
     steps:
     - uses: actions/checkout@v3

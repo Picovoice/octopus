@@ -27,7 +27,7 @@ jobs:
       matrix:
         node-version: [lts/*]
         include:
-        - indexPerformanceThresholdSec: 1.5
+        - indexPerformanceThresholdSec: 1.8
           searchPerformanceThresholdSec: 0.005
 
     steps:

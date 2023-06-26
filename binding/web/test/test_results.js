@@ -73,3 +73,5 @@ const testResults = {
     },
   ],
 }
+
+export { testResults, languages };

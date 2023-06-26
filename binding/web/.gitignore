@@ -1,4 +1,7 @@
 node_modules
 dist
 lib/pv_octopus*.wasm
-test/octopus_params*
+cypress/fixtures/audio_samples/*
+test/octopus_params*.js
+test/octopus_params*.pv
+test/test_data.json

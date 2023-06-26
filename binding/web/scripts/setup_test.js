@@ -1,38 +1,42 @@
-const fs = require("fs");
-const { join } = require("path");
+const fs = require('fs');
+const { join } = require('path');
 
-const params = [
-    "octopus_params.pv",
-    "octopus_params_de.pv",
-    "octopus_params_es.pv",
-    "octopus_params_fr.pv",
-    "octopus_params_it.pv",
-    "octopus_params_ja.pv",
-    "octopus_params_ko.pv",
-    "octopus_params_pt.pv",
-]
+console.log('Copying the octopus model...');
 
-console.log("Copying octopus params...");
+const testDirectory = join(__dirname, '..', 'test');
+const fixturesDirectory = join(__dirname, '..', 'cypress', 'fixtures');
 
-const sourceDirectory = join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "lib",
-    "common",
-    "light"
+const paramsSourceDirectory = join(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'lib',
+  'common',
+  'light'
 );
 
-const outputDirectory = join(__dirname, "..", "test");
+const sourceDirectory = join(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "res",
+);
 
 try {
-    fs.mkdirSync(outputDirectory, { recursive: true });
-    params.forEach(param => {
-        fs.copyFileSync(join(sourceDirectory, param), join(outputDirectory, param))
-    })
+    fs.mkdirSync(testDirectory, { recursive: true });
+
+    fs.readdirSync(paramsSourceDirectory).forEach(file => {
+        fs.copyFileSync(join(paramsSourceDirectory, file), join(testDirectory, file));
+    });
+
+    fs.mkdirSync(join(fixturesDirectory, 'audio_samples'), { recursive: true });
+    fs.readdirSync(join(sourceDirectory, 'audio')).forEach(file => {
+        fs.copyFileSync(join(sourceDirectory, 'audio', file), join(fixturesDirectory, 'audio_samples', file));
+    });
 } catch (error) {
     console.error(error);
 }
 
-console.log("... Done!");
+console.log('... Done!');

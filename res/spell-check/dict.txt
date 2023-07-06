@@ -1,4 +1,5 @@
 Autocorrection
+bestaudio
 CMAKE
 Cocoapods
 Compat
@@ -29,15 +30,16 @@ magnifyingglass
 manzana
 octopusdemo
 octotube
+outtmpl
 perroquet
 porco
 porcospino
 pvbase
 pvoctopus
 pvoctopusdemo
-pytube
 recyclerview
 reindex
 wargv
 whitespaces
 xcworkspace
+ytdlp

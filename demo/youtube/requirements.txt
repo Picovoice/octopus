@@ -1,2 +1,2 @@
 pvoctopus
-pytube
+yt-dlp

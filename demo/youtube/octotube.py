@@ -14,9 +14,10 @@ import sys
 import time
 from argparse import ArgumentParser
 from threading import Thread
+from typing import *
 
 import pvoctopus
-from pytube import YouTube
+from yt_dlp import YoutubeDL
 
 
 class ProgressAnimation(Thread):
@@ -48,17 +49,21 @@ class ProgressAnimation(Thread):
         self._done = True
 
 
-def download(url: str, folder: str) -> str:
-    webm_path = os.path.join(folder, '%s.webm' % url.split("watch?v=")[1])
-    if not os.path.exists(webm_path):
-        anime = ProgressAnimation('Downloading %s' % url)
-        anime.start()
-        youtube = YouTube(url)
-        audio_stream = youtube.streams.filter(only_audio=True, audio_codec='opus').order_by('bitrate').last()
-        audio_stream.download(output_path=folder, filename=os.path.basename(webm_path), skip_existing=True)
-        anime.stop()
-
-    return webm_path
+def download_ytdlp(url: str, output_dir: str, options: Optional[Dict[str, Any]] = None) -> List[str]:
+    ydl_opts = {
+        'outtmpl': "%(id)s.%(ext)s",
+        'format': 'bestaudio',
+        'paths': {
+            'home': output_dir
+        },
+        'geo_bypass': True,
+    }
+    if options is not None:
+        ydl_opts.update(**options)
+    with YoutubeDL(ydl_opts) as ydl:
+        info = ydl.sanitize_info(ydl.extract_info(url, download=False))
+        ydl.download([url])
+        return os.path.join(output_dir, f"{info['id']}.webm"), info['duration']
 
 
 def main():
@@ -70,7 +75,8 @@ def main():
     parser.add_argument('--work-folder', default=os.path.expanduser('~/'))
     args = parser.parse_args()
 
-    webm_path = download(url=args.url, folder=args.work_folder)
+    webm_path = download_ytdlp(url=args.url, output_dir=args.work_folder)[0]
+    print(webm_path)
 
     o = pvoctopus.create(access_key=args.access_key)
 

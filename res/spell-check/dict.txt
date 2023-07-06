@@ -35,7 +35,6 @@ porcospino
 pvbase
 pvoctopus
 pvoctopusdemo
-pytube
 recyclerview
 reindex
 wargv

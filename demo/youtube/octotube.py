@@ -21,7 +21,7 @@ from yt_dlp import YoutubeDL
 
 
 class ProgressAnimation(Thread):
-    def __init__(self, prefix, step_sec=0.1):
+    def __init__(self, prefix: str, step_sec: float = 0.1):
         self._prefix = prefix
         self._step_sec = step_sec
         self._frames = [
@@ -56,7 +56,7 @@ def download_ytdlp(url: str, output_dir: str, options: Optional[Dict[str, Any]] 
         'paths': {
             'home': output_dir
         },
-        'geo_bypass': True,
+        'geo_bypass': True
     }
     if options is not None:
         ydl_opts.update(**options)
@@ -76,7 +76,6 @@ def main():
     args = parser.parse_args()
 
     webm_path = download_ytdlp(url=args.url, output_dir=args.work_folder)[0]
-    print(webm_path)
 
     o = pvoctopus.create(access_key=args.access_key)
 

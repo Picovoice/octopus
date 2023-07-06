@@ -49,7 +49,7 @@ class ProgressAnimation(Thread):
         self._done = True
 
 
-def download_ytdlp(url: str, output_dir: str, options: Optional[Dict[str, Any]] = None) -> List[str]:
+def download(url: str, output_dir: str) -> str:
     ydl_opts = {
         'outtmpl': "%(id)s.%(ext)s",
         'format': 'bestaudio',
@@ -58,12 +58,10 @@ def download_ytdlp(url: str, output_dir: str, options: Optional[Dict[str, Any]] 
         },
         'geo_bypass': True
     }
-    if options is not None:
-        ydl_opts.update(**options)
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.sanitize_info(ydl.extract_info(url, download=False))
         ydl.download([url])
-        return os.path.join(output_dir, f"{info['id']}.webm"), info['duration']
+        return os.path.join(output_dir, f"{info['id']}.webm")
 
 
 def main():
@@ -75,7 +73,7 @@ def main():
     parser.add_argument('--work-folder', default=os.path.expanduser('~/'))
     args = parser.parse_args()
 
-    webm_path = download_ytdlp(url=args.url, output_dir=args.work_folder)[0]
+    webm_path = download(url=args.url, output_dir=args.work_folder)
 
     o = pvoctopus.create(access_key=args.access_key)
 

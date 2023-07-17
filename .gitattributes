@@ -1,3 +1,4 @@
+binding/ios/OctopusAppTest/** linguist-detectable=false
 binding/web/** linguist-detectable=false
 binding/web/src/octopus.ts linguist-detectable=true
 demo/** linguist-detectable=false

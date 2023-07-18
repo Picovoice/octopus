@@ -1,4 +1,3 @@
 -keep class ai.picovoice.octopus.*Exception { <init>(...); }
--keep class ai.picovoice.octopus.OctopusMatch
--keep class ai.picovoice.octopus.OctopusMetadata
--keep class ai.picovoice.octopus.OctopusMetadataNative
+-keep class ai.picovoice.octopus.OctopusMatch { <init>(...); }
+-keep class ai.picovoice.octopus.OctopusMetadataNative { <init>(...); }

@@ -17,11 +17,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Process;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,15 +43,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import ai.picovoice.android.voiceprocessor.VoiceProcessor;
-import ai.picovoice.android.voiceprocessor.VoiceProcessorErrorListener;
 import ai.picovoice.android.voiceprocessor.VoiceProcessorException;
-import ai.picovoice.android.voiceprocessor.VoiceProcessorFrameListener;
 import ai.picovoice.octopus.Octopus;
 import ai.picovoice.octopus.OctopusActivationException;
 import ai.picovoice.octopus.OctopusActivationLimitException;
@@ -73,13 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final VoiceProcessor voiceProcessor = VoiceProcessor.getInstance();
     private final ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
-
-    private Timer recordingTimer;
     private final ArrayList<Short> pcmData = new ArrayList<>();
-
-    private double recordingTimeSec = 0;
-
     public Octopus octopus;
+    private Timer recordingTimer;
+    private double recordingTimeSec = 0;
     private OctopusMetadata metadata = null;
 
     @Override
@@ -202,14 +191,15 @@ public class MainActivity extends AppCompatActivity {
     private void displayFatalError(String message) {
         setUIInteractivity(false);
         setUIState(UIState.FATAL_ERROR);
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             TextView fatalErrorText = findViewById(R.id.fatalErrorText);
             fatalErrorText.setText(message);
             fatalErrorText.setVisibility(View.VISIBLE);
         });
     }
+
     private void displayError(String message, int toastLength) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             Toast.makeText(this, message, toastLength).show();
         });
     }
@@ -250,9 +240,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     recordingTimeSec += 0.1;
-                    runOnUiThread(()->{
+                    runOnUiThread(() -> {
                         timerValue.setText(String.format("%.1f", recordingTimeSec));
-                        if(recordingTimeSec >= MAX_RECORDING_SEC){
+                        if (recordingTimeSec >= MAX_RECORDING_SEC) {
                             displayError(
                                     "Max recording length exceeded. Stopping...",
                                     Toast.LENGTH_SHORT);
@@ -264,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 100, 100);
         } else {
-            if(recordingTimer != null) {
+            if (recordingTimer != null) {
                 recordingTimer.cancel();
                 recordingTimer = null;
             }
@@ -299,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     public void displayMatches(OctopusMatch[] matches) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             TextView searchResultsCountText = findViewById(R.id.searchResultsCountText);
             LinearLayout resultsTableHeader = findViewById(R.id.resultsTableHeader);
             RecyclerView searchResultsView = findViewById(R.id.searchResultsView);
@@ -337,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
         setUIInteractivity(false);
 
-        taskExecutor.execute(()->{
+        taskExecutor.execute(() -> {
             HashSet<String> searchSet = new HashSet<>();
             searchSet.add(searchPhrase);
             try {
@@ -350,8 +340,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (OctopusException e) {
                 displayError(e.getMessage(), Toast.LENGTH_LONG);
-            }
-            finally {
+            } finally {
                 setUIState(UIState.SEARCH_RESULTS);
                 setUIInteractivity(true);
             }

@@ -52,6 +52,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import ai.picovoice.android.voiceprocessor.VoiceProcessor;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorErrorListener;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorException;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorFrameListener;
 import ai.picovoice.octopus.Octopus;
 import ai.picovoice.octopus.OctopusActivationException;
 import ai.picovoice.octopus.OctopusActivationLimitException;
@@ -67,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}";
     private static final int MAX_RECORDING_SEC = 120;
 
-    private final MicrophoneReader microphoneReader = new MicrophoneReader();
+    private final VoiceProcessor voiceProcessor = VoiceProcessor.getInstance();
     private final ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+
     private Timer recordingTimer;
     private final ArrayList<Short> pcmData = new ArrayList<>();
 
@@ -99,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
         } catch (OctopusException e) {
             displayFatalError("Failed to initialize Octopus " + e.getMessage());
         }
+
+        voiceProcessor.addFrameListener(frame -> {
+            for (short sample : frame) {
+                pcmData.add(sample);
+            }
+        });
+
+        voiceProcessor.addErrorListener(error -> {
+            displayError(error.toString(), Toast.LENGTH_LONG);
+        });
     }
 
     @Override
@@ -199,10 +214,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean hasRecordPermission() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
-    }
-
     private void requestRecordPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
@@ -222,7 +233,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toggleRecording(boolean recording) {
         if (recording) {
-            microphoneReader.start();
+            try {
+                voiceProcessor.start(512, octopus.getPcmDataSampleRate());
+            } catch (VoiceProcessorException e) {
+                displayError(e.toString(), Toast.LENGTH_LONG);
+                return;
+            }
             setUIInteractivity(true);
             setUIState(UIState.RECORDING);
             recordingTimeSec = 0;
@@ -257,15 +273,17 @@ public class MainActivity extends AppCompatActivity {
             setUIState(UIState.INDEXING);
             taskExecutor.execute(() -> {
                 try {
-                    microphoneReader.stop();
-                } catch (InterruptedException e) {
-                    displayError(e.getMessage(), Toast.LENGTH_SHORT);
+                    voiceProcessor.stop();
+                } catch (VoiceProcessorException e) {
+                    displayError(e.toString(), Toast.LENGTH_LONG);
+                    return;
                 }
 
                 short[] pcmDataArray = new short[pcmData.size()];
                 for (int i = 0; i < pcmData.size(); ++i) {
                     pcmDataArray[i] = pcmData.get(i);
                 }
+                pcmData.clear();
 
                 try {
                     metadata = octopus.indexAudioData(pcmDataArray);
@@ -343,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRecordClick(View view) {
         ToggleButton recordButton = findViewById(R.id.recordButton);
         if (recordButton.isChecked()) {
-            if (hasRecordPermission()) {
+            if (voiceProcessor.hasRecordAudioPermission(this)) {
                 toggleRecording(true);
             } else {
                 setUIInteractivity(false);
@@ -403,85 +421,6 @@ public class MainActivity extends AppCompatActivity {
                 startSec = itemView.findViewById(R.id.startSec);
                 endSec = itemView.findViewById(R.id.endSec);
                 probability = itemView.findViewById(R.id.probability);
-            }
-        }
-    }
-
-    private class MicrophoneReader {
-        private final AtomicBoolean started = new AtomicBoolean(false);
-        private final AtomicBoolean stop = new AtomicBoolean(false);
-        private final AtomicBoolean stopped = new AtomicBoolean(false);
-
-        void start() {
-            if (started.get()) {
-                return;
-            }
-
-            started.set(true);
-
-            Executors.newSingleThreadExecutor().submit((Callable<Void>) () -> {
-                Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
-                read();
-                return null;
-            });
-        }
-
-        void stop() throws InterruptedException {
-            if (!started.get()) {
-                return;
-            }
-
-            stop.set(true);
-
-            synchronized (stopped) {
-                while (!stopped.get()) {
-                    stopped.wait(500);
-                }
-            }
-
-            started.set(false);
-            stop.set(false);
-            stopped.set(false);
-        }
-
-        private void read() throws OctopusException {
-            final int bufferSize = AudioRecord.getMinBufferSize(
-                    octopus.getPcmDataSampleRate(),
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT);
-
-            AudioRecord audioRecord = null;
-
-            short[] buffer = new short[bufferSize];
-            pcmData.clear();
-
-            try {
-                audioRecord = new AudioRecord(
-                        MediaRecorder.AudioSource.MIC,
-                        octopus.getPcmDataSampleRate(),
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT,
-                        bufferSize);
-                audioRecord.startRecording();
-
-                while (!stop.get()) {
-                    if (audioRecord.read(buffer, 0, buffer.length) == buffer.length) {
-                        for (short value : buffer) {
-                            pcmData.add(value);
-                        }
-                    }
-                }
-
-                audioRecord.stop();
-            } catch (IllegalArgumentException | IllegalStateException | SecurityException e) {
-                throw new OctopusException(e);
-            } finally {
-                if (audioRecord != null) {
-                    audioRecord.release();
-                }
-
-                stopped.set(true);
-                stopped.notifyAll();
             }
         }
     }

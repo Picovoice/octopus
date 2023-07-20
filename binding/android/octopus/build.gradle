@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '1.2.1'
+    PUBLISH_VERSION = '1.2.2'
     PUBLISH_ARTIFACT_ID = 'octopus-android'
 }
 
 android {
     compileSdkVersion defaultTargetSdkVersion
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 21
@@ -17,7 +15,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -38,7 +35,7 @@ if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+
 }
 
 task copyLibs(type: Copy) {

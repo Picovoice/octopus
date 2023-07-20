@@ -1,6 +1,4 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: 'com.android.application'
 
 Properties properties = new Properties()
 if (rootProject.file("local.properties").exists()) {
@@ -21,7 +19,6 @@ if (rootProject.file("local.properties").exists()) {
 
 android {
     compileSdkVersion defaultTargetSdkVersion
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "ai.picovoice.octopusdemo"
@@ -56,12 +53,8 @@ android {
             }
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    buildFeatures {
-        viewBinding true
+    lint {
+        abortOnError false
     }
 }
 
@@ -69,7 +62,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'ai.picovoice:octopus-android:1.2.1'
+    implementation 'ai.picovoice:octopus-android:1.2.2'
+    implementation 'ai.picovoice:android-voice-processor:1.0.2'
 
     // Espresso UI Testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

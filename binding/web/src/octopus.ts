@@ -72,7 +72,6 @@ export class Octopus {
 
   private _wasmMemory?: WebAssembly.Memory;
   private _pvFree: pv_free_type;
-  private readonly _memoryBufferView: DataView;
   private readonly _processMutex: Mutex;
 
   private readonly _objectAddress: number;
@@ -110,7 +109,6 @@ export class Octopus {
     this._octopusMatchAddressAddress = handleWasm.octopusMatchAddressAddress;
     this._octopusMatchLengthAddress = handleWasm.octopusMatchLengthAddress;
 
-    this._memoryBufferView = new DataView(handleWasm.memory.buffer);
     this._processMutex = new Mutex();
 
     this._pvError = handleWasm.pvError;
@@ -246,13 +244,15 @@ export class Octopus {
             `${msg}\nDetails: ${this._pvError.getErrorString()}`
           );
         }
+        
+        const memoryBufferView = new DataView(this._wasmMemory.buffer);
 
-        const metadataAddress = this._memoryBufferView.getInt32(
+        const metadataAddress = memoryBufferView.getInt32(
           this._metadataAddressAddress,
           true
         );
 
-        const metadataLength = this._memoryBufferView.getInt32(
+        const metadataLength = memoryBufferView.getInt32(
           this._metadataLengthAddress,
           true
         );
@@ -303,14 +303,14 @@ export class Octopus {
           throw new Error('malloc failed: Cannot allocate memory');
         }
 
-        const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-        memoryBufferUint8.set(encoded, phraseAddress);
-        memoryBufferUint8[phraseAddress + encoded.length] = 0;
-
         const metadataAddress = await this._alignedAlloc(
           Uint8Array.BYTES_PER_ELEMENT,
           octopusMetadata.buffer.length * Uint8Array.BYTES_PER_ELEMENT
         );
+
+        let memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+        memoryBufferUint8.set(encoded, phraseAddress);
+        memoryBufferUint8[phraseAddress + encoded.length] = 0;
 
         memoryBufferUint8.set(octopusMetadata.buffer, metadataAddress);
 
@@ -324,6 +324,7 @@ export class Octopus {
         );
         await this._pvFree(phraseAddress);
         if (status !== PV_STATUS_SUCCESS) {
+          memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
           const msg = `process failed with status ${arrayBufferToStringAtIndex(
             memoryBufferUint8,
             await this._pvStatusToString(status),
@@ -334,16 +335,18 @@ export class Octopus {
           );
         }
 
+        const memoryBufferView = new DataView(this._wasmMemory.buffer);
+
         const matches: OctopusMatch[] = [];
-        const octopusMatchAddress = this._memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
-        const octopusMatchLength = this._memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
+        const octopusMatchAddress = memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
+        const octopusMatchLength = memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
 
         for (let i = 0; i < octopusMatchLength; i++) {
           const octopusMatch = octopusMatchAddress + i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
 
-          const startSec = this._memoryBufferView.getFloat32(octopusMatch, true);
-          const endSec = this._memoryBufferView.getFloat32(octopusMatch + Number(Float32Array.BYTES_PER_ELEMENT), true);
-          const probability = this._memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+          const startSec = memoryBufferView.getFloat32(octopusMatch, true);
+          const endSec = memoryBufferView.getFloat32(octopusMatch + Number(Float32Array.BYTES_PER_ELEMENT), true);
+          const probability = memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
 
           matches.push({
             startSec,

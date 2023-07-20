@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void toggleRecording(boolean recording) {
         if (recording) {
+            pcmData.clear();
             try {
                 voiceProcessor.start(512, octopus.getPcmDataSampleRate());
             } catch (VoiceProcessorException e) {
@@ -273,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < pcmData.size(); ++i) {
                     pcmDataArray[i] = pcmData.get(i);
                 }
-                pcmData.clear();
 
                 try {
                     metadata = octopus.indexAudioData(pcmDataArray);
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSearchClick(View view) {
         EditText searchText = findViewById(R.id.editTextSearchPhrase);
-        String searchPhrase = searchText.getText().toString();
+        String searchPhrase = searchText.getText().toString().trim();
         if (searchPhrase.length() == 0) {
             displayError("Please enter a search phrase", Toast.LENGTH_SHORT);
             return;

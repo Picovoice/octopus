@@ -61,6 +61,7 @@ import ai.picovoice.octopus.OctopusMetadata;
 public class MainActivity extends AppCompatActivity {
 
     private static final String ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}";
+
     private static final int MAX_RECORDING_SEC = 120;
 
     private final VoiceProcessor voiceProcessor = VoiceProcessor.getInstance();
@@ -262,19 +263,19 @@ public class MainActivity extends AppCompatActivity {
 
             setUIInteractivity(false);
             setUIState(UIState.INDEXING);
+            try {
+                voiceProcessor.stop();
+            } catch (VoiceProcessorException e) {
+                displayError(e.toString(), Toast.LENGTH_LONG);
+                return;
+            }
+
+            short[] pcmDataArray = new short[pcmData.size()];
+            for (int i = 0; i < pcmData.size(); ++i) {
+                pcmDataArray[i] = pcmData.get(i);
+            }
+
             taskExecutor.execute(() -> {
-                try {
-                    voiceProcessor.stop();
-                } catch (VoiceProcessorException e) {
-                    displayError(e.toString(), Toast.LENGTH_LONG);
-                    return;
-                }
-
-                short[] pcmDataArray = new short[pcmData.size()];
-                for (int i = 0; i < pcmData.size(); ++i) {
-                    pcmDataArray[i] = pcmData.get(i);
-                }
-
                 try {
                     metadata = octopus.indexAudioData(pcmDataArray);
                 } catch (OctopusException e) {

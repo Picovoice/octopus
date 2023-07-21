@@ -43,7 +43,7 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav
+      run: python octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav --search_phrase porcupine
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -59,4 +59,4 @@ jobs:
       run: pip3 install -r requirements.txt
 
     - name: Test
-      run: python3 octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav
+      run: python3 octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav --search_phrase porcupine

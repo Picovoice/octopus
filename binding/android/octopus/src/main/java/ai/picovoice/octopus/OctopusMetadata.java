@@ -10,6 +10,9 @@
 
 package ai.picovoice.octopus;
 
+/**
+ * Class that contains metadata returned from Octopus index.
+ */
 public class OctopusMetadata {
 
     static {
@@ -32,11 +35,11 @@ public class OctopusMetadata {
     }
 
     /**
-     * Gets the metadata in the form of a byte array
+     * Gets the metadata in the form of a byte array.
      *
      * @return the metadata in the form of a byte array.
      */
-    public byte[] getBytes(){
+    public byte[] getBytes() {
         return metadataNative.getBytes();
     }
 

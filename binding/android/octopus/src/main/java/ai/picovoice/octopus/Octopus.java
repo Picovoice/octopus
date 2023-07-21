@@ -60,7 +60,11 @@ public class Octopus {
         }
     }
 
-    private static String extractResource(Context context, InputStream srcFileStream, String dstFilename) throws IOException {
+    private static String extractResource(
+            Context context,
+            InputStream srcFileStream,
+            String dstFilename
+    ) throws IOException {
         InputStream is = new BufferedInputStream(srcFileStream, 256);
         OutputStream os = new BufferedOutputStream(context.openFileOutput(dstFilename, Context.MODE_PRIVATE), 256);
         int r;
@@ -185,6 +189,9 @@ public class Octopus {
         return OctopusNative.getVersion();
     }
 
+    /**
+     * Builder for creating an instance of Octopus with a mixture of default arguments.
+     */
     public static class Builder {
 
         private String accessKey = null;
@@ -200,6 +207,9 @@ public class Octopus {
             return this;
         }
 
+        /**
+         * Creates an instance of Octopus Speech-to-Index engine.
+         */
         public Octopus build(Context context) throws OctopusException {
             if (accessKey == null || this.accessKey.equals("")) {
                 throw new OctopusInvalidArgumentException("No AccessKey was provided to Octopus");

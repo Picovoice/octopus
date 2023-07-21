@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                     searchLayout.setVisibility(View.INVISIBLE);
                     statusTextView.setText("");
                     break;
+                default:
             }
         });
     }
@@ -205,13 +206,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private boolean hasRecordPermission() {
+        return ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+
     private void requestRecordPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             ToggleButton toggleButton = findViewById(R.id.recordButton);
@@ -307,13 +319,20 @@ public class MainActivity extends AppCompatActivity {
             searchResultsView.setVisibility(View.VISIBLE);
 
             for (OctopusMatch match : matches) {
-                Log.i("OctopusDemo", String.format("%f -> %f (%f)%n", match.getStartSec(), match.getEndSec(), match.getProbability()));
+                Log.i(
+                        "OctopusDemo",
+                        String.format(
+                                "%f -> %f (%f)%n",
+                                match.getStartSec(),
+                                match.getEndSec(),
+                                match.getProbability()));
             }
 
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
             searchResultsView.setLayoutManager(linearLayoutManager);
 
-            SearchResultsViewAdaptor searchResultsViewAdaptor = new SearchResultsViewAdaptor(getApplicationContext(), Arrays.asList(matches));
+            SearchResultsViewAdaptor searchResultsViewAdaptor = 
+                    new SearchResultsViewAdaptor(getApplicationContext(), Arrays.asList(matches));
             searchResultsView.setAdapter(searchResultsViewAdaptor);
         });
     }
@@ -372,8 +391,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class SearchResultsViewAdaptor extends RecyclerView.Adapter<SearchResultsViewAdaptor.ViewHolder> {
-        final private List<OctopusMatch> data;
-        final private LayoutInflater inflater;
+        private final List<OctopusMatch> data;
+        private final LayoutInflater inflater;
 
         SearchResultsViewAdaptor(Context context, List<OctopusMatch> data) {
             this.inflater = LayoutInflater.from(context);

@@ -40,37 +40,37 @@ public class LanguageTests extends BaseTest {
                 },
                 {
                         "es",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("manzana", new double [][]{{5.184, 5.984, 1}});
                         }},
                 },
                 {
                         "fr",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("perroquet", new double [][]{{4.352, 5.184, 0.990}});
                         }},
                 },
                 {
                         "it",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("porcospino", new double [][]{{0.480, 1.728, 1}});
                         }},
                 },
                 {
                         "ja",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("りんご", new double [][]{{0.960, 1.664, 1}});
                         }},
                 },
                 {
                         "ko",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("아이스크림", new double [][]{{6.592, 7.520, 0.961}});
                         }},
                 },
                 {
                         "pt",
-                        new HashMap<String, double[][]> () {{
+                        new HashMap<String, double[][]>() {{
                             put("porco espinho", new double [][]{{0.480, 1.792, 1}});
                         }},
                 }

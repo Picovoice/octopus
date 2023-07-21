@@ -1,5 +1,5 @@
 #
-# Copyright 2021-2022 Picovoice Inc.
+# Copyright 2021-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -63,6 +63,12 @@ def main():
         help='AccessKey provided by Picovoice Console (https://console.picovoice.ai/)',
         required=True)
 
+    parser.add_argument(
+        '--search_phrase',
+        help='Phrase to search in the provided audio paths',
+        default=None
+    )
+
     args = parser.parse_args()
 
     try:
@@ -90,8 +96,10 @@ def main():
             indexing_animation.stop()
 
     try:
+        search_phrase = args.search_phrase
         while True:
-            search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
+            if args.search_phrase is None:
+                search_phrase = input("\rEnter search phrase (Ctrl+c to exit): ")
             search_phrase = search_phrase.strip()
             for i, metadata in enumerate(metadata_list):
                 try:
@@ -109,6 +117,9 @@ def main():
                 else:
                     print("Nothing found!")
             print("\n")
+
+            if args.search_phrase is not None:
+                break
 
     except KeyboardInterrupt:
         print('Stopping ...')

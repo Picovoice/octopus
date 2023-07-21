@@ -7,8 +7,8 @@
 //  specific language governing permissions and limitations under the License.
 //
 
-public class OctopusError : LocalizedError {
-    private let message: String;
+public class OctopusError: LocalizedError {
+    private let message: String
 
     public init (_ message: String) {
         self.message = message
@@ -25,24 +25,24 @@ public class OctopusError : LocalizedError {
     }
 }
 
-public class OctopusMemoryError : OctopusError {}
+public class OctopusMemoryError: OctopusError {}
 
-public class OctopusIOError : OctopusError {}
+public class OctopusIOError: OctopusError {}
 
-public class OctopusInvalidArgumentError : OctopusError {}
+public class OctopusInvalidArgumentError: OctopusError {}
 
-public class OctopusStopIterationError : OctopusError {}
+public class OctopusStopIterationError: OctopusError {}
 
-public class OctopusKeyError : OctopusError {}
+public class OctopusKeyError: OctopusError {}
 
-public class OctopusInvalidStateError : OctopusError {}
+public class OctopusInvalidStateError: OctopusError {}
 
-public class OctopusRuntimeError : OctopusError {}
+public class OctopusRuntimeError: OctopusError {}
 
-public class OctopusActivationError : OctopusError {}
+public class OctopusActivationError: OctopusError {}
 
-public class OctopusActivationLimitError : OctopusError {}
+public class OctopusActivationLimitError: OctopusError {}
 
-public class OctopusActivationThrottledError : OctopusError {}
+public class OctopusActivationThrottledError: OctopusError {}
 
-public class OctopusActivationRefusedError : OctopusError {}
+public class OctopusActivationRefusedError: OctopusError {}

@@ -10,15 +10,15 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = ViewModel()
-    
+
     let activeBlue = Color(red: 55/255, green: 125/255, blue: 1, opacity: 1)
     let detectionBlue = Color(red: 0, green: 229/255, blue: 195/255, opacity: 1)
     let dangerRed = Color(red: 1, green: 14/255, blue: 14/255, opacity: 1)
-    
+
     var body: some View {
         let interactDisabled: Bool = viewModel.state == UIState.FATAL_ERROR || viewModel.isBusy
-        
-        VStack(alignment: .center){
+
+        VStack(alignment: .center) {
             Spacer()
             ZStack(alignment: .center) {
                 Text(String(format: "%.1f", viewModel.recordingTimeSec))
@@ -27,10 +27,10 @@ struct ContentView: View {
                     .opacity(viewModel.state == UIState.RECORDING ? 1 : 0)
                 ProgressView("Indexing...")
                     .progressViewStyle(CircularProgressViewStyle(tint: activeBlue))
-                    .scaleEffect(x:2, y:2, anchor: .center)
+                    .scaleEffect(x: 2, y: 2, anchor: .center)
                     .opacity(viewModel.state == UIState.INDEXING ? 1 : 0)
                     .padding(20)
-                	
+
                 VStack(alignment: .center) {
                     Text(viewModel.searchResultCountText)
                         .font(.system(size: 25.0))
@@ -89,7 +89,7 @@ struct ContentView: View {
             Spacer()
             Spacer()
             Spacer()
-            
+
             HStack(alignment: .center) {
                 TextField("Search Phrase",
                           text: $viewModel.searchPhraseText,
@@ -100,14 +100,14 @@ struct ContentView: View {
                     .cornerRadius(8)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
-                    .overlay(HStack() {
+                    .overlay(HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
                     })
                     .disabled(interactDisabled)
-                Button(action: viewModel.searchMetadata){
+                Button(action: viewModel.searchMetadata) {
                     Text("Search")
                 }.disabled(interactDisabled)
             }
@@ -115,7 +115,7 @@ struct ContentView: View {
             .opacity(viewModel.state == UIState.NEW_SEARCH ||
                      viewModel.state == UIState.SEARCH_RESULTS ||
                      viewModel.state == UIState.ZERO_SEARCH_RESULTS ? 1 : 0)
-            
+
             Text(viewModel.errorMessage)
                 .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width - 50)
                 .padding()
@@ -124,13 +124,13 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .cornerRadius(.infinity)
                 .opacity(viewModel.state == UIState.FATAL_ERROR ? 1 : 0)
-                
+
             Spacer()
             Text(viewModel.statusText)
                 .padding(4)
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
-            Button(action: viewModel.toggleRecording){
+            Button(action: viewModel.toggleRecording) {
                 Text(viewModel.state == UIState.RECORDING ? "STOP" : "RECORD")
                     .font(.title)
                     .background(interactDisabled ? Color.gray : activeBlue)
@@ -162,4 +162,3 @@ struct ContentView_Previews: PreviewProvider {
         }
     }
 }
-

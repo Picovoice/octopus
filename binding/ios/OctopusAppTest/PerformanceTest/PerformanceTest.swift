@@ -31,9 +31,9 @@ class PerformanceTest: XCTestCase {
         try XCTSkipIf(indexPerformanceThresholdSec == nil)
 
         let bundle = Bundle(for: type(of: self))
-        let fileURL:URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
+        let fileURL: URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
         let audioData = try Data(contentsOf: fileURL)
-        var pcm = Array<Int16>(repeating: 0, count: (audioData.count - 44) / 2)
+        var pcm = [Int16](repeating: 0, count: (audioData.count - 44) / 2)
         _ = pcm.withUnsafeMutableBytes {
             audioData.copyBytes(to: $0, from: 44..<audioData.count)
         }
@@ -52,12 +52,12 @@ class PerformanceTest: XCTestCase {
             metadata.delete()
         }
         octopus.delete()
-        
+
         let avgNSec = results.reduce(0.0, +) / Double(numTestIterations)
         let avgSec = Double(round(avgNSec * 1000) / 1000)
         XCTAssertLessThanOrEqual(avgSec, indexPerformanceThresholdSec!)
     }
-    
+
     func testSearchPerformance() throws {
         try XCTSkipIf(searchThresholdString == "{SEARCH_PERFORMANCE_THRESHOLD_SEC}")
 
@@ -66,16 +66,16 @@ class PerformanceTest: XCTestCase {
         try XCTSkipIf(searchPerformanceThresholdSec == nil)
 
         let bundle = Bundle(for: type(of: self))
-        let fileURL:URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
+        let fileURL: URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
         let audioData = try Data(contentsOf: fileURL)
-        var pcm = Array<Int16>(repeating: 0, count: (audioData.count - 44) / 2)
+        var pcm = [Int16](repeating: 0, count: (audioData.count - 44) / 2)
         _ = pcm.withUnsafeMutableBytes {
             audioData.copyBytes(to: $0, from: 44..<audioData.count)
         }
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioData(pcm: pcm)
-        
+
         let phrases: Set<String> = ["gorilla", "terminator"]
 
         var results: [Double] = []
@@ -90,7 +90,7 @@ class PerformanceTest: XCTestCase {
         }
         metadata.delete()
         octopus.delete()
-        
+
         let avgNSec = results.reduce(0.0, +) / Double(numTestIterations)
         let avgSec = Double(round(avgNSec * 1000) / 1000)
         XCTAssertLessThanOrEqual(avgSec, searchPerformanceThresholdSec!)

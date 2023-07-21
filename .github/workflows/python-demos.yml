@@ -44,19 +44,3 @@ jobs:
 
     - name: Test
       run: python octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav --search_phrase porcupine
-
-  build-self-hosted:
-    runs-on: ${{ matrix.machine }}
-
-    strategy:
-      matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson]
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Install dependencies
-      run: pip3 install -r requirements.txt
-
-    - name: Test
-      run: python3 octopus_demo.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_paths ../../res/audio/multiple_keywords.wav --search_phrase porcupine

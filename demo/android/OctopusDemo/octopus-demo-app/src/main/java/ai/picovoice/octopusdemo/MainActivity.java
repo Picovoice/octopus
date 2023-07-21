@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         voiceProcessor.addErrorListener(error -> {
-            runOnUiThread(()-> displayError(error.toString(), Toast.LENGTH_LONG));
+            runOnUiThread(() -> displayError(error.toString(), Toast.LENGTH_LONG));
         });
     }
 

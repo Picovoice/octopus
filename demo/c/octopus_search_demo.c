@@ -26,7 +26,6 @@ static void *pv_open_dl(const char *path) {
     return dlopen(path, RTLD_NOW);
 
 #endif
-
 }
 
 static void *pv_load_sym(void *dl, const char *sym) {
@@ -40,7 +39,6 @@ static void *pv_load_sym(void *dl, const char *sym) {
     return dlsym(dl, sym);
 
 #endif
-
 }
 
 static void pv_close_dl(void *dl) {
@@ -54,7 +52,6 @@ static void pv_close_dl(void *dl) {
     dlclose(dl);
 
 #endif
-
 }
 
 static void print_dl_error(const char *message) {
@@ -68,22 +65,21 @@ static void print_dl_error(const char *message) {
     fprintf(stderr, "%s with '%s'.\n", message, dlerror());
 
 #endif
-
 }
 
 static struct option long_options[] = {
-        {"library_path",                required_argument, NULL, 'l'},
-        {"model_path",                  required_argument, NULL, 'm'},
-        {"access_key",                  required_argument, NULL, 'a'},
-        {"index_path",                  required_argument, NULL, 'i'},
-        {"search_phrase",               required_argument, NULL, 's'},
+        {"library_path",  required_argument, NULL, 'l'},
+        {"model_path",    required_argument, NULL, 'm'},
+        {"access_key",    required_argument, NULL, 'a'},
+        {"index_path",    required_argument, NULL, 'i'},
+        {"search_phrase", required_argument, NULL, 's'},
 };
 
 void print_usage(const char *program_name) {
     fprintf(
-        stderr,
-        "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -i INDEX_PATH -s SEARCH_PHRASE\n",
-        program_name);
+            stderr,
+            "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -i INDEX_PATH -s SEARCH_PHRASE\n",
+            program_name);
 }
 
 int picovoice_main(int argc, char *argv[]) {
@@ -215,7 +211,7 @@ int picovoice_main(int argc, char *argv[]) {
     gettimeofday(&after, NULL);
 
     total_cpu_time_usec +=
-        (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
+            (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
 
     free(indices);
     pv_octopus_delete_func(o);
@@ -242,7 +238,7 @@ int main(int argc, char *argv[]) {
 #if defined(_WIN32) || defined(_WIN64)
 
 #define UTF8_COMPOSITION_FLAG (0)
-#define NULL_TERMINATED (-1)
+#define NULL_TERMINATED       (-1)
 
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     if (wargv == NULL) {

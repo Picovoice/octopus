@@ -25,14 +25,14 @@ class OctopusLanguageTests: BaseTest {
         ["it", ["porcospino": [[0.480, 1.728, 1]]]],
         ["ja", ["りんご": [[0.960, 1.664, 1]]]],
         ["ko", ["아이스크림": [[6.592, 7.520, 0.961]]]],
-        ["pt", ["porco espinho": [[0.480, 1.792, 1]]]],
+        ["pt", ["porco espinho": [[0.480, 1.792, 1]]]]
     ]
 
     var language: String = ""
     var modelPath: String = ""
     var keywordPaths: [String] = []
     var testAudioPath: String = ""
-    var expectedResults: [String:[[Double]]] = [:]
+    var expectedResults: [String: [[Double]]] = [:]
 
     override class var defaultTestSuite: XCTestSuite {
         get {
@@ -47,7 +47,7 @@ class OctopusLanguageTests: BaseTest {
                     newTestCase.language = testCase[0] as! String
                     newTestCase.modelPath = bundle.path(forResource: "octopus_params\(suffix)", ofType: "pv")!
                     newTestCase.testAudioPath = bundle.path(forResource: "multiple_keywords\(suffix)", ofType: "wav")!
-                    newTestCase.expectedResults = testCase[1] as! [String:[[Double]]]
+                    newTestCase.expectedResults = testCase[1] as! [String: [[Double]]]
                     xcTestSuite.addTest(newTestCase)
                 }
             }

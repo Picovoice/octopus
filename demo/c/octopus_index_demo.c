@@ -26,7 +26,6 @@ static void *pv_open_dl(const char *path) {
     return dlopen(path, RTLD_NOW);
 
 #endif
-
 }
 
 static void *pv_load_sym(void *dl, const char *sym) {
@@ -40,7 +39,6 @@ static void *pv_load_sym(void *dl, const char *sym) {
     return dlsym(dl, sym);
 
 #endif
-
 }
 
 static void pv_close_dl(void *dl) {
@@ -54,7 +52,6 @@ static void pv_close_dl(void *dl) {
     dlclose(dl);
 
 #endif
-
 }
 
 static void print_dl_error(const char *message) {
@@ -68,22 +65,21 @@ static void print_dl_error(const char *message) {
     fprintf(stderr, "%s with '%s'.\n", message, dlerror());
 
 #endif
-
 }
 
 static struct option long_options[] = {
-        {"library_path",                required_argument, NULL, 'l'},
-        {"model_path",                  required_argument, NULL, 'm'},
-        {"access_key",                  required_argument, NULL, 'a'},
-        {"audio_path",                  required_argument, NULL, 'w'},
-        {"index_path",                  required_argument, NULL, 'i'},
+        {"library_path", required_argument, NULL, 'l'},
+        {"model_path",   required_argument, NULL, 'm'},
+        {"access_key",   required_argument, NULL, 'a'},
+        {"audio_path",   required_argument, NULL, 'w'},
+        {"index_path",   required_argument, NULL, 'i'},
 };
 
 void print_usage(const char *program_name) {
     fprintf(
-        stderr,
-        "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -w AUDIO_PATH -i INDEX_PATH\n",
-        program_name);
+            stderr,
+            "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -w AUDIO_PATH -i INDEX_PATH\n",
+            program_name);
 }
 
 int picovoice_main(int argc, char *argv[]) {
@@ -210,7 +206,7 @@ int main(int argc, char *argv[]) {
 #if defined(_WIN32) || defined(_WIN64)
 
 #define UTF8_COMPOSITION_FLAG (0)
-#define NULL_TERMINATED (-1)
+#define NULL_TERMINATED       (-1)
 
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     if (wargv == NULL) {

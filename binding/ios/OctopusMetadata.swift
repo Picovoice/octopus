@@ -12,26 +12,26 @@ import Foundation
 public class OctopusMetadata {
     var handle: UnsafeMutablePointer<UInt8>?
     let numBytes: Int
-    
+
     init(handle: UnsafeMutablePointer<UInt8>, numBytes: Int) {
         self.handle = handle
         self.numBytes = numBytes
     }
-    
+
     /// Constructor.
     ///
     /// - Parameters:
     ///   - metadataBytes: A byte array that was previously obtained via `getBytes`
-    public init(metadataBytes:[UInt8]) {
+    public init(metadataBytes: [UInt8]) {
         self.handle = UnsafeMutablePointer<UInt8>.allocate(capacity: metadataBytes.count)
         self.handle?.initialize(from: metadataBytes, count: metadataBytes.count)
         self.numBytes = metadataBytes.count
     }
-    
+
     deinit {
         self.delete()
     }
-    
+
     /// Releases resources acquired by `OctopusMetadata`
     public func delete() {
         if handle != nil {
@@ -39,7 +39,7 @@ public class OctopusMetadata {
             handle = nil
         }
     }
-    
+
     /// Gets a binary representation of the metadata
     ///
     /// - Throws: OctopusError
@@ -48,8 +48,8 @@ public class OctopusMetadata {
         if handle == nil {
             throw OctopusInvalidStateError("Octopus metadata has been deleted")
         }
-        
-        return Array(UnsafeBufferPointer(start: handle, count:numBytes))
+
+        return Array(UnsafeBufferPointer(start: handle, count: numBytes))
     }
-    
+
 }

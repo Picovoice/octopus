@@ -22,29 +22,29 @@ enum UIState {
 }
 
 class ViewModel: ObservableObject {
-    
+
     private let ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}"
-    
-    private var octopus:Octopus!
-    private var metadata:OctopusMetadata!
-    
+
+    private var octopus: Octopus!
+    private var metadata: OctopusMetadata!
+
     private var recordingTimer = Timer()
     private var audioRecorder: AVAudioRecorder!
     private var isListening = false
     private let MAX_RECORDING_LENGTH_SEC = 120.0
-    
-    @Published var recordToggleButtonText:String = "Start"
-    @Published var searchPhraseText:String = ""
-    @Published var results:[OctopusMatch] = []
+
+    @Published var recordToggleButtonText: String = "Start"
+    @Published var searchPhraseText: String = ""
+    @Published var results: [OctopusMatch] = []
     @Published var statusText = ""
     @Published var showErrorAlert = false
     @Published var errorAlertMessage = ""
     @Published var errorMessage = ""
-    @Published var state:UIState = UIState.INTRO
-    @Published var isBusy:Bool = false
-    @Published var searchResultCountText:String = "# matches found"
+    @Published var state: UIState = UIState.INTRO
+    @Published var isBusy: Bool = false
+    @Published var searchResultCountText: String = "# matches found"
     @Published var recordingTimeSec = 0.0
-    
+
     init() {
         isBusy = true
         do {
@@ -59,13 +59,13 @@ class ViewModel: ObservableObject {
             errorMessage = "ACCESS_KEY activation refused"
         } catch is OctopusActivationLimitError {
             errorMessage = "ACCESS_KEY reached its limit"
-        } catch is OctopusActivationThrottledError  {
+        } catch is OctopusActivationThrottledError {
             errorMessage = "ACCESS_KEY is throttled"
         } catch {
             errorMessage = "\(error)"
         }
     }
-    
+
     deinit {
         do {
             try stop()
@@ -74,12 +74,12 @@ class ViewModel: ObservableObject {
         }
         octopus.delete()
     }
-    
-    func onOctopusInitFail(_ initError:String) {
+
+    func onOctopusInitFail(_ initError: String) {
         errorMessage = initError
         state = UIState.FATAL_ERROR
     }
-    
+
     public func toggleRecording() {
         if isListening {
             toggleRecordingOff()
@@ -87,13 +87,13 @@ class ViewModel: ObservableObject {
             toggleRecordingOn()
         }
     }
-    
+
     public func toggleRecordingOff() {
         recordingTimer.invalidate()
         statusText = ""
         state = UIState.INDEXING
         isBusy = true
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             do {
                 try self.stop()
@@ -107,18 +107,18 @@ class ViewModel: ObservableObject {
             self.isBusy = false
         }
     }
-    
-    public func toggleRecordingOn(){
+
+    public func toggleRecordingOn() {
         isBusy = true
         recordingTimeSec = 0
-        recordingTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+        recordingTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             self.recordingTimeSec += 0.1
-            if(self.recordingTimeSec > self.MAX_RECORDING_LENGTH_SEC) {
+            if self.recordingTimeSec > self.MAX_RECORDING_LENGTH_SEC {
                 self.toggleRecordingOff()
                 self.showErrorAlert("Recording exceeded max recording length")
             }
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             do {
                 try self.start()
@@ -130,18 +130,18 @@ class ViewModel: ObservableObject {
             self.isBusy = false
         }
     }
-    
-    public func searchMetadata(){
-        
+
+    public func searchMetadata() {
+
         let resign = #selector(UIResponder.resignFirstResponder)
         UIApplication.shared.sendAction(resign, to: nil, from: nil, for: nil)
-        
+
         searchPhraseText = searchPhraseText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !searchPhraseText.isEmpty else {
             showErrorAlert("Search phrase cannot be empty")
             return
         }
-        
+
         do {
             let searchResults = try octopus.search(metadata: metadata, phrases: Set([searchPhraseText]))
             for (_, matches) in searchResults {
@@ -149,7 +149,7 @@ class ViewModel: ObservableObject {
                 for result in results {
                     print(result)
                 }
-                
+
                 statusText = ""
                 if results.count == 0 {
                     searchResultCountText = "No matches found"
@@ -160,24 +160,24 @@ class ViewModel: ObservableObject {
                     state = UIState.SEARCH_RESULTS
                 }
             }
-        
+
         } catch let error as OctopusInvalidArgumentError {
             showErrorAlert("\(error)")
         } catch {
             showErrorAlert("\(error)")
         }
     }
-    
+
     public func showErrorAlert(_ message: String) {
         errorAlertMessage = message
         showErrorAlert = true
     }
-    
+
     public func start() throws {
         guard !isListening else {
             return
         }
-        
+
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
             errorMessage = "Recording permission is required for this demo"
@@ -185,14 +185,14 @@ class ViewModel: ObservableObject {
             statusText = ""
             return
         }
-        
+
         try audioSession.setActive(true)
         try audioSession.setCategory(AVAudioSession.Category.playAndRecord,
                                      options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
-        
+
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let audioFilename = documentPath.appendingPathComponent("OctopusDemo.wav")
-        
+
         var formatDescription = AudioStreamBasicDescription(
             mSampleRate: Float64(Octopus.pcmDataSampleRate),
             mFormatID: kAudioFormatLinearPCM,
@@ -204,24 +204,26 @@ class ViewModel: ObservableObject {
             mBitsPerChannel: 16,
             mReserved: 0)
         let format = AVAudioFormat(streamDescription: &formatDescription)!
-        
+
         audioRecorder = try AVAudioRecorder(url: audioFilename, format: format)
         audioRecorder.record()
         isListening = true
     }
-    
+
     public func stop() throws {
         guard isListening else {
             return
         }
-        
+
         audioRecorder.stop()
         isListening = false
-        
+
         let fileManager = FileManager.default
         let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let directoryContents = try fileManager.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
-        
+        let directoryContents = try fileManager.contentsOfDirectory(
+            at: documentDirectory,
+            includingPropertiesForKeys: nil)
+
         let path = directoryContents[0].path
         metadata = try octopus.indexAudioFile(path: path)
     }

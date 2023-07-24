@@ -38,7 +38,7 @@ typedef struct pv_octopus pv_octopus_t;
  * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
  */
 PV_API pv_status_t pv_octopus_init(
-        const char* access_key,
+        const char *access_key,
         const char *model_path,
         pv_octopus_t **object);
 

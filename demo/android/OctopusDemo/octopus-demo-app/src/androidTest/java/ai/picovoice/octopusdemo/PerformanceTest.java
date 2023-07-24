@@ -61,7 +61,7 @@ public class PerformanceTest {
         String iterationString = appContext.getString(R.string.numTestIterations);
         try {
             numTestIterations = Integer.parseInt(iterationString);
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) { }
     }
 
     @Test

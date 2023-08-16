@@ -30,7 +30,6 @@ import java.util.HashSet;
 
 import ai.picovoice.octopus.Octopus;
 import ai.picovoice.octopus.OctopusMetadata;
-import ai.picovoice.octopus.R;
 
 @RunWith(AndroidJUnit4.class)
 public class PerformanceTest {

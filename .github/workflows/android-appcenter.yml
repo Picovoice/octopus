@@ -5,22 +5,20 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'demo/android/OctopusDemo/**'
-      - '!demo/android/OctopusDemo/README.md'
+      - 'binding/android/OctopusTestApp/**'
       - 'res/audio/**'
       - '.github/workflows/android-appcenter.yml'
 
   pull_request:
     branches: [ main, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'demo/android/OctopusDemo/**'
-      - '!demo/android/OctopusDemo/README.md'
+      - 'binding/android/OctopusTestApp/**'
       - 'res/audio/**'
       - '.github/workflows/android-appcenter.yml'
 
 defaults:
   run:
-    working-directory: demo/android/OctopusDemo
+    working-directory: binding/android/OctopusTestApp
 
 jobs:
   build:
@@ -50,6 +48,16 @@ jobs:
     - name: Inject AccessKey
       run: echo pvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" >> local.properties
 
+    - name: Inject Android keystore variables
+      run: |
+        echo storePassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyPassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyAlias=picovoice >> local.properties
+        echo storeFile=../picovoice.jks >> local.properties
+
+    - name: Setup Android keystore file
+      run: echo "${{secrets.ANDROID_RELEASE_KEYSTORE_FILE_B64}}" | base64 -d > picovoice.jks
+
     - name: Build app
       run: ./gradlew assembleDebug
 
@@ -61,7 +69,64 @@ jobs:
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Octopus-Android"
         --devices "Picovoice/android-min-max"
-        --app-path octopus-demo-app/build/outputs/apk/debug/octopus-demo-app-debug.apk
+        --app-path octopus-test-app/build/outputs/apk/debug/octopus-test-app-debug.apk
         --test-series "octopus-android"
         --locale "en_US"
-        --build-dir octopus-demo-app/build/outputs/apk/androidTest/debug
+        --build-dir octopus-test-app/build/outputs/apk/androidTest/debug
+
+  build-integ:
+    name: Run Android Integration Tests on AppCenter
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js LTS
+      uses: actions/setup-node@v3
+      with:
+        node-version: lts/*
+
+    - name: Install AppCenter CLI
+      run: npm install -g appcenter-cli
+
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Copy test_resources
+      run: ./copy_test_resources.sh
+
+    - name: Inject AccessKey
+      run: echo pvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" >> local.properties
+
+    - name: Inject Android keystore variables
+      run: |
+        echo storePassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyPassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyAlias=picovoice >> local.properties
+        echo storeFile=../picovoice.jks >> local.properties
+
+    - name: Setup Android keystore file
+      run: echo "${{secrets.ANDROID_RELEASE_KEYSTORE_FILE_B64}}" | base64 -d > picovoice.jks
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build app
+      run: ./gradlew assembleRelease
+
+    - name: Build androidTest
+      run: ./gradlew assembleReleaseAndroidTest -DtestBuildType=integ
+
+    - name: Run tests on AppCenter
+      run: appcenter test run espresso
+        --token ${{secrets.APPCENTERAPITOKEN}}
+        --app "Picovoice/Octopus-Android"
+        --devices "Picovoice/android-min-max"
+        --app-path octopus-test-app/build/outputs/apk/en/release/octopus-test-app-release.apk
+        --test-series "octopus-android"
+        --locale "en_US"
+        --build-dir octopus-test-app/build/outputs/apk/androidTest/release
+

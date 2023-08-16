@@ -18,7 +18,7 @@ on:
 
 defaults:
   run:
-    working-directory: demo/android/OctopusDemo
+    working-directory: binding/android/OctopusTestApp
 
 jobs:
   build:
@@ -62,6 +62,16 @@ jobs:
     - name: Inject Number of Iterations
       run: echo numTestIterations="30" >> local.properties
 
+    - name: Inject Android keystore variables
+      run: |
+        echo storePassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyPassword="${{secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD}}" >> local.properties
+        echo keyAlias=picovoice >> local.properties
+        echo storeFile=../picovoice.jks >> local.properties
+
+    - name: Setup Android keystore file
+      run: echo "${{secrets.ANDROID_RELEASE_KEYSTORE_FILE_B64}}" | base64 -d > picovoice.jks
+
     - name: Inject Index Performance Threshold
       run: echo indexPerformanceThresholdSec="${{ matrix.indexPerformanceThresholdSec }}" >> local.properties
 
@@ -75,15 +85,15 @@ jobs:
       run: ./gradlew assembleDebug
 
     - name: Build androidTest
-      run: ./gradlew assembleAndroidTest
+      run: ./gradlew assembleAndroidTest -DtestBuildType=perf
 
     - name: Run tests on AppCenter
       run: appcenter test run espresso
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Octopus-Android"
         --devices "Picovoice/${{ matrix.device }}"
-        --app-path octopus-demo-app/build/outputs/apk/debug/octopus-demo-app-debug.apk
+        --app-path octopus-test-app/build/outputs/apk/debug/octopus-test-app-debug.apk
         --test-series "octopus-android"
         --locale "en_US"
-        --build-dir octopus-demo-app/build/outputs/apk/androidTest/debug
+        --build-dir octopus-test-app/build/outputs/apk/androidTest/debug
 

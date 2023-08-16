@@ -1,0 +1,2 @@
+rootProject.name = "OctopusTestApp"
+include ':octopus-test-app'

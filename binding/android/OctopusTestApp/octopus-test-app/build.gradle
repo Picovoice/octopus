@@ -73,7 +73,7 @@ android {
     }
 
     task("copyParams", type: Copy) {
-        from("$projectDir/../../../../lib/common/")
+        from("$projectDir/../../../../lib/common/param/")
         include("octopus_params.pv")
         into("$projectDir/src/main/assets/models")
     }

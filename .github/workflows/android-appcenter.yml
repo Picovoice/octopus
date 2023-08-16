@@ -125,7 +125,7 @@ jobs:
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Octopus-Android"
         --devices "Picovoice/android-min-max"
-        --app-path octopus-test-app/build/outputs/apk/en/release/octopus-test-app-release.apk
+        --app-path octopus-test-app/build/outputs/apk/release/octopus-test-app-release.apk
         --test-series "octopus-android"
         --locale "en_US"
         --build-dir octopus-test-app/build/outputs/apk/androidTest/release

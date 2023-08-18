@@ -1,6 +1,7 @@
-binding/ios/OctopusAppTest/** linguist-detectable=false
 binding/web/** linguist-detectable=false
 binding/web/src/octopus.ts linguist-detectable=true
+binding/android/OctopusTestApp/** linguist-detectable=false
+binding/ios/OctopusAppTest/** linguist-detectable=false
 demo/** linguist-detectable=false
 lib/** linguist-detectable=false
 resources/** linguist-detectable=false

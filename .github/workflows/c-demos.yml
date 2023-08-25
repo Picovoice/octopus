@@ -3,23 +3,41 @@ name: C Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths:
-      - 'demo/c/**'
       - '!demo/c/README.md'
-      - 'res/audio/**'
       - '.github/workflows/c-demos.yml'
-
+      - 'demo/c/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'res/audio_samples/**'
   pull_request:
-    branches: [ main, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'demo/c/**'
       - '!demo/c/README.md'
-      - 'res/audio/**'
       - '.github/workflows/c-demos.yml'
+      - 'demo/c/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'res/audio_samples/**'
+
+
+defaults:
+  run:
+    working-directory: demo/c
 
 jobs:
-  build-demos-github-hosted:
+  build-demo-github-hosted:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -29,32 +47,31 @@ jobs:
         - os: ubuntu-latest
           platform: linux
           arch: x86_64
-          ext: so
         - os: windows-latest
           platform: windows
           arch: amd64
-          ext: dll
         - os: macos-latest
           platform: mac
           arch: x86_64
-          ext: dylib
 
     steps:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
 
-    - name: Build Search Demo
-      run: |
-        cmake -S demo/c/. -B demo/c/build
-        cmake --build demo/c/build
-
-    - uses: ./.github/actions/c-demo
-      name: Run demo
+    - name: Set up Python '3.10'
+      uses: actions/setup-python@v4
       with:
-        access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_octopus.${{ matrix.ext }}
-        model_path: ../../lib/common/param/octopus_params.pv
-        audio_path: ../../res/audio/multiple_keywords.wav
-        index_path: ../../index.oif
-        search_phrase: picovoice
+        python-version: '3.10'
+
+    - name: Create build directory
+      run: cmake -B ./build
+
+    - name: Build demo
+      run: cmake --build ./build
+
+    - name: Install dependencies
+      run: pip install -r test/requirements.txt
+
+    - name: Test
+      run: python test/test_octopus_c.py ${{secrets.PV_VALID_ACCESS_KEY}} ${{ matrix.platform }} ${{ matrix.arch }}

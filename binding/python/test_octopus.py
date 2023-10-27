@@ -1,5 +1,5 @@
 #
-# Copyright 2021-2022 Picovoice Inc.
+# Copyright 2021-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license.
 # A copy of the license is located in the "LICENSE" file accompanying this
@@ -19,9 +19,9 @@ from typing import *
 
 from parameterized import parameterized
 
-from octopus import *
+from _octopus import *
+from _util import *
 from test_util import *
-from util import *
 
 TEST_PARAMS = [
     ["en", {"alexa": [(7.648, 8.352, 1)], "porcupine": [(5.728, 6.752, 1), (35.360, 36.416, 1)]}],
@@ -39,18 +39,13 @@ class OctopusTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls._access_key = sys.argv[1]
+        cls._relative = '../..'
 
-    def _create_octopus(self, language: str) -> Octopus:
+    def _create_octopus(self, language: str = 'en') -> Octopus:
         return Octopus(
             access_key=self._access_key,
-            library_path=pv_library_path('../..'),
-            model_path=pv_model_path('../..', language))
-
-    @staticmethod
-    def _audio_path(language: str) -> str:
-        return os.path.join(
-            os.path.dirname(__file__),
-            '../../res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language)))
+            library_path=default_library_path(self._relative),
+            model_path=get_model_path_by_language(self._relative, language))
 
     def _check_matches(
             self, phrase_matches: Dict[str, Sequence[Octopus.Match]],
@@ -69,7 +64,8 @@ class OctopusTestCase(unittest.TestCase):
 
         try:
             octopus = self._create_octopus(language)
-            metadata = octopus.index_audio_data(read_wav_file(self._audio_path(language), octopus.sample_rate))
+            audio_data = read_wav_file(get_audio_path_by_language(self._relative, language), octopus.sample_rate)
+            metadata = octopus.index_audio_data(audio_data)
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
             self._check_matches(phrase_matches, phrase_occurrences)
         finally:
@@ -82,7 +78,7 @@ class OctopusTestCase(unittest.TestCase):
 
         try:
             octopus = self._create_octopus(language)
-            metadata = octopus.index_audio_file(self._audio_path(language))
+            metadata = octopus.index_audio_file(get_audio_path_by_language(self._relative, language))
             phrase_matches = octopus.search(metadata, list(phrase_occurrences.keys()))
             self._check_matches(phrase_matches, phrase_occurrences)
         finally:
@@ -93,8 +89,8 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = self._create_octopus('en')
-            metadata = octopus.index_audio_file(self._audio_path('en'))
+            octopus = self._create_octopus()
+            metadata = octopus.index_audio_file(get_audio_path_by_language(self._relative))
             with self.assertRaises(OctopusInvalidArgumentError):
                 octopus.search(metadata, [phrase])
         finally:
@@ -120,8 +116,8 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = self._create_octopus('en')
-            metadata = octopus.index_audio_file(self._audio_path('en'))
+            octopus = self._create_octopus()
+            metadata = octopus.index_audio_file(get_audio_path_by_language(self._relative))
             search_term = ' americano   avocado    '
             normalized_search_term = 'americano avocado'
             matches = octopus.search(metadata, [search_term])
@@ -143,7 +139,7 @@ class OctopusTestCase(unittest.TestCase):
 
         try:
             octopus = self._create_octopus(language)
-            original_metadata = octopus.index_audio_file(self._audio_path(language))
+            original_metadata = octopus.index_audio_file(get_audio_path_by_language(self._relative, language))
 
             metadata_bytes = original_metadata.to_bytes()
             metadata = OctopusMetadata.from_bytes(metadata_bytes)
@@ -164,7 +160,7 @@ class OctopusTestCase(unittest.TestCase):
 
         try:
             octopus = self._create_octopus(language)
-            original_metadata = octopus.index_audio_file(self._audio_path(language))
+            original_metadata = octopus.index_audio_file(get_audio_path_by_language(self._relative, language))
 
             with open(cache_path, 'wb') as f:
                 f.write(original_metadata.to_bytes())
@@ -183,11 +179,29 @@ class OctopusTestCase(unittest.TestCase):
         octopus = None
 
         try:
-            octopus = self._create_octopus('en')
+            octopus = self._create_octopus()
             self.assertIsInstance(octopus.version, str)
         finally:
             if octopus is not None:
                 octopus.delete()
+
+    def test_message_stack(self):
+        error = None
+        try:
+            o = self._create_octopus()
+            self.assertIsNone(o)
+        except OctopusError as e:
+            error = e.message_stack
+
+        self.assertIsNotNone(error)
+        self.assertGreater(len(error), 0)
+
+        try:
+            o = self._create_octopus()
+            self.assertIsNone(o)
+        except OctopusError as e:
+            self.assertEqual(len(error), len(e.message_stack))
+            self.assertListEqual(list(error), list(e.message_stack))
 
 
 if __name__ == '__main__':

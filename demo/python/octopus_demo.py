@@ -49,25 +49,20 @@ class LoadingAnimation(threading.Thread):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--audio_paths', nargs='+', help='Absolute paths to input audio files', required=True)
-
-    parser.add_argument('--library_path', help='Absolute path to dynamic library', default=pvoctopus.LIBRARY_PATH)
-
-    parser.add_argument(
-        '--model_path',
-        help='Absolute path to the file containing model parameters',
-        default=pvoctopus.MODEL_PATH)
-
     parser.add_argument(
         '--access_key',
         help='AccessKey provided by Picovoice Console (https://console.picovoice.ai/)',
         required=True)
 
+    parser.add_argument('--audio_paths', nargs='+', help='Absolute paths to input audio files', required=True)
+
+    parser.add_argument('--library_path', help='Absolute path to dynamic library')
+
+    parser.add_argument('--model_path', help='Absolute path to the file containing model parameters')
+
     parser.add_argument(
         '--search_phrase',
-        help='Phrase to search in the provided audio paths',
-        default=None
-    )
+        help='Phrase to search in the provided audio paths')
 
     args = parser.parse_args()
 
@@ -77,7 +72,7 @@ def main():
             library_path=args.library_path,
             model_path=args.model_path)
         print("Octopus version: %s" % octopus.version)
-    except (MemoryError, ValueError, RuntimeError, PermissionError) as e:
+    except pvoctopus.OctopusError as e:
         print(e)
         sys.exit(1)
 
@@ -88,7 +83,7 @@ def main():
         try:
             print("\rindexing '%s'" % os.path.basename(audio_file))
             metadata_list.append(octopus.index_audio_file(os.path.abspath(audio_file)))
-        except (MemoryError, ValueError, RuntimeError, PermissionError, IOError) as e:
+        except pvoctopus.OctopusError as e:
             print("Failed to process '%s' with '%s'" % (os.path.basename(audio_file), e))
             octopus.delete()
             sys.exit(1)
@@ -104,7 +99,7 @@ def main():
             for i, metadata in enumerate(metadata_list):
                 try:
                     matches = octopus.search(metadata, [str(search_phrase)])
-                except pvoctopus.OctopusInvalidArgumentError as e:
+                except pvoctopus.OctopusError as e:
                     print(e)
                     continue
                 if len(matches) != 0:

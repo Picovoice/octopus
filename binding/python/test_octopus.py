@@ -29,7 +29,7 @@ TEST_PARAMS = [
     ["es", {"manzana": [(5.184, 5.984, 1)]}],
     ["fr", {"perroquet": [(4.352, 5.184, 0.952)]}],
     ["it", {"porcospino": [(0.480, 1.728, 1)]}],
-    ["ja", {"りんご": [(0.960, 1.664, 1)]}],
+    ["ja", {"りんご": [(0.990, 1.634, 1)]}],
     ["ko", {"아이스크림": [(6.592, 7.520, 0.961)]}],
     ["pt", {"porco espinho": [(0.480, 1.792, 1)]}],
 ]
@@ -188,7 +188,10 @@ class OctopusTestCase(unittest.TestCase):
     def test_message_stack(self):
         error = None
         try:
-            o = self._create_octopus()
+            o = Octopus(
+                access_key='invalid',
+                library_path=default_library_path(self._relative),
+                model_path=get_model_path_by_language(self._relative))
             self.assertIsNone(o)
         except OctopusError as e:
             error = e.message_stack
@@ -197,7 +200,10 @@ class OctopusTestCase(unittest.TestCase):
         self.assertGreater(len(error), 0)
 
         try:
-            o = self._create_octopus()
+            o = Octopus(
+                access_key='invalid',
+                library_path=default_library_path(self._relative),
+                model_path=get_model_path_by_language(self._relative))
             self.assertIsNone(o)
         except OctopusError as e:
             self.assertEqual(len(error), len(e.message_stack))

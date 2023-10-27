@@ -108,10 +108,6 @@ class OctopusMetadata(object):
         return self._to_bytes(self.handle, self.size)
 
     @classmethod
-    def create_owned(cls, handle: c_void_p, size: int) -> 'OctopusMetadata':
-        return cls.from_bytes(cls._to_bytes(handle, size))
-
-    @classmethod
     def from_bytes(cls, metadata_bytes: bytes) -> 'OctopusMetadata':
         byte_ptr = (c_byte * len(metadata_bytes)).from_buffer_copy(metadata_bytes)
         handle = cast(byte_ptr, c_void_p)
@@ -216,21 +212,33 @@ class Octopus(object):
         self._delete_func.argtypes = [POINTER(self.COctopus)]
         self._delete_func.restype = None
 
+        self._index_size_func = library.pv_octopus_index_size
+        self._index_size_func.argtypes = [
+            POINTER(self.COctopus),
+            c_int32,
+            POINTER(c_int32)]
+        self._index_size_func.restype = self.PicovoiceStatuses
+
         self._index_func = library.pv_octopus_index
         self._index_func.argtypes = [
             POINTER(self.COctopus),
             POINTER(c_short),
             c_int32,
-            POINTER(c_void_p),
-            POINTER(c_int32)]
+            c_void_p]
         self._index_func.restype = self.PicovoiceStatuses
+
+        self._index_file_size_func = library.pv_octopus_index_file_size
+        self._index_file_size_func.argtypes = [
+            POINTER(self.COctopus),
+            c_char_p,
+            POINTER(c_int32)]
+        self._index_file_size_func.restype = self.PicovoiceStatuses
 
         self._index_file_func = library.pv_octopus_index_file
         self._index_file_func.argtypes = [
             POINTER(self.COctopus),
             c_char_p,
-            POINTER(c_void_p),
-            POINTER(c_int32)]
+            c_void_p]
         self._index_file_func.restype = self.PicovoiceStatuses
 
         self._search_func = library.pv_octopus_search
@@ -243,16 +251,16 @@ class Octopus(object):
             POINTER(c_int32)]
         self._search_func.restype = self.PicovoiceStatuses
 
+        self._matches_delete_func = library.pv_octopus_matches_delete
+        self._matches_delete_func.argtypes = [POINTER(self.CMatch)]
+        self._matches_delete_func.restype = None
+
         version_func = library.pv_octopus_version
         version_func.argtypes = []
         version_func.restype = c_char_p
         self._version = version_func().decode('utf-8')
 
         self._sample_rate = library.pv_sample_rate()
-
-        self._pv_free = library.pv_free
-        self._pv_free.argtypes = [c_void_p]
-        self._pv_free.restype = None
 
     def delete(self) -> None:
         """Releases resources acquired by Octopus."""
@@ -268,24 +276,29 @@ class Octopus(object):
         :return metadata: An immutable metadata object.
         """
 
-        c_metadata = c_void_p()
         metadata_size = c_int32()
+        status = self._index_size_func(
+            self._handle,
+            c_int32(len(pcm)),
+            byref(metadata_size))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Index size failed',
+                message_stack=self._get_error_stack())
 
+        metadata_bytes = create_string_buffer(metadata_size.value)
+        metadata_bytes_ptr = cast(metadata_bytes, c_void_p)
         status = self._index_func(
             self._handle,
             (c_short * len(pcm))(*pcm),
             c_int32(len(pcm)),
-            byref(c_metadata),
-            byref(metadata_size))
+            metadata_bytes_ptr)
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
                 message='Index failed',
                 message_stack=self._get_error_stack())
 
-        metadata = OctopusMetadata.create_owned(c_metadata, metadata_size.value)
-        self._pv_free(c_metadata)
-
-        return metadata
+        return OctopusMetadata(metadata_bytes_ptr, metadata_size.value)
 
     def index_audio_file(self, path: str) -> OctopusMetadata:
         """
@@ -298,23 +311,28 @@ class Octopus(object):
         if not os.path.exists(path):
             raise OctopusIOError("Couldn't find input file at `%s`." % path)
 
-        c_metadata = c_void_p()
         metadata_size = c_int32()
-
-        status = self._index_file_func(
+        status = self._index_file_size_func(
             self._handle,
             path.encode('utf-8'),
-            byref(c_metadata),
             byref(metadata_size))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
-                message='Index failed',
+                message='Index file size failed',
                 message_stack=self._get_error_stack())
 
-        metadata = OctopusMetadata.create_owned(c_metadata, metadata_size.value)
-        self._pv_free(c_metadata)
+        metadata_bytes = create_string_buffer(metadata_size.value)
+        metadata_bytes_ptr = cast(metadata_bytes, c_void_p)
+        status = self._index_file_func(
+            self._handle,
+            path.encode('utf-8'),
+            metadata_bytes)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Index file failed',
+                message_stack=self._get_error_stack())
 
-        return metadata
+        return OctopusMetadata(metadata_bytes_ptr, metadata_size.value)
 
     Match = namedtuple('Match', ['start_sec', 'end_sec', 'probability'])
 
@@ -363,6 +381,7 @@ class Octopus(object):
                         probability=c_phrase_matches[i].probability)
                     phrase_matches.append(match)
                 matches[phrase] = phrase_matches
+            self._matches_delete_func(c_phrase_matches)
 
         return matches
 

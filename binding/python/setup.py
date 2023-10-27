@@ -6,7 +6,7 @@ import setuptools
 INCLUDE_FILES = ('../../LICENSE', '__init__.py', '_factory.py', '_octopus.py', '_util.py')
 INCLUDE_LIBS = ('linux', 'mac', 'windows')
 
-# os.system('git clean -dfx')
+os.system('git clean -dfx')
 
 package_folder = os.path.join(os.path.dirname(__file__), 'pvoctopus')
 os.mkdir(package_folder)
@@ -16,17 +16,19 @@ for rel_path in INCLUDE_FILES:
     shutil.copy(os.path.join(os.path.dirname(__file__), rel_path), package_folder)
     manifest_in += "include pvoctopus/%s\n" % os.path.basename(rel_path)
 
-os.mkdir(os.path.join(package_folder, 'lib'))
+model_subdir = 'lib/common/param'
+model_file = 'octopus_params.pv'
+os.makedirs(os.path.join(package_folder, model_subdir))
+shutil.copy(
+    os.path.join(os.path.dirname(__file__), '../..', model_subdir, model_file),
+    os.path.join(package_folder, model_subdir, model_file))
+manifest_in += "include pvoctopus/%s/%s\n" % (model_subdir, model_file)
+
 for platform in INCLUDE_LIBS:
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
     manifest_in += "recursive-include pvoctopus/lib/%s/ *\n" % platform
-
-shutil.copy(
-    os.path.join(os.path.dirname(__file__), '../../lib/common/param/octopus_params.pv'),
-    os.path.join(package_folder, 'lib/common/param/octopus_params.pv'))
-manifest_in += "include pvoctopus/lib/common/param/octopus_params.pv\n"
 
 with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
     f.write(manifest_in)

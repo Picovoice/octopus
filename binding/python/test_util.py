@@ -44,7 +44,7 @@ def get_audio_path_by_language(relative: str, language: str = 'en') -> str:
 
 
 def get_model_path_by_language(relative: str, language: str = 'en'):
-    model_file_path = 'lib/common/octopus_params%s.pv' % ('' if language == 'en' else ('_%s' % language))
+    model_file_path = 'lib/common/param/octopus_params%s.pv' % ('' if language == 'en' else ('_%s' % language))
     return os.path.join(
         os.path.dirname(__file__),
         relative,

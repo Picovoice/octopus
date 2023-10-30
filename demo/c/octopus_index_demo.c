@@ -74,14 +74,14 @@ static struct option long_options[] = {
         {"index_path",   required_argument, NULL, 'i'},
 };
 
-void print_usage(const char *program_name) {
+static void print_usage(const char *program_name) {
     fprintf(
             stderr,
             "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -w AUDIO_PATH -i INDEX_PATH\n",
             program_name);
 }
 
-void print_error_message(char **message_stack, int32_t message_stack_depth) {
+static void print_error_message(char **message_stack, int32_t message_stack_depth) {
     for (int32_t i = 0; i < message_stack_depth; i++) {
         fprintf(stderr, "  [%d] %s\n", i, message_stack[i]);
     }

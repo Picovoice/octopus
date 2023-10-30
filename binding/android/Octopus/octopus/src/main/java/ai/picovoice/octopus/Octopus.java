@@ -30,12 +30,17 @@ import java.util.HashSet;
 public class Octopus {
 
     private static String defaultModelPath;
+    private static String _sdk = "android";
 
     static {
         System.loadLibrary("pv_octopus");
     }
 
     private long handle;
+
+    public static void setSdk(String sdk) {
+        Octopus._sdk = sdk;
+    }
 
     /**
      * Constructor.
@@ -45,6 +50,7 @@ public class Octopus {
      * @throws OctopusException if there is an error while initializing Octopus.
      */
     private Octopus(String accessKey, String modelPath) throws OctopusException {
+        OctopusNative.setSdk(Octopus._sdk);
         handle = OctopusNative.init(accessKey, modelPath);
     }
 

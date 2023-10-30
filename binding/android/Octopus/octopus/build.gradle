@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '1.2.2'
+    PUBLISH_VERSION = '2.0.0'
     PUBLISH_ARTIFACT_ID = 'octopus-android'
 }
 
@@ -39,12 +39,12 @@ dependencies {
 }
 
 task copyLibs(type: Copy) {
-    from("${rootDir}/../../lib/android")
+    from("${rootDir}/../../../lib/android")
     into("${rootDir}/octopus/src/main/jniLibs")
 }
 
 task copyParams(type: Copy) {
-    from("${rootDir}/../../lib/common/param")
+    from("${rootDir}/../../../lib/common/param")
     include('octopus_params.pv')
     into("${rootDir}/octopus/src/main/res/raw")
 }

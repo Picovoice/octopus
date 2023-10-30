@@ -249,4 +249,29 @@ public class OctopusTest extends BaseTest {
         metadata.delete();
         octopus.delete();
     }
+
+    @Test
+    public void testErrorStack() {
+        String[] error = {};
+        try {
+            new Octopus.Builder()
+                    .setAccessKey("invalid")
+                    .build(appContext);
+        } catch (OctopusException e) {
+            error = e.getMessageStack();
+        }
+
+        assertTrue(0 < error.length);
+        assertTrue(error.length <= 8);
+
+        try {
+            new Octopus.Builder()
+                    .setAccessKey("invalid")
+                    .build(appContext);
+        } catch (OctopusException e) {
+            for (int i = 0; i < error.length; i++) {
+                assertEquals(e.getMessageStack()[i], error[i]);
+            }
+        }
+    }
 }

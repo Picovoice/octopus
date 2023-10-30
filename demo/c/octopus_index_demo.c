@@ -113,71 +113,71 @@ int picovoice_main(int argc, char *argv[]) {
                 index_path = optarg;
                 break;
             default:
-                exit(1);
+                exit(EXIT_FAILURE);
         }
     }
 
     if (!library_path || !model_path || !audio_path || !access_key || !index_path) {
         print_usage(argv[0]);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void *dl = pv_open_dl(library_path);
     if (!dl) {
         fprintf(stderr, "Failed to open library.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     const char *(*pv_status_to_string_func)(pv_status_t) = pv_load_sym(dl, "pv_status_to_string");
     if (!pv_status_to_string_func) {
         print_dl_error("Failed to load 'pv_status_to_string'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pv_status_t
     (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
     if (!pv_octopus_init_func) {
         print_dl_error("Failed to load 'pv_octopus_init()'.");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void (*pv_octopus_delete_func)(pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_delete");
     if (!pv_octopus_delete_func) {
         print_dl_error("Failed to load 'pv_octopus_delete()'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pv_status_t (*pv_octopus_index_file_size_func)(pv_octopus_t *, const char *, int32_t *) = NULL;
     pv_octopus_index_file_size_func = pv_load_sym(dl, "pv_octopus_index_file_size");
     if (!pv_octopus_index_file_size_func) {
         print_dl_error("Failed to load 'pv_octopus_index_file_size()'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pv_status_t (*pv_octopus_index_file_func)(pv_octopus_t *, const char *, void *) = NULL;
     pv_octopus_index_file_func = pv_load_sym(dl, "pv_octopus_index_file");
     if (!pv_octopus_index_file_func) {
         print_dl_error("Failed to load 'pv_octopus_index_file()'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     const char (*pv_octopus_version_func)(const pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_version");
     if (!pv_octopus_version_func) {
         print_dl_error("Failed to load 'pv_octopus_version()'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
 
     pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = pv_load_sym(dl, "pv_get_error_stack");
     if (!pv_get_error_stack_func) {
         print_dl_error("Failed to load 'pv_get_error_stack_func'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void (*pv_free_error_stack_func)(char **) = pv_load_sym(dl, "pv_free_error_stack");
     if (!pv_free_error_stack_func) {
         print_dl_error("Failed to load 'pv_free_error_stack_func'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pv_octopus_t *o = NULL;
@@ -193,7 +193,7 @@ int picovoice_main(int argc, char *argv[]) {
                     stderr,
                     ".\nUnable to get Octopus error state with '%s'.\n",
                     pv_status_to_string_func(error_status));
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         if (message_stack_depth > 0) {
@@ -202,7 +202,7 @@ int picovoice_main(int argc, char *argv[]) {
             pv_free_error_stack_func(message_stack);
         }
 
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     int32_t num_indices_byte = 0;
@@ -218,7 +218,7 @@ int picovoice_main(int argc, char *argv[]) {
                     stderr,
                     ".\nUnable to get Octopus error state with '%s'.\n",
                     pv_status_to_string_func(error_status));
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         if (message_stack_depth > 0) {
@@ -226,13 +226,13 @@ int picovoice_main(int argc, char *argv[]) {
             print_error_message(message_stack, message_stack_depth);
             pv_free_error_stack_func(message_stack);
         }
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void *indices = calloc(num_indices_byte, sizeof(char));
     if (!indices) {
         fprintf(stderr, "Failed to allocate '%d' bytes of memory for Octopus indices.\n", num_indices_byte);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     status = pv_octopus_index_file_func(o, audio_path, indices);
@@ -247,7 +247,7 @@ int picovoice_main(int argc, char *argv[]) {
                     stderr,
                     ".\nUnable to get Octopus error state with '%s'.\n",
                     pv_status_to_string_func(error_status));
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         if (message_stack_depth > 0) {
@@ -255,7 +255,7 @@ int picovoice_main(int argc, char *argv[]) {
             print_error_message(message_stack, message_stack_depth);
             pv_free_error_stack_func(message_stack);
         }
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     pv_octopus_delete_func(o);
@@ -264,12 +264,12 @@ int picovoice_main(int argc, char *argv[]) {
     FILE *f = fopen(index_path, "wb");
     if (!f) {
         fprintf(stderr, "Failed to create index file at '%s'.\n", index_path);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     if (fwrite(indices, 1, num_indices_byte, f) != (size_t) num_indices_byte) {
         fprintf(stderr, "Failed to write into index file at '%s'.\n", index_path);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     fclose(f);
@@ -288,7 +288,7 @@ int main(int argc, char *argv[]) {
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     if (wargv == NULL) {
         fprintf(stderr, "CommandLineToArgvW failed\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     char *utf8_argv[argc];

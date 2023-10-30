@@ -1,5 +1,5 @@
 //
-//  Copyright 2021 Picovoice Inc.
+//  Copyright 2021-2023 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -33,6 +33,12 @@ public class Octopus {
 
     private var handle: OpaquePointer?
 
+    private static var sdk = "ios"
+
+    public static func setSdk(sdk: String) {
+        self.sdk = sdk
+    }
+
     /// Constructor.
     ///
     /// - Parameters:
@@ -55,6 +61,8 @@ public class Octopus {
         if !FileManager().fileExists(atPath: modelPathArg!) {
             modelPathArg = try getResourcePath(modelPathArg!)
         }
+
+        pv_set_sdk(Octopus.sdk)
 
         let status = pv_octopus_init(
             accessKey,
@@ -90,21 +98,31 @@ public class Octopus {
             throw OctopusInvalidStateError("Octopus must be initialized before indexing")
         }
 
-        var cMetadata: UnsafeMutableRawPointer?
         var cNumMetadataBytes: Int32 = -1
-        let status = pv_octopus_index(
+        var status = pv_octopus_index_size(
+            handle,
+            Int32(pcm.count),
+            &cNumMetadataBytes)
+
+        if status != PV_STATUS_SUCCESS {
+            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size")
+        }
+
+        let numMetadataBytes = Int(cNumMetadataBytes)
+        var cMetadata: UnsafeMutableRawPointer? = UnsafeMutablePointer.allocate(capacity: numMetadataBytes)
+
+        status = pv_octopus_index(
             handle,
             pcm,
             Int32(pcm.count),
-            &cMetadata,
-            &cNumMetadataBytes)
+            cMetadata)
 
         if status != PV_STATUS_SUCCESS {
             throw pvStatusToOctopusError(status, "Octopus index failed")
         }
-
-        let numMetadataBytes = Int(cNumMetadataBytes)
+        
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
+        free(cMetadata)
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -125,20 +143,30 @@ public class Octopus {
             pathArg = try getResourcePath(pathArg)
         }
 
-        var cMetadata: UnsafeMutableRawPointer?
         var cNumMetadataBytes: Int32 = -1
-        let status = pv_octopus_index_file(
+        var status = status = pv_octopus_index_file_size(
             handle,
             pathArg,
-            &cMetadata,
             &cNumMetadataBytes)
+
+        if status != PV_STATUS_SUCCESS {
+            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size")
+        }
+
+        let numMetadataBytes = Int(cNumMetadataBytes)
+        var cMetadata: UnsafeMutableRawPointer?
+
+        status = pv_octopus_index_file(
+                handle,
+                pathArg,
+                cMetadata)
 
         if status != PV_STATUS_SUCCESS {
             throw pvStatusToOctopusError(status, "Octopus index failed")
         }
 
-        let numMetadataBytes = Int(cNumMetadataBytes)
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
+        free(cMetadata)
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -173,12 +201,13 @@ public class Octopus {
             var cMatches: UnsafeMutablePointer<pv_octopus_match_t>?
             var cNumMatches: Int32 = -1
 
-            let status = pv_octopus_search(handle,
-                                           metadata.handle,
-                                           Int32(metadata.numBytes),
-                                           formattedPhrase,
-                                           &cMatches,
-                                           &cNumMatches)
+            let status = pv_octopus_search(
+                handle,
+                metadata.handle,
+                Int32(metadata.numBytes),
+                formattedPhrase,
+                &cMatches,
+                &cNumMatches)
             if status != PV_STATUS_SUCCESS {
                 throw pvStatusToOctopusError(status, "Octopus search failed")
             }
@@ -192,6 +221,7 @@ public class Octopus {
                     probability: Float(cMatch.probability))
                 phraseMatches.append(phraseMatch)
             }
+            pv_octopus_matches_delete(cMatches)
 
             matches[formattedPhrase] = phraseMatches
         }
@@ -217,33 +247,54 @@ public class Octopus {
             "If this is a packaged asset, ensure you have added it to your xcode project.")
     }
 
-    private func pvStatusToOctopusError(_ status: pv_status_t, _ message: String) -> OctopusError {
+    private func pvStatusToOctopusError(
+        _ status: pv_status_t,
+        _ message: String,
+        _ messageStack: [String] = [) -> OctopusError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
-            return OctopusMemoryError(message)
+            return OctopusMemoryError(message, messageStack)
         case PV_STATUS_IO_ERROR:
-            return OctopusIOError(message)
+            return OctopusIOError(message, messageStack)
         case PV_STATUS_INVALID_ARGUMENT:
-            return OctopusInvalidArgumentError(message)
+            return OctopusInvalidArgumentError(message, messageStack)
         case PV_STATUS_STOP_ITERATION:
-            return OctopusStopIterationError(message)
+            return OctopusStopIterationError(message, messageStack)
         case PV_STATUS_KEY_ERROR:
-            return OctopusKeyError(message)
+            return OctopusKeyError(message, messageStack)
         case PV_STATUS_INVALID_STATE:
-            return OctopusInvalidStateError(message)
+            return OctopusInvalidStateError(message, messageStack)
         case PV_STATUS_RUNTIME_ERROR:
-            return OctopusRuntimeError(message)
+            return OctopusRuntimeError(message, messageStack)
         case PV_STATUS_ACTIVATION_ERROR:
-            return OctopusActivationError(message)
+            return OctopusActivationError(message, messageStack)
         case PV_STATUS_ACTIVATION_LIMIT_REACHED:
-            return OctopusActivationLimitError(message)
+            return OctopusActivationLimitError(message, messageStack)
         case PV_STATUS_ACTIVATION_THROTTLED:
-            return OctopusActivationThrottledError(message)
+            return OctopusActivationThrottledError(message, messageStack)
         case PV_STATUS_ACTIVATION_REFUSED:
-            return OctopusActivationRefusedError(message)
+            return OctopusActivationRefusedError(message, messageStack)
         default:
             let pvStatusString = String(cString: pv_status_to_string(status))
-            return OctopusError("\(pvStatusString): \(message)")
+            return OctopusError("\(pvStatusString): \(message)", messageStack)
         }
+    }
+
+    private func getMessageStack() throws -> [String] {
+        var messageStackRef: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?
+        var messageStackDepth: Int32 = 0
+        let status = pv_get_error_stack(&messageStackRef, &messageStackDepth)
+        if status != PV_STATUS_SUCCESS {
+            throw pvStatusToPorcupineError(status, "Unable to get Porcupine error state")
+        }
+
+        var messageStack: [String] = []
+        for i in 0..<messageStackDepth {
+            messageStack.append(String(cString: messageStackRef!.advanced(by: Int(i)).pointee!))
+        }
+
+        pv_free_error_stack(messageStackRef)
+
+        return messageStack
     }
 }

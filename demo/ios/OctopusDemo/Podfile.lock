@@ -10,7 +10,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Octopus-iOS:
-    :commit: 41600b73b9ed440930c2fd52aee69cce8fd4e1ef
+    :commit: 0b39a312fbac4d927373c6571499201a6fe43b9d
     :git: https://github.com/Picovoice/octopus.git
 
 SPEC CHECKSUMS:

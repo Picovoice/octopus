@@ -215,4 +215,22 @@ class OctopusAppTestUITests: BaseTest {
         metadata.delete()
         octopus.delete()
     }
+
+    func testMessageStack() throws {
+        var first_error: String = ""
+        do {
+            let octopus = try Octopus(accessKey: "invalid")
+            XCTAssertNil(octopus)
+        } catch {
+            first_error = "\(error.localizedDescription)"
+            XCTAssert(first_error.count < 1024)
+        }
+
+        do {
+            let octopus = try Octopus(accessKey: "invalid")
+            XCTAssertNil(octopus)
+        } catch {
+            XCTAssert("\(error.localizedDescription)".count == first_error.count)
+        }
+    }
 }

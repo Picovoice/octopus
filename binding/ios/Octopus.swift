@@ -109,7 +109,8 @@ public class Octopus {
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
-        var cMetadata: UnsafeMutableRawPointer? = UnsafeMutablePointer.allocate(capacity: numMetadataBytes)
+        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(byteCount: numMetadataBytes, alignment: MemoryLayout<UInt8>.alignment)
+        cMetadata?.initializeMemory(as: UInt8.self, repeating: 0, count: numMetadataBytes)
 
         status = pv_octopus_index(
             handle,
@@ -122,7 +123,7 @@ public class Octopus {
         }
         
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
-        free(cMetadata)
+//        cMetadata?.deallocate()
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -144,7 +145,7 @@ public class Octopus {
         }
 
         var cNumMetadataBytes: Int32 = -1
-        var status = status = pv_octopus_index_file_size(
+        var status = pv_octopus_index_file_size(
             handle,
             pathArg,
             &cNumMetadataBytes)
@@ -154,7 +155,8 @@ public class Octopus {
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
-        var cMetadata: UnsafeMutableRawPointer?
+        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(byteCount: numMetadataBytes, alignment: MemoryLayout<UInt8>.alignment)
+        cMetadata?.initializeMemory(as: UInt8.self, repeating: 0, count: numMetadataBytes)
 
         status = pv_octopus_index_file(
                 handle,
@@ -166,7 +168,7 @@ public class Octopus {
         }
 
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
-        free(cMetadata)
+//        cMetadata?.deallocate()
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -250,7 +252,7 @@ public class Octopus {
     private func pvStatusToOctopusError(
         _ status: pv_status_t,
         _ message: String,
-        _ messageStack: [String] = [) -> OctopusError {
+        _ messageStack: [String] = []) -> OctopusError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
             return OctopusMemoryError(message, messageStack)
@@ -285,7 +287,7 @@ public class Octopus {
         var messageStackDepth: Int32 = 0
         let status = pv_get_error_stack(&messageStackRef, &messageStackDepth)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToPorcupineError(status, "Unable to get Porcupine error state")
+            throw pvStatusToOctopusError(status, "Unable to get Porcupine error state")
         }
 
         var messageStack: [String] = []

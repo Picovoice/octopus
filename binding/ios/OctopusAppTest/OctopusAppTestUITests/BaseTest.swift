@@ -13,7 +13,7 @@ import Octopus
 
 class BaseTest: XCTestCase {
 
-    let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
+    let accessKey: String = "Tw4jothrMMLyRYQ793yD/XF3DeithcbeNVsYlNN0Dc1vY26suWNOkg=="
 
     override func setUpWithError() throws {
         continueAfterFailure = true

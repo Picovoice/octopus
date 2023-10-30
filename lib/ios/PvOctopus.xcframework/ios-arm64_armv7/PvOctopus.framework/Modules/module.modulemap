@@ -1,7 +1,0 @@
-framework module PvOctopus {
-  umbrella header "PvOctopus.h"
-  header "pv_octopus.h"
-  header "picovoice.h"
-  export *
-  module * {export *}
-}

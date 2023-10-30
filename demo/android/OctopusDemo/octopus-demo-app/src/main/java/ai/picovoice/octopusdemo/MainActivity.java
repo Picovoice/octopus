@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             octopus = new Octopus.Builder().setAccessKey(ACCESS_KEY).build(getApplicationContext());
             setUIInteractivity(true);
         } catch (OctopusInvalidArgumentException e) {
-            displayFatalError(String.format("AccessKey '%s' is invalid", ACCESS_KEY));
+            displayFatalError(e.getMessage());
         } catch (OctopusActivationException e) {
             displayFatalError("AccessKey activation error");
         } catch (OctopusActivationLimitException e) {

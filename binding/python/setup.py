@@ -28,7 +28,7 @@ for platform in INCLUDE_LIBS:
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
-    manifest_in += "recursive-include pvoctopus/lib/%s/ *\n" % platform
+    manifest_in += "recursive-include pvoctopus/lib/%s *\n" % platform
 
 with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
     f.write(manifest_in)

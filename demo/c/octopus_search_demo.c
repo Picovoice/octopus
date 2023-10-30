@@ -186,8 +186,7 @@ int picovoice_main(int argc, char *argv[]) {
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "Failed to init with '%s'.\n", pv_status_to_string_func(status));
-
+        fprintf(stderr, "Failed to init with '%s'", pv_status_to_string_func(status));
         char **message_stack = NULL;
         int32_t message_stack_depth = 0;
         pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
@@ -233,9 +232,31 @@ int picovoice_main(int argc, char *argv[]) {
     pv_octopus_match_t *matches = NULL;
     int32_t num_matches = 0;
 
-    status = pv_octopus_search_func(o, indices, num_indices_byte, search_phrase, &matches, &num_matches);
+    status = pv_octopus_search_func(
+            o,
+            indices,
+            num_indices_byte,
+            search_phrase,
+            &matches,
+            &num_matches);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "Failed to search with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to search with '%s'", pv_status_to_string_func(status));
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(EXIT_FAILURE);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
         exit(EXIT_FAILURE);
     }
 

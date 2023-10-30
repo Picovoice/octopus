@@ -183,7 +183,7 @@ int picovoice_main(int argc, char *argv[]) {
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "Failed to init with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to init with '%s'", pv_status_to_string_func(status));
 
         char **message_stack = NULL;
         int32_t message_stack_depth = 0;
@@ -208,7 +208,7 @@ int picovoice_main(int argc, char *argv[]) {
     int32_t num_indices_byte = 0;
     status = pv_octopus_index_file_size_func(o, audio_path, &num_indices_byte);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "Failed to get index size with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to get index size with '%s'", pv_status_to_string_func(status));
 
         char **message_stack = NULL;
         int32_t message_stack_depth = 0;
@@ -237,7 +237,7 @@ int picovoice_main(int argc, char *argv[]) {
 
     status = pv_octopus_index_file_func(o, audio_path, indices);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "Failed to index file with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to index file with '%s'", pv_status_to_string_func(status));
 
         char **message_stack = NULL;
         int32_t message_stack_depth = 0;

@@ -173,13 +173,13 @@ int picovoice_main(int argc, char *argv[]) {
 
     pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = pv_load_sym(dl, "pv_get_error_stack");
     if (!pv_get_error_stack_func) {
-        print_dl_error("Failed to load 'pv_get_error_stack_func'");
+        print_dl_error("Failed to load 'pv_get_error_stack'");
         exit(EXIT_FAILURE);
     }
 
     void (*pv_free_error_stack_func)(char **) = pv_load_sym(dl, "pv_free_error_stack");
     if (!pv_free_error_stack_func) {
-        print_dl_error("Failed to load 'pv_free_error_stack_func'");
+        print_dl_error("Failed to load 'pv_free_error_stack'");
         exit(EXIT_FAILURE);
     }
 

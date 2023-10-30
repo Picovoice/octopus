@@ -137,46 +137,46 @@ int picovoice_main(int argc, char *argv[]) {
     pv_status_t
     (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
     if (!pv_octopus_init_func) {
-        print_dl_error("Failed to load 'pv_octopus_init()'.");
+        print_dl_error("Failed to load 'pv_octopus_init'.");
         exit(EXIT_FAILURE);
     }
 
     void (*pv_octopus_delete_func)(pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_delete");
     if (!pv_octopus_delete_func) {
-        print_dl_error("Failed to load 'pv_octopus_delete()'");
+        print_dl_error("Failed to load 'pv_octopus_delete'");
         exit(EXIT_FAILURE);
     }
 
     pv_status_t (*pv_octopus_index_file_size_func)(pv_octopus_t *, const char *, int32_t *) = NULL;
     pv_octopus_index_file_size_func = pv_load_sym(dl, "pv_octopus_index_file_size");
     if (!pv_octopus_index_file_size_func) {
-        print_dl_error("Failed to load 'pv_octopus_index_file_size()'");
+        print_dl_error("Failed to load 'pv_octopus_index_file_size'");
         exit(EXIT_FAILURE);
     }
 
     pv_status_t (*pv_octopus_index_file_func)(pv_octopus_t *, const char *, void *) = NULL;
     pv_octopus_index_file_func = pv_load_sym(dl, "pv_octopus_index_file");
     if (!pv_octopus_index_file_func) {
-        print_dl_error("Failed to load 'pv_octopus_index_file()'");
+        print_dl_error("Failed to load 'pv_octopus_index_file'");
         exit(EXIT_FAILURE);
     }
 
     const char (*pv_octopus_version_func)(const pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_version");
     if (!pv_octopus_version_func) {
-        print_dl_error("Failed to load 'pv_octopus_version()'");
+        print_dl_error("Failed to load 'pv_octopus_version'");
         exit(EXIT_FAILURE);
     }
 
 
     pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = pv_load_sym(dl, "pv_get_error_stack");
     if (!pv_get_error_stack_func) {
-        print_dl_error("Failed to load 'pv_get_error_stack_func'");
+        print_dl_error("Failed to load 'pv_get_error_stack'");
         exit(EXIT_FAILURE);
     }
 
     void (*pv_free_error_stack_func)(char **) = pv_load_sym(dl, "pv_free_error_stack");
     if (!pv_free_error_stack_func) {
-        print_dl_error("Failed to load 'pv_free_error_stack_func'");
+        print_dl_error("Failed to load 'pv_free_error_stack'");
         exit(EXIT_FAILURE);
     }
 

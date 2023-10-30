@@ -1,7 +1,6 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 
@@ -82,6 +81,12 @@ void print_usage(const char *program_name) {
             program_name);
 }
 
+void print_error_message(char **message_stack, int32_t message_stack_depth) {
+    for (int32_t i = 0; i < message_stack_depth; i++) {
+        fprintf(stderr, "  [%d] %s\n", i, message_stack[i]);
+    }
+}
+
 int picovoice_main(int argc, char *argv[]) {
     const char *library_path = NULL;
     const char *model_path = NULL;
@@ -119,79 +124,151 @@ int picovoice_main(int argc, char *argv[]) {
 
     void *dl = pv_open_dl(library_path);
     if (!dl) {
-        fprintf(stderr, "failed to open library.\n");
+        fprintf(stderr, "Failed to open library.\n");
         exit(1);
     }
 
     const char *(*pv_status_to_string_func)(pv_status_t) = pv_load_sym(dl, "pv_status_to_string");
     if (!pv_status_to_string_func) {
-        print_dl_error("failed to load 'pv_status_to_string'");
+        print_dl_error("Failed to load 'pv_status_to_string'");
         exit(1);
     }
 
-    pv_status_t (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
+    pv_status_t
+    (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
     if (!pv_octopus_init_func) {
-        print_dl_error("failed to load 'pv_octopus_init()'.");
+        print_dl_error("Failed to load 'pv_octopus_init()'.");
         exit(1);
     }
 
     void (*pv_octopus_delete_func)(pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_delete");
     if (!pv_octopus_delete_func) {
-        print_dl_error("failed to load 'pv_octopus_delete()'");
+        print_dl_error("Failed to load 'pv_octopus_delete()'");
         exit(1);
     }
 
-    pv_status_t (*pv_octopus_index_file_func)(pv_octopus_t *, const char *, void **, int32_t *) = NULL;
+    pv_status_t (*pv_octopus_index_file_size_func)(pv_octopus_t *, const char *, int32_t *) = NULL;
+    pv_octopus_index_file_size_func = pv_load_sym(dl, "pv_octopus_index_file_size");
+    if (!pv_octopus_index_file_size_func) {
+        print_dl_error("Failed to load 'pv_octopus_index_file_size()'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_octopus_index_file_func)(pv_octopus_t *, const char *, void *) = NULL;
     pv_octopus_index_file_func = pv_load_sym(dl, "pv_octopus_index_file");
     if (!pv_octopus_index_file_func) {
-        print_dl_error("failed to load 'pv_octopus_index_file()'");
+        print_dl_error("Failed to load 'pv_octopus_index_file()'");
         exit(1);
     }
 
     const char (*pv_octopus_version_func)(const pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_version");
     if (!pv_octopus_version_func) {
-        print_dl_error("failed to load 'pv_octopus_version()'");
+        print_dl_error("Failed to load 'pv_octopus_version()'");
+        exit(1);
+    }
+
+
+    pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = pv_load_sym(dl, "pv_get_error_stack");
+    if (!pv_get_error_stack_func) {
+        print_dl_error("Failed to load 'pv_get_error_stack_func'");
+        exit(1);
+    }
+
+    void (*pv_free_error_stack_func)(char **) = pv_load_sym(dl, "pv_free_error_stack");
+    if (!pv_free_error_stack_func) {
+        print_dl_error("Failed to load 'pv_free_error_stack_func'");
         exit(1);
     }
 
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "failed to init with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to init with '%s'.\n", pv_status_to_string_func(status));
+
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(1);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
+
         exit(1);
     }
 
-    double total_cpu_time_usec = 0;
-
-    void *indices = NULL;
     int32_t num_indices_byte = 0;
-
-    struct timeval before;
-    gettimeofday(&before, NULL);
-
-    status = pv_octopus_index_file_func(o, audio_path, &indices, &num_indices_byte);
+    status = pv_octopus_index_file_size_func(o, audio_path, &num_indices_byte);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "failed to index with '%s'.\n", pv_status_to_string_func(status));
+        fprintf(stderr, "Failed to get index size with '%s'.\n", pv_status_to_string_func(status));
+
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(1);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
         exit(1);
     }
 
-    struct timeval after;
-    gettimeofday(&after, NULL);
+    void *indices = calloc(num_indices_byte, sizeof(char));
+    if (!indices) {
+        fprintf(stderr, "Failed to allocate '%d' bytes of memory for Octopus indices.\n", num_indices_byte);
+        exit(1);
+    }
 
-    total_cpu_time_usec +=
-            (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
+    status = pv_octopus_index_file_func(o, audio_path, indices);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "Failed to index file with '%s'.\n", pv_status_to_string_func(status));
+
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(1);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
+        exit(1);
+    }
 
     pv_octopus_delete_func(o);
     pv_close_dl(dl);
 
     FILE *f = fopen(index_path, "wb");
     if (!f) {
-        fprintf(stderr, "failed to create index file at '%s'.\n", index_path);
+        fprintf(stderr, "Failed to create index file at '%s'.\n", index_path);
         exit(1);
     }
 
     if (fwrite(indices, 1, num_indices_byte, f) != (size_t) num_indices_byte) {
-        fprintf(stderr, "failed to write into index file at '%s'.\n", index_path);
+        fprintf(stderr, "Failed to write into index file at '%s'.\n", index_path);
         exit(1);
     }
 
@@ -221,7 +298,7 @@ int main(int argc, char *argv[]) {
         int arg_chars_num = WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, NULL, 0, NULL, NULL);
         utf8_argv[i] = (char *) malloc(arg_chars_num * sizeof(char));
         if (!utf8_argv[i]) {
-            fprintf(stderr, "failed to to allocate memory for converting args");
+            fprintf(stderr, "Failed to to allocate memory for converting args");
         }
         WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, utf8_argv[i], arg_chars_num, NULL, NULL);
     }

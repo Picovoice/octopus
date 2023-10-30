@@ -38,10 +38,6 @@ public class Octopus {
 
     private long handle;
 
-    public static void setSdk(String sdk) {
-        Octopus._sdk = sdk;
-    }
-
     /**
      * Constructor.
      *

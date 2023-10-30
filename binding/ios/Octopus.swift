@@ -111,7 +111,9 @@ public class Octopus {
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
-        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(byteCount: numMetadataBytes, alignment: MemoryLayout<UInt8>.alignment)
+        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(
+            byteCount: numMetadataBytes,
+            alignment: MemoryLayout<UInt8>.alignment)
         cMetadata?.initializeMemory(as: UInt8.self, repeating: 0, count: numMetadataBytes)
 
         status = pv_octopus_index(
@@ -124,7 +126,7 @@ public class Octopus {
             let messageStack = try getMessageStack()
             throw pvStatusToOctopusError(status, "Octopus index failed", messageStack)
         }
-        
+
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
@@ -158,7 +160,9 @@ public class Octopus {
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
-        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(byteCount: numMetadataBytes, alignment: MemoryLayout<UInt8>.alignment)
+        let cMetadata: UnsafeMutableRawPointer? = UnsafeMutableRawPointer.allocate(
+            byteCount: numMetadataBytes,
+            alignment: MemoryLayout<UInt8>.alignment)
         cMetadata?.initializeMemory(as: UInt8.self, repeating: 0, count: numMetadataBytes)
 
         status = pv_octopus_index_file(

@@ -69,7 +69,8 @@ public class Octopus {
             modelPathArg,
             &handle)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToOctopusError(status, "Octopus init failed")
+            let messageStack = try getMessageStack()
+            throw pvStatusToOctopusError(status, "Octopus init failed", messageStack)
         }
     }
 
@@ -105,7 +106,8 @@ public class Octopus {
             &cNumMetadataBytes)
 
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size")
+            let messageStack = try getMessageStack()
+            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size", messageStack)
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
@@ -119,11 +121,11 @@ public class Octopus {
             cMetadata)
 
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToOctopusError(status, "Octopus index failed")
+            let messageStack = try getMessageStack()
+            throw pvStatusToOctopusError(status, "Octopus index failed", messageStack)
         }
         
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
-//        cMetadata?.deallocate()
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -151,7 +153,8 @@ public class Octopus {
             &cNumMetadataBytes)
 
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size")
+            let messageStack = try getMessageStack()
+            throw pvStatusToOctopusError(status, "Octopus failed to determine index buffer size", messageStack)
         }
 
         let numMetadataBytes = Int(cNumMetadataBytes)
@@ -164,11 +167,11 @@ public class Octopus {
                 cMetadata)
 
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToOctopusError(status, "Octopus index failed")
+            let messageStack = try getMessageStack()
+            throw pvStatusToOctopusError(status, "Octopus index failed", messageStack)
         }
 
         let metadata = cMetadata!.bindMemory(to: UInt8.self, capacity: numMetadataBytes)
-//        cMetadata?.deallocate()
 
         return OctopusMetadata(handle: metadata, numBytes: numMetadataBytes)
     }
@@ -211,7 +214,8 @@ public class Octopus {
                 &cMatches,
                 &cNumMatches)
             if status != PV_STATUS_SUCCESS {
-                throw pvStatusToOctopusError(status, "Octopus search failed")
+                let messageStack = try getMessageStack()
+                throw pvStatusToOctopusError(status, "Octopus search failed", messageStack)
             }
 
             let numPhraseMatches = Int(cNumMatches)

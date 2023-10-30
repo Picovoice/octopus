@@ -51,8 +51,8 @@ class ViewModel: ObservableObject {
             try octopus = Octopus(accessKey: ACCESS_KEY)
             statusText = "Start by recording some audio"
             isBusy = false
-        } catch is OctopusInvalidArgumentError {
-            onOctopusInitFail("ACCESS_KEY '\(ACCESS_KEY)' is invalid")
+        } catch let error as OctopusInvalidArgumentError {
+            onOctopusInitFail("\(error.localizedDescription)")
         } catch is OctopusActivationError {
             errorMessage = "ACCESS_KEY activation error"
         } catch is OctopusActivationRefusedError {

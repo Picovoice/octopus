@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2022 Picovoice Inc.
+    Copyright 2020-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -50,14 +50,26 @@ PV_API pv_status_t pv_octopus_init(
 PV_API void pv_octopus_delete(pv_octopus_t *object);
 
 /**
+ * Determines size required for indices buffer when indexing audio data.
+ *
+ * @param object Octopus object.
+ * @param num_samples Number of audio samples to index.
+ * @param num_indices_bytes Size of index metadata in bytes.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure
+ */
+PV_API pv_status_t pv_octopus_index_size(
+        pv_octopus_t *object,
+        int32_t num_samples,
+        int32_t *num_indices_bytes);
+
+/**
  * Indexes audio data.
  *
  * @param object Octopus object.
  * @param pcm Audio data. The audio needs to have a sample rate equal to 'pv_sample_rate()' and be 16-bit
  * linearly-encoded. Octopus operates on single-channel audio.
  * @param num_samples Number of audio samples to index.
- * @param indices Index metadata.
- * @param num_indices_bytes Size of index metadata in bytes.
+ * @param indices Buffer to store index metadata. Must be pre-allocated with result of `pv_octopus_index_size()`.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_OUT_OF_MEMORY', 'PV_STATUS_RUNTIME_ERROR',
  * 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED', 'PV_STATUS_ACTIVATION_THROTTLED', or
  * 'PV_STATUS_ACTIVATION_REFUSED' on failure
@@ -66,16 +78,31 @@ PV_API pv_status_t pv_octopus_index(
         pv_octopus_t *object,
         const int16_t *pcm,
         int32_t num_samples,
-        void **indices,
+        void *indices);
+
+/**
+ * Determines size required for indices buffer when indexing an audio file.
+ *
+ * @param object Octopus object.
+ * @param path Absolute path to the audio file. The file needs to have a sample rate equal to or greater than
+ * `pv_sample_rate()`. The supported formats are: `3gp (AMR)`, `FLAC`, `MP3`, `MP4/m4a (AAC)`, `Ogg`, `WAV`, `WebM`.
+ * Files with stereo audio are mixed into a single mono channel and then processed.
+ * @param num_indices_bytes Size of index metadata in bytes.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure
+ */
+PV_API pv_status_t pv_octopus_index_file_size(
+        pv_octopus_t *object,
+        const char *path,
         int32_t *num_indices_bytes);
 
 /**
  * Indexes an audio file.
  *
  * @param object Octopus object.
- * @param path  Absolute path to the audio file.
- * @param indices Index metadata.
- * @param num_indices_bytes Size of index metadata in bytes.
+ * @param path Absolute path to the audio file. The file needs to have a sample rate equal to or greater than
+ * `pv_sample_rate()`. The supported formats are: `3gp (AMR)`, `FLAC`, `MP3`, `MP4/m4a (AAC)`, `Ogg`, `WAV`, `WebM`.
+ * Files with stereo audio are mixed into a single mono channel and then processed.
+ * @param indices Buffer to store index metadata. Must be pre-allocated with result of `pv_octopus_index_file_size()`.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY',
  * 'PV_STATUS_RUNTIME_ERROR', 'PV_STATUS_ACTIVATION_ERROR', 'PV_STATUS_ACTIVATION_LIMIT_REACHED',
  * 'PV_STATUS_ACTIVATION_THROTTLED', or 'PV_STATUS_ACTIVATION_REFUSED' on failure
@@ -83,8 +110,7 @@ PV_API pv_status_t pv_octopus_index(
 PV_API pv_status_t pv_octopus_index_file(
         pv_octopus_t *object,
         const char *path,
-        void **indices,
-        int32_t *num_indices_bytes);
+        void *indices);
 
 /**
  * Container representing a matched utterance.
@@ -113,6 +139,13 @@ PV_API pv_status_t pv_octopus_search(
         const char *phrase,
         pv_octopus_match_t **matches,
         int32_t *num_matches);
+
+/**
+ * Deletes matches returned from `pv_octopus_search()`
+ *
+ * @param matches matched utterances returned from `pv_octopus_search()`
+ */
+PV_API void pv_octopus_matches_delete(pv_octopus_match_t *matches);
 
 /**
  * Getter for version.

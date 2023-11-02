@@ -32,11 +32,15 @@ public class Octopus {
     private static String defaultModelPath;
     private static String _sdk = "android";
 
+    private long handle;
+
     static {
         System.loadLibrary("pv_octopus");
     }
 
-    private long handle;
+    public static void setSdk(String sdk) {
+        Octopus._sdk = sdk;
+    }
 
     /**
      * Constructor.

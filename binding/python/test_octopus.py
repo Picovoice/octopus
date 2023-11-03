@@ -209,6 +209,33 @@ class OctopusTestCase(unittest.TestCase):
             self.assertEqual(len(error), len(e.message_stack))
             self.assertListEqual(list(error), list(e.message_stack))
 
+    def test_index_search_message_stack(self):
+        o = Octopus(
+            access_key=self._access_key,
+            library_path=default_library_path(self._relative),
+            model_path=get_model_path_by_language(self._relative))
+        test_pcm = [0] * 512
+        test_metadata = o.index_audio_file(get_audio_path_by_language(self._relative, "en"))
+
+        address = o._handle
+        o._handle = None
+
+        try:
+            res = o.index_audio_data(test_pcm)
+            self.assertIsNone(res)
+        except OctopusError as e:
+            self.assertGreater(len(e.message_stack), 0)
+            self.assertLess(len(e.message_stack), 8)
+
+        try:
+            res = o.search(test_metadata, ["test"])
+            self.assertIsNone(res)
+        except OctopusError as e:
+            self.assertGreater(len(e.message_stack), 0)
+            self.assertLess(len(e.message_stack), 8)
+
+        o._handle = address
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

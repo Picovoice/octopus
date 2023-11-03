@@ -40,10 +40,6 @@ export class OctopusWorker {
     this._sampleRate = sampleRate;
   }
 
-  public static setSdk(sdk: string): void {
-    OctopusWorker._sdk = sdk;
-  }
-
   /**
    * Get Octopus engine version.
    */
@@ -83,6 +79,10 @@ export class OctopusWorker {
     if (this._wasmSimd === undefined) {
       this._wasmSimd = wasmSimd;
     }
+  }
+
+  public static setSdk(sdk: string): void {
+    OctopusWorker._sdk = sdk;
   }
 
   /**
@@ -158,6 +158,7 @@ export class OctopusWorker {
       options: options,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
+      sdk: this._sdk,
     });
 
     return returnPromise;

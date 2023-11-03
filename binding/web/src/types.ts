@@ -54,6 +54,7 @@ export type OctopusWorkerInitRequest = {
   options: OctopusOptions;
   wasm: string;
   wasmSimd: string;
+  sdk: string;
 };
 
 export type OctopusWorkerIndexRequest = {

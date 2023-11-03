@@ -35,6 +35,7 @@ const initRequest = async (request: OctopusWorkerInitRequest): Promise<any> => {
   try {
     Octopus.setWasm(request.wasm);
     Octopus.setWasmSimd(request.wasmSimd);
+    Octopus.setSdk(request.sdk);
     octopus = await Octopus._init(
       request.accessKey,
       request.modelPath,

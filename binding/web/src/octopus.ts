@@ -17,17 +17,17 @@ import { simd } from 'wasm-feature-detect';
 
 import {
   aligned_alloc_type,
-  pv_free_type,
-  buildWasm,
   arrayBufferToStringAtIndex,
+  buildWasm,
   isAccessKeyValid,
   loadModel,
+  pv_free_type,
   PvError,
 } from '@picovoice/web-utils';
 
 import {
-  OctopusMetadata,
   OctopusMatch,
+  OctopusMetadata,
   OctopusModel,
   OctopusOptions,
   PvStatus,
@@ -84,9 +84,6 @@ type OctopusWasmOutput = {
   memory: WebAssembly.Memory;
   alignedAlloc: aligned_alloc_type;
   pvFree: pv_free_type;
-  objectAddress: number;
-  messageStackAddressAddressAddress: number;
-  messageStackDepthAddress: number;
   pvOctopusDelete: pv_octopus_delete_type;
   pvOctopusMatchesDelete: pv_octopus_matches_delete_type;
   pvOctopusIndexSize: pv_octopus_index_size_type;
@@ -97,9 +94,12 @@ type OctopusWasmOutput = {
   pvFreeErrorStack: pv_free_error_stack_type;
   sampleRate: number;
   version: string;
+  objectAddress: number;
   metadataLengthAddress: number;
   octopusMatchAddressAddress: number;
   octopusMatchLengthAddress: number;
+  messageStackAddressAddressAddress: number;
+  messageStackDepthAddress: number;
   pvError: PvError;
 };
 
@@ -156,7 +156,7 @@ export class Octopus {
     this._wasmMemory = handleWasm.memory;
     this._objectAddress = handleWasm.objectAddress;
     this._messageStackAddressAddressAddress =
-      handleWasm.messageStackDepthAddress;
+      handleWasm.messageStackAddressAddressAddress;
     this._messageStackDepthAddress = handleWasm.messageStackDepthAddress;
     this._metadataLengthAddress = handleWasm.metadataLengthAddress;
     this._octopusMatchAddressAddress = handleWasm.octopusMatchAddressAddress;
@@ -241,7 +241,6 @@ export class Octopus {
     if (!isAccessKeyValid(accessKey)) {
       throw new OctopusErrors.OctopusInvalidArgumentError('Invalid AccessKey');
     }
-
     return new Promise<Octopus>((resolve, reject) => {
       Octopus._octopusMutex
         .runExclusive(async () => {
@@ -706,9 +705,12 @@ export class Octopus {
       metadataLengthAddress: metadataLengthAddress,
       octopusMatchAddressAddress: octopusMatchAddressAddress,
       octopusMatchLengthAddress: octopusMatchLengthAddress,
+      messageStackAddressAddressAddress: messageStackAddressAddressAddress,
+      messageStackDepthAddress: messageStackDepthAddress,
       pvError: pvError,
     };
   }
+
   private static async getMessageStack(
     pv_get_error_stack: pv_get_error_stack_type,
     pv_free_error_stack: pv_free_error_stack_type,
@@ -746,6 +748,7 @@ export class Octopus {
       );
       messageStack.push(message);
     }
+
     await pv_free_error_stack(messageStackAddressAddress);
 
     return messageStack;

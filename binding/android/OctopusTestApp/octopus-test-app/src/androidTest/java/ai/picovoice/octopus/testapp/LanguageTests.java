@@ -59,7 +59,7 @@ public class LanguageTests extends BaseTest {
                 {
                         "ja",
                         new HashMap<String, double[][]>() {{
-                            put("りんご", new double [][]{{0.960, 1.664, 1}});
+                            put("りんご", new double [][]{{0.992, 1.632, 1}});
                         }},
                 },
                 {

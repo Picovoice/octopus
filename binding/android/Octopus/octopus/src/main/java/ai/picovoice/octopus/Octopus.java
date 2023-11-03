@@ -1,5 +1,5 @@
 /*
-    Copyright 2021 Picovoice Inc.
+    Copyright 2021-2023 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -30,12 +30,17 @@ import java.util.HashSet;
 public class Octopus {
 
     private static String defaultModelPath;
+    private static String _sdk = "android";
+
+    private long handle;
 
     static {
         System.loadLibrary("pv_octopus");
     }
 
-    private long handle;
+    public static void setSdk(String sdk) {
+        Octopus._sdk = sdk;
+    }
 
     /**
      * Constructor.
@@ -45,6 +50,7 @@ public class Octopus {
      * @throws OctopusException if there is an error while initializing Octopus.
      */
     private Octopus(String accessKey, String modelPath) throws OctopusException {
+        OctopusNative.setSdk(Octopus._sdk);
         handle = OctopusNative.init(accessKey, modelPath);
     }
 

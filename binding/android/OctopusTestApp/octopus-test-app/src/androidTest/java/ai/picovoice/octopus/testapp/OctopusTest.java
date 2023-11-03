@@ -1,5 +1,5 @@
 /*
-    Copyright 2021 Picovoice Inc.
+    Copyright 2021-2023 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -248,5 +248,30 @@ public class OctopusTest extends BaseTest {
 
         metadata.delete();
         octopus.delete();
+    }
+
+    @Test
+    public void testErrorStack() {
+        String[] error = {};
+        try {
+            new Octopus.Builder()
+                    .setAccessKey("invalid")
+                    .build(appContext);
+        } catch (OctopusException e) {
+            error = e.getMessageStack();
+        }
+
+        assertTrue(0 < error.length);
+        assertTrue(error.length <= 8);
+
+        try {
+            new Octopus.Builder()
+                    .setAccessKey("invalid")
+                    .build(appContext);
+        } catch (OctopusException e) {
+            for (int i = 0; i < error.length; i++) {
+                assertEquals(e.getMessageStack()[i], error[i]);
+            }
+        }
     }
 }

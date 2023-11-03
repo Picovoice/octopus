@@ -507,6 +507,11 @@ export class Octopus {
    */
   public async release(): Promise<void> {
     await this._pvOctopusDelete(this._objectAddress);
+    await this._pvFree(this._messageStackAddressAddressAddress);
+    await this._pvFree(this._messageStackDepthAddress);
+    await this._pvFree(this._metadataLengthAddress);
+    await this._pvFree(this._octopusMatchAddressAddress);
+    await this._pvFree(this._octopusMatchLengthAddress);
     delete this._wasmMemory;
     this._wasmMemory = undefined;
   }

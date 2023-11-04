@@ -3,7 +3,7 @@
   "description": "Octopus library for web browsers (via WebAssembly)",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
-  "version": "1.2.15",
+  "version": "2.0.0",
   "keywords": [
     "octopus",
     "web",
@@ -62,6 +62,6 @@
     "wasm-feature-detect": "^1.5.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   }
 }

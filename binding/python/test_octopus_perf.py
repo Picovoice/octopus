@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Picovoice Inc.
+# Copyright 2022-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license.
 # A copy of the license is located in the "LICENSE" file accompanying this
@@ -12,14 +12,13 @@
 # limitations under the License.
 #
 
-import os
 import sys
 import time
 import unittest
 
-from octopus import *
+from _octopus import *
+from _util import *
 from test_util import *
-from util import *
 
 
 class OctopusTestCase(unittest.TestCase):
@@ -28,17 +27,19 @@ class OctopusTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         access_key = sys.argv[1]
+        relative = '../..'
+
         cls.num_test_iterations = int(sys.argv[2])
         cls.index_performance_threshold_sec = float(sys.argv[3])
         cls.search_performance_threshold_sec = float(sys.argv[4])
 
         cls.octopus = Octopus(
             access_key=access_key,
-            library_path=pv_library_path('../..'),
-            model_path=pv_model_path('../..', 'en'))
+            library_path=default_library_path(relative),
+            model_path=get_model_path_by_language(relative))
 
         cls.audio = read_wav_file(
-            os.path.join(os.path.dirname(__file__), '../../res/audio/multiple_keywords.wav'),
+            get_audio_path_by_language(relative),
             cls.octopus.sample_rate)
 
     @classmethod

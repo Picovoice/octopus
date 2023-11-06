@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Picovoice Inc.
+# Copyright 2022-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -9,6 +9,7 @@
 # specific language governing permissions and limitations under the License.
 #
 
+import os
 import struct
 import wave
 from typing import Sequence
@@ -34,6 +35,24 @@ def read_wav_file(file_name: str, sample_rate: int) -> Sequence[int]:
     return frames[::channels]
 
 
+def get_audio_path_by_language(relative: str, language: str = 'en') -> str:
+    audio_file_path = 'res/audio/multiple_keywords%s.wav' % ('' if language == 'en' else ('_' + language))
+    return os.path.join(
+        os.path.dirname(__file__),
+        relative,
+        audio_file_path)
+
+
+def get_model_path_by_language(relative: str, language: str = 'en'):
+    model_file_path = 'lib/common/param/octopus_params%s.pv' % ('' if language == 'en' else ('_%s' % language))
+    return os.path.join(
+        os.path.dirname(__file__),
+        relative,
+        model_file_path)
+
+
 __all__ = [
+    'get_audio_path_by_language',
+    'get_model_path_by_language',
     'read_wav_file'
 ]

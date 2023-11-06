@@ -1,4 +1,6 @@
-# Octopus
+# Octopus Binding for Python
+
+## Octopus
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -30,8 +32,8 @@ Create an instance of the engine:
 ```python
 import pvoctopus
 
-access_key = ""  # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-handle = pvoctopus.create(access_key=access_key)
+access_key = "${ACCESS_KEY}"  # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+octopus = pvoctopus.create(access_key=access_key)
 ```
 
 Octopus consists of two steps: Indexing and Searching. Indexing transforms audio data into a `Metadata` object that
@@ -44,7 +46,7 @@ The engine accepts 16-bit linearly-encoded PCM and operates on single-channel au
 
 ```python
 audio_data = [...]
-metadata = handle.index(audio_data)
+metadata = octopus.index(audio_data)
 ```
 
 Similarly, files can be indexed by passing in the absolute file path to the audio object.
@@ -52,7 +54,7 @@ Supported file formats are mp3, flac, wav and opus:
 
 ```python
 audio_file_path = "/path/to/my/audiofile.wav"
-metadata = handle.index_file(audio_file_path)
+metadata = octopus.index_file(audio_file_path)
 ```
 
 Once the `Metadata` object has been created, it can be used for searching:
@@ -90,10 +92,10 @@ cached_metadata = pvoctopus.OctopusMetadata.from_bytes(metadata_bytes)
 matches = octopus.search(cached_metadata, ['avocado'])
 ```
 
-When done the handle resources have to be released explicitly:
+When done the Octopus, resources have to be released explicitly:
 
 ```python
-handle.delete()
+octopus.delete()
 ```
 
 ## Non-English Models

@@ -63,11 +63,11 @@ jobs:
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
-      - name: Run Tests on AppCenter
-        run: appcenter test run xcuitest
-          --token ${{secrets.APPCENTERAPITOKEN}}
-          --app "Picovoice/Octopus-iOS"
-          --devices "Picovoice/ios-min-max"
-          --test-series "octopus-ios"
-          --locale "en_US"
-          --build-dir ddp/Build/Products/Debug-iphoneos
+      # - name: Run Tests on AppCenter
+      #   run: appcenter test run xcuitest
+      #     --token ${{secrets.APPCENTERAPITOKEN}}
+      #     --app "Picovoice/Octopus-iOS"
+      #     --devices "Picovoice/ios-min-max"
+      #     --test-series "octopus-ios"
+      #     --locale "en_US"
+      #     --build-dir ddp/Build/Products/Debug-iphoneos

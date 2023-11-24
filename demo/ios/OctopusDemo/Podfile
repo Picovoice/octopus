@@ -2,5 +2,5 @@ source 'https://cdn.cocoapods.org/'
 platform :ios, '13.0'
 
 target 'OctopusDemo' do
-    pod 'Octopus-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/octopus/v2.0-ios/binding/ios/Octopus-iOS.podspec'
+    pod 'Octopus-iOS', '~> 2.0.0'
 end

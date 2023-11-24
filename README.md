@@ -335,7 +335,7 @@ Replace `${ACCESS_KEY}` with yours obtained from [Picovoice Console](https://con
 
 ## Releases
 
-### v2.0.0 - November, 2022
+### v2.0.0 - November 24th, 2023
 
 - Improvements to error reporting
 - Upgrades to authorization and authentication system

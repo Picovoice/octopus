@@ -1,4 +1,6 @@
-# Octopus
+# Octopus Binding for Android
+
+## Octopus Speech-to-Index Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 

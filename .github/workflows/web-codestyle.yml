@@ -27,8 +27,9 @@ jobs:
       with:
         node-version: lts/*
 
-    - name: Pre-build dependencies
-      run: npm install yarn
+    - name: Build Web SDK
+      run: yarn && yarn copywasm && yarn build
+      working-directory: binding/web
 
     - name: Run Binding Linter
       run: yarn && yarn lint

@@ -3,51 +3,42 @@ import shutil
 
 import setuptools
 
+INCLUDE_FILES = ('../../LICENSE', '__init__.py', '_factory.py', '_octopus.py', '_util.py')
+INCLUDE_LIBS = ('linux', 'mac', 'windows')
+
 os.system('git clean -dfx')
 
 package_folder = os.path.join(os.path.dirname(__file__), 'pvoctopus')
 os.mkdir(package_folder)
+manifest_in = ""
 
-shutil.copy(os.path.join(os.path.dirname(__file__), '../../LICENSE'), package_folder)
+for rel_path in INCLUDE_FILES:
+    shutil.copy(os.path.join(os.path.dirname(__file__), rel_path), package_folder)
+    manifest_in += "include pvoctopus/%s\n" % os.path.basename(rel_path)
 
-shutil.copy(os.path.join(os.path.dirname(__file__), '__init__.py'), os.path.join(package_folder, '__init__.py'))
-shutil.copy(os.path.join(os.path.dirname(__file__), 'octopus.py'), os.path.join(package_folder, 'octopus.py'))
-shutil.copy(os.path.join(os.path.dirname(__file__), 'util.py'), os.path.join(package_folder, 'util.py'))
+model_subdir = 'lib/common/param'
+model_file = 'octopus_params.pv'
+os.makedirs(os.path.join(package_folder, model_subdir))
+shutil.copy(
+    os.path.join(os.path.dirname(__file__), '../..', model_subdir, model_file),
+    os.path.join(package_folder, model_subdir, model_file))
+manifest_in += "include pvoctopus/%s/%s\n" % (model_subdir, model_file)
 
-platforms = ('linux', 'mac', 'windows')
-
-os.mkdir(os.path.join(package_folder, 'lib'))
-for platform in platforms:
+for platform in INCLUDE_LIBS:
     shutil.copytree(
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
-
-os.makedirs(os.path.join(package_folder, 'lib/common/param'))
-shutil.copy(
-    os.path.join(os.path.dirname(__file__), '../../lib/common/param/octopus_params.pv'),
-    os.path.join(package_folder, 'lib/common/param/octopus_params.pv'))
-
-MANIFEST_IN = """
-include pvoctopus/LICENSE
-include pvoctopus/__init__.py
-include pvoctopus/octopus.py
-include pvoctopus/util.py
-include pvoctopus/lib/common/param/octopus_params.pv
-include pvoctopus/lib/linux/x86_64/libpv_octopus.so
-include pvoctopus/lib/mac/x86_64/libpv_octopus.dylib
-include pvoctopus/lib/mac/arm64/libpv_octopus.dylib
-include pvoctopus/lib/windows/amd64/libpv_octopus.dll
-"""
+    manifest_in += "recursive-include pvoctopus/lib/%s *\n" % platform
 
 with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
-    f.write(MANIFEST_IN.strip('\n '))
+    f.write(manifest_in)
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
     long_description = f.read()
 
 setuptools.setup(
     name="pvoctopus",
-    version="1.2.1",
+    version="2.0.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Octopus Speech-to-Index engine.",

@@ -1,7 +1,6 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 
@@ -75,11 +74,17 @@ static struct option long_options[] = {
         {"search_phrase", required_argument, NULL, 's'},
 };
 
-void print_usage(const char *program_name) {
+static void print_usage(const char *program_name) {
     fprintf(
             stderr,
             "usage : %s -l LIBRARY_PATH -m MODEL_PATH -a ACCESS_KEY -i INDEX_PATH -s SEARCH_PHRASE\n",
             program_name);
+}
+
+static void print_error_message(char **message_stack, int32_t message_stack_depth) {
+    for (int32_t i = 0; i < message_stack_depth; i++) {
+        fprintf(stderr, "  [%d] %s\n", i, message_stack[i]);
+    }
 }
 
 int picovoice_main(int argc, char *argv[]) {
@@ -108,37 +113,44 @@ int picovoice_main(int argc, char *argv[]) {
                 search_phrase = optarg;
                 break;
             default:
-                exit(1);
+                exit(EXIT_FAILURE);
         }
     }
 
     if (!library_path || !model_path || !search_phrase || !access_key || !index_path) {
         print_usage(argv[0]);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void *dl = pv_open_dl(library_path);
     if (!dl) {
         print_dl_error("Failed to open library");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     const char *(*pv_status_to_string_func)(pv_status_t) = pv_load_sym(dl, "pv_status_to_string");
     if (!pv_status_to_string_func) {
         print_dl_error("Failed to load symbol 'pv_status_to_string'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    pv_status_t (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
+    pv_status_t
+    (*pv_octopus_init_func)(const char *, const char *, pv_octopus_t **) = pv_load_sym(dl, "pv_octopus_init");
     if (!pv_octopus_init_func) {
         print_dl_error("Failed to load symbol 'pv_octopus_init'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     void (*pv_octopus_delete_func)(pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_delete");
     if (!pv_octopus_delete_func) {
         print_dl_error("Failed to load symbol 'pv_octopus_delete'");
-        exit(1);
+        exit(EXIT_FAILURE);
+    }
+
+    void (*pv_octopus_matches_delete_func)(pv_octopus_match_t *) = pv_load_sym(dl, "pv_octopus_matches_delete");
+    if (!pv_octopus_matches_delete_func) {
+        print_dl_error("Failed to load symbol 'pv_octopus_matches_delete'");
+        exit(EXIT_FAILURE);
     }
 
     pv_status_t (*pv_octopus_search_func)(
@@ -150,68 +162,103 @@ int picovoice_main(int argc, char *argv[]) {
             int32_t *) = pv_load_sym(dl, "pv_octopus_search");
     if (!pv_octopus_search_func) {
         print_dl_error("Failed to load symbol 'pv_octopus_search'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     const char (*pv_octopus_version_func)(const pv_octopus_t *) = pv_load_sym(dl, "pv_octopus_version");
     if (!pv_octopus_version_func) {
         print_dl_error("Failed to load symbol 'pv_octopus_version'");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
-    void (*pv_free_func)(void *) = pv_load_sym(dl, "pv_free");
-    if (!pv_free_func) {
-        print_dl_error("failed to load `pv_free`");
-        exit(1);
+    pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = pv_load_sym(dl, "pv_get_error_stack");
+    if (!pv_get_error_stack_func) {
+        print_dl_error("Failed to load 'pv_get_error_stack'");
+        exit(EXIT_FAILURE);
+    }
+
+    void (*pv_free_error_stack_func)(char **) = pv_load_sym(dl, "pv_free_error_stack");
+    if (!pv_free_error_stack_func) {
+        print_dl_error("Failed to load 'pv_free_error_stack'");
+        exit(EXIT_FAILURE);
     }
 
     pv_octopus_t *o = NULL;
     pv_status_t status = pv_octopus_init_func(access_key, model_path, &o);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "failed to init with '%s'.\n", pv_status_to_string_func(status));
-        exit(1);
+        fprintf(stderr, "Failed to init with '%s'", pv_status_to_string_func(status));
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(EXIT_FAILURE);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
+
+        exit(EXIT_FAILURE);
     }
 
     FILE *f = fopen(index_path, "rb");
     if (!f) {
-        fprintf(stderr, "failed to open index file at '%s'.\n", index_path);
-        exit(1);
+        fprintf(stderr, "Failed to open index file at '%s'.\n", index_path);
+        exit(EXIT_FAILURE);
     }
 
     fseek(f, 0, SEEK_END);
     const int32_t num_indices_byte = (int32_t) ftell(f);
     fseek(f, 0, SEEK_SET);
-    void *indices = malloc(num_indices_byte);
+
+    void *indices = calloc(num_indices_byte, sizeof(char));
     if (!indices) {
-        fprintf(stderr, "failed to allocate '%d' bytes of memory for indices.\n", num_indices_byte);
-        exit(1);
+        fprintf(stderr, "Failed to allocate '%d' bytes of memory for indices.\n", num_indices_byte);
+        exit(EXIT_FAILURE);
     }
     if (fread(indices, 1, num_indices_byte, f) != (size_t) num_indices_byte) {
-        fprintf(stderr, "failed to read indices from '%s'.\n", index_path);
-        exit(1);
+        fprintf(stderr, "Failed to read indices from '%s'.\n", index_path);
+        exit(EXIT_FAILURE);
     }
 
     fclose(f);
 
-    double total_cpu_time_usec = 0;
-
     pv_octopus_match_t *matches = NULL;
     int32_t num_matches = 0;
 
-    struct timeval before;
-    gettimeofday(&before, NULL);
-
-    status = pv_octopus_search_func(o, indices, num_indices_byte, search_phrase, &matches, &num_matches);
+    status = pv_octopus_search_func(
+            o,
+            indices,
+            num_indices_byte,
+            search_phrase,
+            &matches,
+            &num_matches);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "failed to search with '%s'.\n", pv_status_to_string_func(status));
-        exit(1);
+        fprintf(stderr, "Failed to search with '%s'", pv_status_to_string_func(status));
+        char **message_stack = NULL;
+        int32_t message_stack_depth = 0;
+        pv_status_t error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Octopus error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(EXIT_FAILURE);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
+        exit(EXIT_FAILURE);
     }
-
-    struct timeval after;
-    gettimeofday(&after, NULL);
-
-    total_cpu_time_usec +=
-            (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
 
     free(indices);
     pv_octopus_delete_func(o);
@@ -227,7 +274,7 @@ int picovoice_main(int argc, char *argv[]) {
                 matches[i].probability);
     }
 
-    pv_free_func(matches);
+    pv_octopus_matches_delete_func(matches);
     pv_close_dl(dl);
 
     return 0;
@@ -243,7 +290,7 @@ int main(int argc, char *argv[]) {
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     if (wargv == NULL) {
         fprintf(stderr, "CommandLineToArgvW failed\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     char *utf8_argv[argc];
@@ -253,7 +300,7 @@ int main(int argc, char *argv[]) {
         int arg_chars_num = WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, NULL, 0, NULL, NULL);
         utf8_argv[i] = (char *) malloc(arg_chars_num * sizeof(char));
         if (!utf8_argv[i]) {
-            fprintf(stderr, "failed to to allocate memory for converting args");
+            fprintf(stderr, "Failed to to allocate memory for converting args");
         }
         WideCharToMultiByte(CP_UTF8, UTF8_COMPOSITION_FLAG, wargv[i], NULL_TERMINATED, utf8_argv[i], arg_chars_num, NULL, NULL);
     }

@@ -1,4 +1,6 @@
-# Octopus
+# Octopus Binding for iOS
+
+## Octopus Speech-to-Index Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -8,11 +10,11 @@ hypothesis (e.g. homophones)
 
 ## Compatibility
 
-- iOS 9.0+
+- iOS 13.0+
 
 ## Installation
 
-The Octopus iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Octopus-iOS). To import it into your iOS project, add the following line to your Podfile: 
+The Octopus iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Octopus-iOS). To import it into your iOS project, add the following line to your Podfile:
 
 ```ruby
 pod 'Octopus-iOS'
@@ -38,7 +40,7 @@ do {
 ```
 
 Octopus consists of two steps: Indexing and Searching.
-Indexing transforms audio data into searchable `OctopusMetadata` object. 
+Indexing transforms audio data into searchable `OctopusMetadata` object.
 
 Octopus indexing has two input options: raw PCM audio data, or an audio file.
 
@@ -83,7 +85,7 @@ let matches = try octopus.search(metadata: metadata, phrases: phrases)
 ```
 
 Matches are returned in a hashmap, where the key is the input phrase and the associated value is an array
-of immutable `OctopusMatch` objects that represent any instances of the phrase that were found in the input audio. 
+of immutable `OctopusMatch` objects that represent any instances of the phrase that were found in the input audio.
 The start time and end time of the match are given in seconds, while the probability is a floating-point value between [0, 1].
 
 ```swift

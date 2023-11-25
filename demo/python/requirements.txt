@@ -1,2 +1,2 @@
-pvoctopus==1.2.0
+pvoctopus==2.0.0
 tabulate

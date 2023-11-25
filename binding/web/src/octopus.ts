@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 Picovoice Inc.
+  Copyright 2022-2023 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -11,64 +11,109 @@
 
 /* eslint camelcase: 0 */
 
-import { Mutex } from "async-mutex";
+import { Mutex } from 'async-mutex';
 
-import { simd } from "wasm-feature-detect";
+import { simd } from 'wasm-feature-detect';
 
 import {
   aligned_alloc_type,
-  pv_free_type,
-  buildWasm,
   arrayBufferToStringAtIndex,
+  buildWasm,
   isAccessKeyValid,
   loadModel,
-  PvError
-} from "@picovoice/web-utils";
+  pv_free_type,
+  PvError,
+} from '@picovoice/web-utils';
 
-import { OctopusMetadata, OctopusMatch, OctopusModel, OctopusOptions } from "./types";
+import {
+  OctopusMatch,
+  OctopusMetadata,
+  OctopusModel,
+  OctopusOptions,
+  PvStatus,
+} from './types';
+
+import * as OctopusErrors from './octopus_errors';
+import { pvStatusToException } from './octopus_errors';
 
 /**
  * WebAssembly function types
  */
 
-type pv_octopus_init_type = (accessKey: number, modelPath: number, object: number) => Promise<number>;
-type pv_octopus_index_type = (object: number, pcm: number, numSamples: number, indices: number, numIndicesBytes: number) => Promise<number>;
-type pv_octopus_search_type = (object: number, indices: number, numIndicesBytes: number, phrase: number, matches: number, numMatches: number) => Promise<number>;
+type pv_octopus_init_type = (
+  accessKey: number,
+  modelPath: number,
+  object: number
+) => Promise<number>;
+type pv_octopus_index_size_type = (
+  object: number,
+  numSamples: number,
+  numIndicesBytes: number
+) => Promise<number>;
+type pv_octopus_index_type = (
+  object: number,
+  pcm: number,
+  numSamples: number,
+  indices: number
+) => Promise<number>;
+type pv_octopus_search_type = (
+  object: number,
+  indices: number,
+  numIndicesBytes: number,
+  phrase: number,
+  matches: number,
+  numMatches: number
+) => Promise<number>;
 type pv_octopus_delete_type = (object: number) => Promise<void>;
-type pv_status_to_string_type = (status: number) => Promise<number>
+type pv_octopus_matches_delete_type = (matches: number) => Promise<void>;
+type pv_status_to_string_type = (status: number) => Promise<number>;
 type pv_sample_rate_type = () => Promise<number>;
 type pv_octopus_version_type = () => Promise<number>;
+type pv_set_sdk_type = (sdk: number) => Promise<void>;
+type pv_get_error_stack_type = (
+  messageStack: number,
+  messageStackDepth: number
+) => Promise<number>;
+type pv_free_error_stack_type = (messageStack: number) => Promise<void>;
 
 /**
-* JavaScript/WebAssembly Binding for Octopus
-*/
+ * JavaScript/WebAssembly Binding for Octopus
+ */
 
 type OctopusWasmOutput = {
   memory: WebAssembly.Memory;
   alignedAlloc: aligned_alloc_type;
   pvFree: pv_free_type;
-  objectAddress: number;
   pvOctopusDelete: pv_octopus_delete_type;
+  pvOctopusMatchesDelete: pv_octopus_matches_delete_type;
+  pvOctopusIndexSize: pv_octopus_index_size_type;
   pvOctopusIndex: pv_octopus_index_type;
   pvOctopusSearch: pv_octopus_search_type;
   pvStatusToString: pv_status_to_string_type;
+  pvGetErrorStack: pv_get_error_stack_type;
+  pvFreeErrorStack: pv_free_error_stack_type;
   sampleRate: number;
   version: string;
-  metadataAddressAddress: number;
+  objectAddress: number;
   metadataLengthAddress: number;
   octopusMatchAddressAddress: number;
   octopusMatchLengthAddress: number;
+  messageStackAddressAddressAddress: number;
+  messageStackDepthAddress: number;
   pvError: PvError;
 };
 
-const PV_STATUS_SUCCESS = 10000;
 const MAX_PCM_LENGTH_SEC = 60 * 15;
 
 export class Octopus {
   private readonly _pvOctopusDelete: pv_octopus_delete_type;
+  private readonly _pvOctopusMatchesDelete: pv_octopus_matches_delete_type;
+  private readonly _pvOctopusIndexSize: pv_octopus_index_size_type;
   private readonly _pvOctopusIndex: pv_octopus_index_type;
   private readonly _pvOctopusSearch: pv_octopus_search_type;
   private readonly _pvStatusToString: pv_status_to_string_type;
+  private readonly _pvGetErrorStack: pv_get_error_stack_type;
+  private readonly _pvFreeErrorStack: pv_free_error_stack_type;
 
   private _wasmMemory?: WebAssembly.Memory;
   private _pvFree: pv_free_type;
@@ -76,15 +121,17 @@ export class Octopus {
 
   private readonly _objectAddress: number;
   private readonly _alignedAlloc: CallableFunction;
-  private _metadataAddressAddress: number;
-  private _metadataLengthAddress: number;
-  private _octopusMatchAddressAddress: number;
-  private _octopusMatchLengthAddress: number;
+  private readonly _messageStackAddressAddressAddress: number;
+  private readonly _messageStackDepthAddress: number;
+  private readonly _metadataLengthAddress: number;
+  private readonly _octopusMatchAddressAddress: number;
+  private readonly _octopusMatchLengthAddress: number;
 
   private static _sampleRate: number;
   private static _version: string;
   private static _wasm: string;
   private static _wasmSimd: string;
+  private static _sdk: string = 'web';
 
   private static _octopusMutex = new Mutex();
 
@@ -98,13 +145,19 @@ export class Octopus {
     this._pvFree = handleWasm.pvFree;
 
     this._pvOctopusDelete = handleWasm.pvOctopusDelete;
+    this._pvOctopusMatchesDelete = handleWasm.pvOctopusMatchesDelete;
+    this._pvOctopusIndexSize = handleWasm.pvOctopusIndexSize;
     this._pvOctopusIndex = handleWasm.pvOctopusIndex;
     this._pvOctopusSearch = handleWasm.pvOctopusSearch;
     this._pvStatusToString = handleWasm.pvStatusToString;
+    this._pvGetErrorStack = handleWasm.pvGetErrorStack;
+    this._pvFreeErrorStack = handleWasm.pvFreeErrorStack;
 
     this._wasmMemory = handleWasm.memory;
     this._objectAddress = handleWasm.objectAddress;
-    this._metadataAddressAddress = handleWasm.metadataAddressAddress;
+    this._messageStackAddressAddressAddress =
+      handleWasm.messageStackAddressAddressAddress;
+    this._messageStackDepthAddress = handleWasm.messageStackDepthAddress;
     this._metadataLengthAddress = handleWasm.metadataLengthAddress;
     this._octopusMatchAddressAddress = handleWasm.octopusMatchAddressAddress;
     this._octopusMatchLengthAddress = handleWasm.octopusMatchLengthAddress;
@@ -112,6 +165,10 @@ export class Octopus {
     this._processMutex = new Mutex();
 
     this._pvError = handleWasm.pvError;
+  }
+
+  public static setSdk(sdk: string): void {
+    Octopus._sdk = sdk;
   }
 
   /**
@@ -163,27 +220,37 @@ export class Octopus {
    *
    * @returns An instance of the Octopus engine.
    */
-  public static async create(accessKey: string, model: OctopusModel, options: OctopusOptions = {}): Promise<Octopus> {
-    const customWritePath = (model.customWritePath) ? model.customWritePath : 'octopus_model';
+  public static async create(
+    accessKey: string,
+    model: OctopusModel,
+    options: OctopusOptions = {}
+  ): Promise<Octopus> {
+    const customWritePath = model.customWritePath
+      ? model.customWritePath
+      : 'octopus_model';
     const modelPath = await loadModel({ ...model, customWritePath });
 
-    return await this._init(accessKey, modelPath, options);
+    return Octopus._init(accessKey, modelPath, options);
   }
 
   public static async _init(
     accessKey: string,
     modelPath: string,
-    options: OctopusOptions = {},
+    options: OctopusOptions = {}
   ): Promise<Octopus> {
     if (!isAccessKeyValid(accessKey)) {
-      throw new Error('Invalid AccessKey');
+      throw new OctopusErrors.OctopusInvalidArgumentError('Invalid AccessKey');
     }
-
     return new Promise<Octopus>((resolve, reject) => {
       Octopus._octopusMutex
         .runExclusive(async () => {
           const isSimd = await simd();
-          const wasmOutput = await Octopus.initWasm(accessKey.trim(), (isSimd) ? this._wasmSimd : this._wasm, modelPath, options);
+          const wasmOutput = await Octopus.initWasm(
+            accessKey.trim(),
+            isSimd ? this._wasmSimd : this._wasm,
+            modelPath,
+            options
+          );
           return new Octopus(wasmOutput);
         })
         .then((result: Octopus) => {
@@ -204,73 +271,112 @@ export class Octopus {
    */
   public async index(pcm: Int16Array): Promise<OctopusMetadata> {
     if (!(pcm instanceof Int16Array)) {
-      throw new Error("The argument 'pcm' must be provided as an Int16Array");
+      throw new OctopusErrors.OctopusInvalidArgumentError(
+        "The argument 'pcm' must be provided as an Int16Array"
+      );
     }
     const maxSize = MAX_PCM_LENGTH_SEC * Octopus._sampleRate * 2;
     if (pcm.length > maxSize) {
-      throw new Error(`'pcm' size must be smaller than ${maxSize}`);
+      throw new OctopusErrors.OctopusInvalidArgumentError(
+        `'pcm' size must be smaller than ${maxSize}`
+      );
     }
 
-    const returnPromise = new Promise<OctopusMetadata>((resolve, reject) => {
-      this._processMutex.runExclusive(async () => {
-        if (this._wasmMemory === undefined) {
-          throw new Error("Attempted to call Octopus index after release.");
-        }
+    return new Promise<OctopusMetadata>((resolve, reject) => {
+      this._processMutex
+        .runExclusive(async () => {
+          if (this._wasmMemory === undefined) {
+            throw new OctopusErrors.OctopusInvalidStateError(
+              'Attempted to call Octopus index after release.'
+            );
+          }
 
-        const pcmAddress = await this._alignedAlloc(
-          Int16Array.BYTES_PER_ELEMENT,
-          (pcm.length) * Int16Array.BYTES_PER_ELEMENT
-        );
-
-        const memoryBufferInt16 = new Int16Array(this._wasmMemory.buffer);
-        memoryBufferInt16.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
-
-        const status = await this._pvOctopusIndex(
-          this._objectAddress,
-          pcmAddress,
-          pcm.length,
-          this._metadataAddressAddress,
-          this._metadataLengthAddress
-        );
-        await this._pvFree(pcmAddress);
-        if (status !== PV_STATUS_SUCCESS) {
+          const memoryBufferView = new DataView(this._wasmMemory.buffer);
           const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-          const msg = `process failed with status ${arrayBufferToStringAtIndex(
-            memoryBufferUint8,
-            await this._pvStatusToString(status),
-          )}`;
 
-          throw new Error(
-            `${msg}\nDetails: ${this._pvError.getErrorString()}`
+          let status = await this._pvOctopusIndexSize(
+            this._objectAddress,
+            pcm.length,
+            this._metadataLengthAddress
           );
-        }
-        
-        const memoryBufferView = new DataView(this._wasmMemory.buffer);
+          if (status !== PvStatus.SUCCESS) {
+            const messageStack = await Octopus.getMessageStack(
+              this._pvGetErrorStack,
+              this._pvFreeErrorStack,
+              this._messageStackAddressAddressAddress,
+              this._messageStackDepthAddress,
+              memoryBufferView,
+              memoryBufferUint8
+            );
 
-        const metadataAddress = memoryBufferView.getInt32(
-          this._metadataAddressAddress,
-          true
-        );
+            throw pvStatusToException(
+              status,
+              'Index size failed',
+              messageStack
+            );
+          }
 
-        const metadataLength = memoryBufferView.getInt32(
-          this._metadataLengthAddress,
-          true
-        );
+          const metadataLength = memoryBufferView.getInt32(
+            this._metadataLengthAddress,
+            true
+          );
 
-        const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer, metadataAddress, metadataLength);
-        const buffer = new Uint8Array(metadataLength);
-        buffer.set(memoryBufferUint8, 0);
+          const pcmAddress = await this._alignedAlloc(
+            Int16Array.BYTES_PER_ELEMENT,
+            pcm.length * Int16Array.BYTES_PER_ELEMENT
+          );
+          if (pcmAddress === 0) {
+            throw new OctopusErrors.OctopusOutOfMemoryError(
+              'malloc failed: Cannot allocate memory'
+            );
+          }
+          const memoryBufferInt16 = new Int16Array(this._wasmMemory.buffer);
+          memoryBufferInt16.set(pcm, pcmAddress / Int16Array.BYTES_PER_ELEMENT);
 
-        await this._pvFree(metadataAddress);
+          const metadataAddress = await this._alignedAlloc(
+            Uint8Array.BYTES_PER_ELEMENT,
+            Uint8Array.BYTES_PER_ELEMENT * metadataLength
+          );
+          if (metadataAddress === 0) {
+            throw new OctopusErrors.OctopusOutOfMemoryError(
+              'malloc failed: Cannot allocate memory'
+            );
+          }
 
-        return { buffer };
-      }).then((result: OctopusMetadata) => {
-        resolve(result);
-      }).catch((error: any) => {
-        reject(error);
-      });
+          status = await this._pvOctopusIndex(
+            this._objectAddress,
+            pcmAddress,
+            pcm.length,
+            metadataAddress
+          );
+          await this._pvFree(pcmAddress);
+          if (status !== PvStatus.SUCCESS) {
+            const messageStack = await Octopus.getMessageStack(
+              this._pvGetErrorStack,
+              this._pvFreeErrorStack,
+              this._messageStackAddressAddressAddress,
+              this._messageStackDepthAddress,
+              memoryBufferView,
+              memoryBufferUint8
+            );
+
+            throw pvStatusToException(status, 'Index failed', messageStack);
+          }
+
+          const buffer = memoryBufferUint8.slice(
+            metadataAddress / Uint8Array.BYTES_PER_ELEMENT,
+            metadataAddress / Uint8Array.BYTES_PER_ELEMENT + metadataLength
+          );
+          await this._pvFree(metadataAddress);
+          return { buffer };
+        })
+        .then((result: OctopusMetadata) => {
+          resolve(result);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
     });
-    return returnPromise;
   }
 
   /**
@@ -280,93 +386,120 @@ export class Octopus {
    * @param searchPhrase - The text phrase to search the metadata (indexed audio) for.
    * @return An array of OctopusMatch objects.
    */
-  public async search(octopusMetadata: OctopusMetadata, searchPhrase: string): Promise<OctopusMatch[]> {
-    const returnPromise = new Promise<OctopusMatch[]>((resolve, reject) => {
-      this._processMutex.runExclusive(async () => {
-        if (this._wasmMemory === undefined) {
-          throw new Error("Attempted to call Octopus search after release.");
-        }
+  public async search(
+    octopusMetadata: OctopusMetadata,
+    searchPhrase: string
+  ): Promise<OctopusMatch[]> {
+    const searchPhraseCleaned = searchPhrase.trim();
+    if (searchPhraseCleaned === '') {
+      throw new OctopusErrors.OctopusInvalidArgumentError(
+        'The search phrase cannot be empty'
+      );
+    }
 
-        const searchPhraseCleaned = searchPhrase.trim();
-        if (searchPhraseCleaned === '') {
-          throw new Error('The search phrase cannot be empty');
-        }
+    return new Promise<OctopusMatch[]>((resolve, reject) => {
+      this._processMutex
+        .runExclusive(async () => {
+          if (this._wasmMemory === undefined) {
+            throw new OctopusErrors.OctopusInvalidStateError(
+              'Attempted to call Octopus search after release.'
+            );
+          }
 
-        const encoded = new TextEncoder().encode(searchPhraseCleaned);
+          const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+          const memoryBufferView = new DataView(this._wasmMemory.buffer);
 
-        const phraseAddress = await this._alignedAlloc(
-          Uint8Array.BYTES_PER_ELEMENT,
-          (encoded.length + 1) * Uint8Array.BYTES_PER_ELEMENT
-        );
+          const encoded = new TextEncoder().encode(searchPhraseCleaned);
 
-        if (phraseAddress === 0) {
-          throw new Error('malloc failed: Cannot allocate memory');
-        }
-
-        const metadataAddress = await this._alignedAlloc(
-          Uint8Array.BYTES_PER_ELEMENT,
-          octopusMetadata.buffer.length * Uint8Array.BYTES_PER_ELEMENT
-        );
-
-        let memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-        memoryBufferUint8.set(encoded, phraseAddress);
-        memoryBufferUint8[phraseAddress + encoded.length] = 0;
-
-        memoryBufferUint8.set(octopusMetadata.buffer, metadataAddress);
-
-        const status = await this._pvOctopusSearch(
-          this._objectAddress,
-          metadataAddress,
-          octopusMetadata.buffer.length,
-          phraseAddress,
-          this._octopusMatchAddressAddress,
-          this._octopusMatchLengthAddress
-        );
-        await this._pvFree(phraseAddress);
-        if (status !== PV_STATUS_SUCCESS) {
-          memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-          const msg = `process failed with status ${arrayBufferToStringAtIndex(
-            memoryBufferUint8,
-            await this._pvStatusToString(status),
-          )}`;
-
-          throw new Error(
-            `${msg}\nDetails: ${this._pvError.getErrorString()}`
+          const phraseAddress = await this._alignedAlloc(
+            Uint8Array.BYTES_PER_ELEMENT,
+            (encoded.length + 1) * Uint8Array.BYTES_PER_ELEMENT
           );
-        }
+          if (phraseAddress === 0) {
+            throw new OctopusErrors.OctopusOutOfMemoryError(
+              'malloc failed: Cannot allocate memory'
+            );
+          }
+          memoryBufferUint8.set(encoded, phraseAddress);
+          memoryBufferUint8[phraseAddress + encoded.length] = 0;
 
-        const memoryBufferView = new DataView(this._wasmMemory.buffer);
+          const metadataAddress = await this._alignedAlloc(
+            Uint8Array.BYTES_PER_ELEMENT,
+            octopusMetadata.buffer.length * Uint8Array.BYTES_PER_ELEMENT
+          );
+          if (metadataAddress === 0) {
+            throw new OctopusErrors.OctopusOutOfMemoryError(
+              'malloc failed: Cannot allocate memory'
+            );
+          }
+          memoryBufferUint8.set(octopusMetadata.buffer, metadataAddress);
 
-        const matches: OctopusMatch[] = [];
-        const octopusMatchAddress = memoryBufferView.getInt32(this._octopusMatchAddressAddress, true);
-        const octopusMatchLength = memoryBufferView.getInt32(this._octopusMatchLengthAddress, true);
+          const status = await this._pvOctopusSearch(
+            this._objectAddress,
+            metadataAddress,
+            octopusMetadata.buffer.length,
+            phraseAddress,
+            this._octopusMatchAddressAddress,
+            this._octopusMatchLengthAddress
+          );
+          await this._pvFree(phraseAddress);
+          if (status !== PvStatus.SUCCESS) {
+            const messageStack = await Octopus.getMessageStack(
+              this._pvGetErrorStack,
+              this._pvFreeErrorStack,
+              this._messageStackAddressAddressAddress,
+              this._messageStackDepthAddress,
+              memoryBufferView,
+              memoryBufferUint8
+            );
 
-        for (let i = 0; i < octopusMatchLength; i++) {
-          const octopusMatch = octopusMatchAddress + i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
+            throw pvStatusToException(status, 'Search failed', messageStack);
+          }
 
-          const startSec = memoryBufferView.getFloat32(octopusMatch, true);
-          const endSec = memoryBufferView.getFloat32(octopusMatch + Number(Float32Array.BYTES_PER_ELEMENT), true);
-          const probability = memoryBufferView.getFloat32(octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT), true);
+          const matches: OctopusMatch[] = [];
+          const octopusMatchAddress = memoryBufferView.getInt32(
+            this._octopusMatchAddressAddress,
+            true
+          );
+          const octopusMatchLength = memoryBufferView.getInt32(
+            this._octopusMatchLengthAddress,
+            true
+          );
 
-          matches.push({
-            startSec,
-            endSec,
-            probability
-          });
-        }
+          for (let i = 0; i < octopusMatchLength; i++) {
+            const octopusMatch =
+              octopusMatchAddress +
+              i * (3 * Number(Float32Array.BYTES_PER_ELEMENT));
 
-        await this._pvFree(octopusMatchAddress);
-        await this._pvFree(metadataAddress);
+            const startSec = memoryBufferView.getFloat32(octopusMatch, true);
+            const endSec = memoryBufferView.getFloat32(
+              octopusMatch + Number(Float32Array.BYTES_PER_ELEMENT),
+              true
+            );
+            const probability = memoryBufferView.getFloat32(
+              octopusMatch + 2 * Number(Float32Array.BYTES_PER_ELEMENT),
+              true
+            );
 
-        return matches;
-      }).then((result: OctopusMatch[]) => {
-        resolve(result);
-      }).catch((error: any) => {
-        reject(error);
-      });
+            matches.push({
+              startSec,
+              endSec,
+              probability,
+            });
+          }
+
+          await this._pvOctopusMatchesDelete(octopusMatchAddress);
+          await this._pvFree(metadataAddress);
+
+          return matches;
+        })
+        .then((result: OctopusMatch[]) => {
+          resolve(result);
+        })
+        .catch((error: any) => {
+          reject(error);
+        });
     });
-
-    return returnPromise;
   }
 
   /**
@@ -374,14 +507,25 @@ export class Octopus {
    */
   public async release(): Promise<void> {
     await this._pvOctopusDelete(this._objectAddress);
+    await this._pvFree(this._messageStackAddressAddressAddress);
+    await this._pvFree(this._messageStackDepthAddress);
+    await this._pvFree(this._metadataLengthAddress);
+    await this._pvFree(this._octopusMatchAddressAddress);
+    await this._pvFree(this._octopusMatchLengthAddress);
     delete this._wasmMemory;
     this._wasmMemory = undefined;
   }
 
-  private static async initWasm(accessKey: string, wasmBase64: string, modelPath: string, options: OctopusOptions): Promise<any> {
+  private static async initWasm(
+    accessKey: string,
+    wasmBase64: string,
+    modelPath: string,
+    _: OctopusOptions
+  ): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 1MiB ~= 16 pages
-    const memory = new WebAssembly.Memory({ initial: 1024 });
+    const memory = new WebAssembly.Memory({ initial: 10240 });
 
+    const memoryBufferView = new DataView(memory.buffer);
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
 
     const pvError = new PvError();
@@ -391,28 +535,35 @@ export class Octopus {
     const aligned_alloc = exports.aligned_alloc as aligned_alloc_type;
     const pv_free = exports.pv_free as pv_free_type;
 
-    const pv_octopus_version = exports.pv_octopus_version as pv_octopus_version_type;
+    const pv_octopus_version =
+      exports.pv_octopus_version as pv_octopus_version_type;
+    const pv_octopus_index_size =
+      exports.pv_octopus_index_size as pv_octopus_index_size_type;
     const pv_octopus_index = exports.pv_octopus_index as pv_octopus_index_type;
-    const pv_octopus_search = exports.pv_octopus_search as pv_octopus_search_type;
-    const pv_octopus_delete = exports.pv_octopus_delete as pv_octopus_delete_type;
+    const pv_octopus_search =
+      exports.pv_octopus_search as pv_octopus_search_type;
+    const pv_octopus_delete =
+      exports.pv_octopus_delete as pv_octopus_delete_type;
+    const pv_octopus_matches_delete =
+      exports.pv_octopus_matches_delete as pv_octopus_matches_delete_type;
     const pv_octopus_init = exports.pv_octopus_init as pv_octopus_init_type;
-    const pv_status_to_string = exports.pv_status_to_string as pv_status_to_string_type;
+    const pv_status_to_string =
+      exports.pv_status_to_string as pv_status_to_string_type;
     const pv_sample_rate = exports.pv_sample_rate as pv_sample_rate_type;
-
-    const metadataAddressAddress = await aligned_alloc(
-      Int32Array.BYTES_PER_ELEMENT,
-      Int32Array.BYTES_PER_ELEMENT
-    );
-    if (metadataAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
-    }
+    const pv_set_sdk = exports.pv_set_sdk as pv_set_sdk_type;
+    const pv_get_error_stack =
+      exports.pv_get_error_stack as pv_get_error_stack_type;
+    const pv_free_error_stack =
+      exports.pv_free_error_stack as pv_free_error_stack_type;
 
     const metadataLengthAddress = await aligned_alloc(
       Int32Array.BYTES_PER_ELEMENT,
       Int32Array.BYTES_PER_ELEMENT
     );
     if (metadataLengthAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
 
     const octopusMatchAddressAddress = await aligned_alloc(
@@ -420,7 +571,9 @@ export class Octopus {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
 
     const octopusMatchLengthAddress = await aligned_alloc(
@@ -428,7 +581,9 @@ export class Octopus {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (octopusMatchLengthAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
 
     const objectAddressAddress = await aligned_alloc(
@@ -436,7 +591,9 @@ export class Octopus {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (objectAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
 
     const accessKeyAddress = await aligned_alloc(
@@ -444,7 +601,9 @@ export class Octopus {
       (accessKey.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (accessKeyAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
     for (let i = 0; i < accessKey.length; i++) {
       memoryBufferUint8[accessKeyAddress + i] = accessKey.charCodeAt(i);
@@ -457,58 +616,146 @@ export class Octopus {
       (encodedModelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (modelPathAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
     }
     memoryBufferUint8.set(encodedModelPath, modelPathAddress);
     memoryBufferUint8[modelPathAddress + encodedModelPath.length] = 0;
 
-    const status = await pv_octopus_init(accessKeyAddress, modelPathAddress, objectAddressAddress);
-    await pv_free(accessKeyAddress);
-    if (status !== PV_STATUS_SUCCESS) {
-      const msg = `'pv_octopus_init' failed with status ${arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        await pv_status_to_string(status)
-      )}`;
+    const sdkEncoded = new TextEncoder().encode(this._sdk);
+    const sdkAddress = await aligned_alloc(
+      Uint8Array.BYTES_PER_ELEMENT,
+      (sdkEncoded.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+    );
+    if (!sdkAddress) {
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
+    }
+    memoryBufferUint8.set(sdkEncoded, sdkAddress);
+    memoryBufferUint8[sdkAddress + sdkEncoded.length] = 0;
+    await pv_set_sdk(sdkAddress);
 
-      throw new Error(
-        `${msg}\nDetails: ${pvError.getErrorString()}`
+    const messageStackDepthAddress = await aligned_alloc(
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT
+    );
+    if (!messageStackDepthAddress) {
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
       );
     }
 
-    const memoryBuffer = new Uint8Array(memory.buffer);
-    const memoryBufferView = new DataView(memory.buffer);
-    const objectAddress = memoryBufferView.getInt32(
-      objectAddressAddress,
-      true
+    const messageStackAddressAddressAddress = await aligned_alloc(
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT
     );
+    if (!messageStackAddressAddressAddress) {
+      throw new OctopusErrors.OctopusOutOfMemoryError(
+        'malloc failed: Cannot allocate memory'
+      );
+    }
+
+    const status = await pv_octopus_init(
+      accessKeyAddress,
+      modelPathAddress,
+      objectAddressAddress
+    );
+    await pv_free(accessKeyAddress);
+    await pv_free(modelPathAddress);
+    if (status !== PvStatus.SUCCESS) {
+      const messageStack = await Octopus.getMessageStack(
+        pv_get_error_stack,
+        pv_free_error_stack,
+        messageStackAddressAddressAddress,
+        messageStackDepthAddress,
+        memoryBufferView,
+        memoryBufferUint8
+      );
+
+      throw pvStatusToException(
+        status,
+        'Initialization failed',
+        messageStack,
+        pvError
+      );
+    }
+
+    const objectAddress = memoryBufferView.getInt32(objectAddressAddress, true);
+    await pv_free(objectAddressAddress);
 
     const sampleRate = await pv_sample_rate();
     const versionAddress = await pv_octopus_version();
     const version = arrayBufferToStringAtIndex(
-      memoryBuffer,
-      versionAddress,
+      memoryBufferUint8,
+      versionAddress
     );
-
-    await pv_free(objectAddressAddress);
-    await pv_free(accessKeyAddress);
-    await pv_free(modelPathAddress);
 
     return {
       memory: memory,
       alignedAlloc: aligned_alloc,
       pvFree: pv_free,
       pvOctopusDelete: pv_octopus_delete,
+      pvOctopusMatchesDelete: pv_octopus_matches_delete,
+      pvOctopusIndexSize: pv_octopus_index_size,
       pvOctopusIndex: pv_octopus_index,
       pvOctopusSearch: pv_octopus_search,
       pvStatusToString: pv_status_to_string,
+      pvGetErrorStack: pv_get_error_stack,
+      pvFreeErrorStack: pv_free_error_stack,
       sampleRate: sampleRate,
       version: version,
       objectAddress: objectAddress,
-      metadataAddressAddress: metadataAddressAddress,
       metadataLengthAddress: metadataLengthAddress,
       octopusMatchAddressAddress: octopusMatchAddressAddress,
       octopusMatchLengthAddress: octopusMatchLengthAddress,
-      pvError: pvError
+      messageStackAddressAddressAddress: messageStackAddressAddressAddress,
+      messageStackDepthAddress: messageStackDepthAddress,
+      pvError: pvError,
     };
+  }
+
+  private static async getMessageStack(
+    pv_get_error_stack: pv_get_error_stack_type,
+    pv_free_error_stack: pv_free_error_stack_type,
+    messageStackAddressAddressAddress: number,
+    messageStackDepthAddress: number,
+    memoryBufferView: DataView,
+    memoryBufferUint8: Uint8Array
+  ): Promise<string[]> {
+    const status = await pv_get_error_stack(
+      messageStackAddressAddressAddress,
+      messageStackDepthAddress
+    );
+    if (status !== PvStatus.SUCCESS) {
+      throw pvStatusToException(status, 'Unable to get Octopus error state');
+    }
+
+    const messageStackAddressAddress = memoryBufferView.getInt32(
+      messageStackAddressAddressAddress,
+      true
+    );
+
+    const messageStackDepth = memoryBufferView.getInt32(
+      messageStackDepthAddress,
+      true
+    );
+    const messageStack: string[] = [];
+    for (let i = 0; i < messageStackDepth; i++) {
+      const messageStackAddress = memoryBufferView.getInt32(
+        messageStackAddressAddress + i * Int32Array.BYTES_PER_ELEMENT,
+        true
+      );
+      const message = arrayBufferToStringAtIndex(
+        memoryBufferUint8,
+        messageStackAddress
+      );
+      messageStack.push(message);
+    }
+
+    await pv_free_error_stack(messageStackAddressAddress);
+
+    return messageStack;
   }
 }

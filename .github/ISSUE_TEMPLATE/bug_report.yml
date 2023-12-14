@@ -23,6 +23,7 @@ body:
       label: SDK
       options:
         - Android
+        - C
         - iOS
         - Python
         - Web
@@ -53,9 +54,6 @@ body:
         - Linux (x86_64)
         - macOS (x86_64, arm64)
         - Windows (x86_64)
-        - Raspberry Pi
-        - NVIDIA Jetson
-        - BeagleBone
     validations:
       required: true
   - type: input

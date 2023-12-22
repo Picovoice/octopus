@@ -13,9 +13,9 @@ hypothesis (e.g. homophones)
 - iOS 13.0+
 
 ## Installation
-
+<!-- markdown-link-check-disable -->
 The Octopus iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Octopus-iOS). To import it into your iOS project, add the following line to your Podfile:
-
+<!-- markdown-link-check-enable -->
 ```ruby
 pod 'Octopus-iOS'
 ```

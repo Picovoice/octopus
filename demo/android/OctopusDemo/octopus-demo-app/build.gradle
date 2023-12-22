@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion defaultTargetSdkVersion
+    compileSdk defaultTargetSdkVersion
 
     defaultConfig {
         applicationId "ai.picovoice.octopusdemo"
@@ -21,6 +21,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'ai.picovoice.octopusdemo'
 }
 
 dependencies {

@@ -37,7 +37,8 @@ hypothesis (e.g. homophones).
 
 ## Language Support
 
-- English, French, German, Italian, Japanese, Korean, Portuguese, and Spanish
+- English, French, German, Italian, Japanese, Korean, Portuguese, and Spanish.
+- Support for [additional languages is available for commercial customers](https://picovoice.ai/consulting/) on a case-by-case basis.
 
 ## Demos
 

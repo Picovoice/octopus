@@ -20,6 +20,7 @@ hypothesis (e.g. homophones).
 
 - [Octopus](#octopus)
   - [Table of Contents](#table-of-contents)
+  - [Language Support](#language-support)
   - [Demos](#demos)
     - [Python](#python-demos)
     - [C](#c-demos)
@@ -33,6 +34,11 @@ hypothesis (e.g. homophones).
     - [iOS](#ios)
     - [Web](#web)
   - [Releases](#releases)
+
+## Language Support
+
+- English, French, German, Italian, Japanese, Korean, Portuguese, and Spanish.
+- Support for [additional languages is available for commercial customers](https://picovoice.ai/consulting/) on a case-by-case basis.
 
 ## Demos
 

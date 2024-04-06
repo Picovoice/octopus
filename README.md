@@ -1,15 +1,16 @@
 # Octopus
 
+[![GitHub release](https://img.shields.io/github/release/Picovoice/Octopus.svg)](https://github.com/Picovoice/Octopus/releases)
 [![GitHub](https://img.shields.io/github/license/Picovoice/octopus)](https://github.com/Picovoice/octopus/)
 
-[![PyPI](https://img.shields.io/pypi/v/pvoctopus)](https://pypi.org/project/pvoctopus/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/octopus-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/octopus-android/)
+[![npm](https://img.shields.io/npm/v/@picovoice/octopus-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/octopus-web)
+[![npm](https://img.shields.io/cocoapods/v/Octopus-iOS)](https://cocoapods.org/pods/Octopus-iOS)
+[![PyPI](https://img.shields.io/pypi/v/pvoctopus)](https://pypi.org/project/pvoctopus/)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-<!-- markdown-link-check-disable -->
-[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)
-<!-- markdown-link-check-enable -->
+[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)<!-- markdown-link-check-disable-line -->
 [![YouTube Channel Views](https://img.shields.io/youtube/channel/views/UCAdi9sTCXLosG1XeqDwLx7w?label=YouTube&style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
 
 Octopus is Picovoice's Speech-to-Index engine. It directly indexes speech without relying on a text representation. This

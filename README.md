@@ -5,7 +5,7 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/octopus-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/octopus-android/)
 [![npm](https://img.shields.io/npm/v/@picovoice/octopus-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/octopus-web)
-[![CocoaPods](https://img.shields.io/cocoapods/v/Octopus-iOS)](https://cocoapods.org/pods/Octopus-iOS)
+[![CocoaPods](https://img.shields.io/cocoapods/v/Octopus-iOS)](https://cocoapods.org/pods/Octopus-iOS)<!-- markdown-link-check-disable-line -->
 [![PyPI](https://img.shields.io/pypi/v/pvoctopus)](https://pypi.org/project/pvoctopus/)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)

@@ -10,7 +10,7 @@ hypothesis (e.g. homophones)
 
 ## Compatibility
 
-- Python 3.5+
+- Python 3.8+
 - Runs on Linux (x86_64), macOS (x86_64, arm64), Windows (x86_64)
 
 ## Installation

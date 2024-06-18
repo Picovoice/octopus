@@ -46,6 +46,6 @@ setuptools.setup(
             'octopus_demo=pvoctopusdemo.octopus_demo:main',
         ],
     ),
-    python_requires='>=3.5',
+    python_requires='>=3.8',
     keywords="Speech-to-Index, Voice Search, Keyword Spotting, Speech Recognition, Voice Recognition",
 )

@@ -5,12 +5,7 @@ import android.content.res.AssetManager;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.microsoft.appcenter.espresso.Factory;
-import com.microsoft.appcenter.espresso.ReportHelper;
-
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -21,19 +16,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 class BaseTest {
-    @Rule
-    public ReportHelper reportHelper = Factory.getReportHelper();
+
     Context testContext;
     Context appContext;
     AssetManager assetManager;
     String testResourcesPath;
 
     String accessKey = "";
-
-    @After
-    public void TearDown() {
-        reportHelper.label("Stopping App");
-    }
 
     @Before
     public void Setup() throws IOException {

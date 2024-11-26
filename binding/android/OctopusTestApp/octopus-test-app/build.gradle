@@ -131,5 +131,5 @@ afterEvaluate {
     tasks."mergeDebugAssets".dependsOn "copyAudio"
     tasks."mergeReleaseAssets".dependsOn "copyAudio"
     tasks."generateReleaseLintVitalReportModel".dependsOn "copyAudio"
-    tasks."lintVitalAnalyzeRelease".dependsOn "copyParams"
+    tasks."lintVitalAnalyzeRelease".dependsOn "copyAudio"
 }

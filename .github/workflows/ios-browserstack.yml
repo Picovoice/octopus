@@ -47,11 +47,7 @@ jobs:
 
       - name: Inject AccessKey
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
-          OctopusAppTestUITests/OctopusAppTestUITests.swift
-
-      - name: Inject Performance Threshold
-        run: sed -i '.bak' 's:{PERFORMANCE_THRESHOLD_SEC}:0.1:'
-          OctopusAppTestUITests/OctopusAppTestUITests.swift
+          OctopusAppTestUITests/BaseTest.swift
 
       - name: XCode Build
         run: xcrun xcodebuild build-for-testing

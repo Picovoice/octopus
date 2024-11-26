@@ -62,12 +62,12 @@ jobs:
 
       - name: Inject Index Performance Threshold
         run: sed -i '.bak'
-          '1,/{INDEX_THRESHOLD_SEC}/s/{INDEX_THRESHOLD_SEC}/${{ matrix.indexPerformanceThresholdSec }}/'
+          '1,/{INDEX_PERFORMANCE_THRESHOLD_SEC}/s/{INDEX_PERFORMANCE_THRESHOLD_SEC}/${{ matrix.indexPerformanceThresholdSec }}/'
           PerformanceTest/PerformanceTest.swift
 
       - name: Inject Search Performance Threshold
         run: sed -i '.bak'
-          '1,/{SEARCH_THRESHOLD_SEC}/s/{SEARCH_THRESHOLD_SEC}/${{ matrix.searchPerformanceThresholdSec }}/'
+          '1,/{SEARCH_PERFORMANCE_THRESHOLD_SEC}/s/{SEARCH_PERFORMANCE_THRESHOLD_SEC}/${{ matrix.searchPerformanceThresholdSec }}/'
           PerformanceTest/PerformanceTest.swift
 
       - name: XCode Build

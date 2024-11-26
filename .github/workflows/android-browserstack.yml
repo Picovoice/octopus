@@ -126,5 +126,5 @@ jobs:
         --project_name "Octopus-Android-Integration"
         --devices "android-min-max"
         --app_path "octopus-test-app/build/outputs/apk/release/octopus-test-app-release.apk"
-        --test_path "octopus-test-app/build/outputs/apk/androidTest/release/rhino-test-app-release-androidTest.apk"
+        --test_path "octopus-test-app/build/outputs/apk/androidTest/release/octopus-test-app-release-androidTest.apk"
 

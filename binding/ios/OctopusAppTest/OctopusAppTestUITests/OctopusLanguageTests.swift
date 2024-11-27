@@ -59,6 +59,7 @@ class OctopusLanguageTests: BaseTest {
     func testWrapper() throws {
 
         try XCTContext.runActivity(named: "(\(language))") { _ in
+            print("DEBUG MODEL PATH: \(language): \(modelPath)")
             let octopus = try Octopus(accessKey: accessKey, modelPath: modelPath)
             let metadata = try octopus.indexAudioFile(path: testAudioPath)
             let matches = try octopus.search(metadata: metadata, phrases: Set(expectedResults.keys))

@@ -8,14 +8,10 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Setup
 
-1. Before building the demo app, run the following from this directory to install the Octopus CocoaPod:
-```console
-pod install
-```
-2. Replace `"YOUR_ACCESS_KEY_HERE"` inside [`ViewModel.swift`](OctopusDemo/OctopusDemo/ViewModel.swift) with
-your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/).
+Replace `{YOUR_ACCESS_KEY_HERE}` inside [`ViewModel.swift`](OctopusDemo/OctopusDemo/ViewModel.swift) with your AccessKey obtained from [Picovoice Console](https://console.picovoice.ai/).
 
 ## Usage
+
 Open the OctopusDemo Xcode project and build. Launch the demo on a simulator or a physical iOS device.
 
 1. Press the record button.

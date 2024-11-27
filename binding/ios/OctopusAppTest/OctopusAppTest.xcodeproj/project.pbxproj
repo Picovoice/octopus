@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A4DF03AB93039DC6A992730 /* libPods-OctopusAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */; };
-		16197350434656617777BDDE /* libPods-OctopusAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */; };
 		1E0064C827CEEA65006FF6E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064C727CEEA65006FF6E9 /* AppDelegate.swift */; };
 		1E0064CC27CEEA65006FF6E9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064CB27CEEA65006FF6E9 /* ViewController.swift */; };
 		1E0064CF27CEEA65006FF6E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E0064CD27CEEA65006FF6E9 /* Main.storyboard */; };
@@ -18,7 +16,7 @@
 		1E00654627CFF260006FF6E9 /* OctopusAppTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0064E827CEEA66006FF6E9 /* OctopusAppTestUITests.swift */; };
 		1E5B7B042800D9BE00F8BDDB /* PerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B7B032800D9BE00F8BDDB /* PerformanceTest.swift */; };
 		1E5B7B072800DD6600F8BDDB /* multiple_keywords.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7B062800DD6600F8BDDB /* multiple_keywords.wav */; };
-		36696536961DE78B3E1C06FA /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		36696536961DE78B3E1C06FA /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		C757D8CD28A1C77100F391C8 /* BaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C757D8CB28A1C77100F391C8 /* BaseTest.swift */; };
 		C757D8CE28A1C77100F391C8 /* OctopusLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C757D8CC28A1C77100F391C8 /* OctopusLanguageTests.swift */; };
 		C757D8D628A1C85200F391C8 /* multiple_keywords_ko.wav in Resources */ = {isa = PBXBuildFile; fileRef = C757D8CF28A1C85100F391C8 /* multiple_keywords_ko.wav */; };
@@ -35,7 +33,6 @@
 		C757D8E828A1D08B00F391C8 /* octopus_params_it.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E128A1D08B00F391C8 /* octopus_params_it.pv */; };
 		C757D8E928A1D08B00F391C8 /* octopus_params_de.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E228A1D08B00F391C8 /* octopus_params_de.pv */; };
 		C757D8EA28A1D08B00F391C8 /* octopus_params_fr.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E328A1D08B00F391C8 /* octopus_params_fr.pv */; };
-		F80AD4648813F37825025113 /* libPods-PerformanceTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,13 +68,6 @@
 		1E5B7B032800D9BE00F8BDDB /* PerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTest.swift; sourceTree = "<group>"; };
 		1E5B7B052800D9D700F8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E5B7B062800DD6600F8BDDB /* multiple_keywords.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = multiple_keywords.wav; path = ../../../../res/audio/multiple_keywords.wav; sourceTree = "<group>"; };
-		3159E42AF97125B3BF92F4E2 /* Pods-OctopusAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTest.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest.debug.xcconfig"; sourceTree = "<group>"; };
-		44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PerformanceTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D2D4D3777C0F0BA199911F2 /* Pods-OctopusAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		7FCC31E53F4723E8437124BC /* Pods-OctopusAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
-		BEE19B0361C1913B6BC6BAAB /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
 		C757D8CB28A1C77100F391C8 /* BaseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTest.swift; sourceTree = "<group>"; };
 		C757D8CC28A1C77100F391C8 /* OctopusLanguageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OctopusLanguageTests.swift; sourceTree = "<group>"; };
 		C757D8CF28A1C85100F391C8 /* multiple_keywords_ko.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = multiple_keywords_ko.wav; path = ../../../../res/audio/multiple_keywords_ko.wav; sourceTree = "<group>"; };
@@ -94,8 +84,6 @@
 		C757D8E128A1D08B00F391C8 /* octopus_params_it.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = octopus_params_it.pv; path = ../../../../lib/common/param/octopus_params_it.pv; sourceTree = "<group>"; };
 		C757D8E228A1D08B00F391C8 /* octopus_params_de.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = octopus_params_de.pv; path = ../../../../lib/common/param/octopus_params_de.pv; sourceTree = "<group>"; };
 		C757D8E328A1D08B00F391C8 /* octopus_params_fr.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = octopus_params_fr.pv; path = ../../../../lib/common/param/octopus_params_fr.pv; sourceTree = "<group>"; };
-		D0F4BDAB8DCEFACB0DD878B2 /* Pods-OctopusAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusAppTest.release.xcconfig"; path = "Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest.release.xcconfig"; sourceTree = "<group>"; };
-		F596BBCDD422A8A148A60A99 /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +91,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A4DF03AB93039DC6A992730 /* libPods-OctopusAppTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,8 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36696536961DE78B3E1C06FA /* BuildFile in Frameworks */,
-				16197350434656617777BDDE /* libPods-OctopusAppTestUITests.a in Frameworks */,
+				36696536961DE78B3E1C06FA /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +106,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F80AD4648813F37825025113 /* libPods-PerformanceTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,9 +118,8 @@
 				1E5B7B022800D9A500F8BDDB /* PerformanceTest */,
 				1E0064C627CEEA65006FF6E9 /* OctopusAppTest */,
 				1E0064E727CEEA66006FF6E9 /* OctopusAppTestUITests */,
+				E15A378F2CF7E5DE00A96F85 /* Frameworks */,
 				1E0064C527CEEA65006FF6E9 /* Products */,
-				C61A87423E5B220A51E25364 /* Frameworks */,
-				3B3C264F62BB7B471FB94F36 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -198,26 +182,9 @@
 			path = PerformanceTest;
 			sourceTree = "<group>";
 		};
-		3B3C264F62BB7B471FB94F36 /* Pods */ = {
+		E15A378F2CF7E5DE00A96F85 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3159E42AF97125B3BF92F4E2 /* Pods-OctopusAppTest.debug.xcconfig */,
-				D0F4BDAB8DCEFACB0DD878B2 /* Pods-OctopusAppTest.release.xcconfig */,
-				4D2D4D3777C0F0BA199911F2 /* Pods-OctopusAppTestUITests.debug.xcconfig */,
-				7FCC31E53F4723E8437124BC /* Pods-OctopusAppTestUITests.release.xcconfig */,
-				F596BBCDD422A8A148A60A99 /* Pods-PerformanceTest.debug.xcconfig */,
-				BEE19B0361C1913B6BC6BAAB /* Pods-PerformanceTest.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		C61A87423E5B220A51E25364 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				498BE0F0C0B5145436720B55 /* libPods-OctopusAppTest.a */,
-				44786E307CC71BBF2D5286B6 /* libPods-PerformanceTest.a */,
-				4B652FC67B3D9F1FAF609384 /* libPods-OctopusAppTestUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -229,12 +196,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E0064EE27CEEA66006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTest" */;
 			buildPhases = (
-				6D3A5791552EFDF0A035C668 /* [CP] Check Pods Manifest.lock */,
 				1E0064C027CEEA65006FF6E9 /* Sources */,
 				1E0064C127CEEA65006FF6E9 /* Frameworks */,
 				1E0064C227CEEA65006FF6E9 /* Resources */,
-				099DC105C4C090417630866D /* [CP] Embed Pods Frameworks */,
-				C0A683631E64F2C172582FED /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -249,12 +213,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E00650827CFEC95006FF6E9 /* Build configuration list for PBXNativeTarget "OctopusAppTestUITests" */;
 			buildPhases = (
-				051297945D889D2994D839D4 /* [CP] Check Pods Manifest.lock */,
 				1E0064FA27CFEC95006FF6E9 /* Sources */,
 				1E0064FB27CFEC95006FF6E9 /* Frameworks */,
 				1E0064FC27CFEC95006FF6E9 /* Resources */,
-				F55BCF9ECEB148EE2668A8B5 /* [CP] Embed Pods Frameworks */,
-				EE663D5CAC5BE0282F78B220 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -270,12 +231,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E5B7AFE2800D98500F8BDDB /* Build configuration list for PBXNativeTarget "PerformanceTest" */;
 			buildPhases = (
-				1E5B7AF52800D98500F8BDDB /* [CP] Check Pods Manifest.lock */,
 				1E5B7AF62800D98500F8BDDB /* Sources */,
 				1E5B7AF82800D98500F8BDDB /* Frameworks */,
 				1E5B7AFA2800D98500F8BDDB /* Resources */,
-				1E5B7AFC2800D98500F8BDDB /* [CP] Embed Pods Frameworks */,
-				1E5B7AFD2800D98500F8BDDB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -319,6 +277,9 @@
 				Base,
 			);
 			mainGroup = 1E0064BB27CEEA65006FF6E9;
+			packageReferences = (
+				E15A37882CF7E12E00A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */,
+			);
 			productRefGroup = 1E0064C527CEEA65006FF6E9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -372,177 +333,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		051297945D889D2994D839D4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OctopusAppTestUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		099DC105C4C090417630866D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1E5B7AF52800D98500F8BDDB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PerformanceTest-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1E5B7AFC2800D98500F8BDDB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		1E5B7AFD2800D98500F8BDDB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6D3A5791552EFDF0A035C668 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OctopusAppTest-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C0A683631E64F2C172582FED /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTest/Pods-OctopusAppTest-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EE663D5CAC5BE0282F78B220 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F55BCF9ECEB148EE2668A8B5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusAppTestUITests/Pods-OctopusAppTestUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1E0064C027CEEA65006FF6E9 /* Sources */ = {
@@ -723,7 +513,6 @@
 		};
 		1E0064EF27CEEA66006FF6E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3159E42AF97125B3BF92F4E2 /* Pods-OctopusAppTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -753,7 +542,6 @@
 		};
 		1E0064F027CEEA66006FF6E9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D0F4BDAB8DCEFACB0DD878B2 /* Pods-OctopusAppTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -783,7 +571,6 @@
 		};
 		1E00650627CFEC95006FF6E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D2D4D3777C0F0BA199911F2 /* Pods-OctopusAppTestUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -808,7 +595,6 @@
 		};
 		1E00650727CFEC95006FF6E9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7FCC31E53F4723E8437124BC /* Pods-OctopusAppTestUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -832,7 +618,6 @@
 		};
 		1E5B7AFF2800D98500F8BDDB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F596BBCDD422A8A148A60A99 /* Pods-PerformanceTest.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -859,7 +644,6 @@
 		};
 		1E5B7B002800D98500F8BDDB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BEE19B0361C1913B6BC6BAAB /* Pods-PerformanceTest.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -922,6 +706,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E15A37882CF7E12E00A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../octopus;
+		};
+/* End XCLocalSwiftPackageReference section */
 	};
 	rootObject = 1E0064BC27CEEA65006FF6E9 /* Project object */;
 }

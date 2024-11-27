@@ -10,6 +10,7 @@
 import AVFoundation
 import Foundation
 import Octopus
+import UIKit
 
 enum UIState {
     case INTRO

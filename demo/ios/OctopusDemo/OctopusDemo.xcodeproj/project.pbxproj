@@ -3,15 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		02447A8D26D94F75004A6CE9 /* OctopusDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447A8C26D94F75004A6CE9 /* OctopusDemoApp.swift */; };
 		02447A8F26D94F75004A6CE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447A8E26D94F75004A6CE9 /* ContentView.swift */; };
 		02447A9126D94F7C004A6CE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02447A9026D94F7C004A6CE9 /* Assets.xcassets */; };
-		AC225D30A2525B57122E3EA8 /* libPods-OctopusDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 296AE0E11E4CD7EF81795CE2 /* libPods-OctopusDemo.a */; };
 		C76A41602703B17000DB57D6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76A415F2703B17000DB57D6 /* ViewModel.swift */; };
+		E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378A2CF7E15700A96F85 /* Octopus */; };
+		E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378D2CF7E1C000A96F85 /* Octopus */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,9 +21,6 @@
 		02447A8E26D94F75004A6CE9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		02447A9026D94F7C004A6CE9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02447A9526D94F7C004A6CE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04E786B497520913E4659643 /* Pods-OctopusDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemo.debug.xcconfig"; path = "Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		296AE0E11E4CD7EF81795CE2 /* libPods-OctopusDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OctopusDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52D655E8EB36634981EB5888 /* Pods-OctopusDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OctopusDemo.release.xcconfig"; path = "Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo.release.xcconfig"; sourceTree = "<group>"; };
 		C76A415F2703B17000DB57D6 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -31,7 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC225D30A2525B57122E3EA8 /* libPods-OctopusDemo.a in Frameworks */,
+				E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */,
+				E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,8 +42,6 @@
 			children = (
 				02447A8B26D94F75004A6CE9 /* OctopusDemo */,
 				02447A8A26D94F75004A6CE9 /* Products */,
-				7983C9752CBB2C0CDEFFB371 /* Pods */,
-				16ACDC30B9AECAEF966FEDBC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,23 +65,6 @@
 			path = OctopusDemo;
 			sourceTree = "<group>";
 		};
-		16ACDC30B9AECAEF966FEDBC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				296AE0E11E4CD7EF81795CE2 /* libPods-OctopusDemo.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		7983C9752CBB2C0CDEFFB371 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				04E786B497520913E4659643 /* Pods-OctopusDemo.debug.xcconfig */,
-				52D655E8EB36634981EB5888 /* Pods-OctopusDemo.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -92,12 +72,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 02447AAE26D94F7D004A6CE9 /* Build configuration list for PBXNativeTarget "OctopusDemo" */;
 			buildPhases = (
-				0573C65CEB54A4BB02C3C891 /* [CP] Check Pods Manifest.lock */,
 				02447A8526D94F75004A6CE9 /* Sources */,
 				02447A8626D94F75004A6CE9 /* Frameworks */,
 				02447A8726D94F75004A6CE9 /* Resources */,
-				F7C08396E7037F25F0AB6119 /* [CP] Embed Pods Frameworks */,
-				9930A78981D8A8E0A964A124 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -131,6 +108,9 @@
 				Base,
 			);
 			mainGroup = 02447A8026D94F74004A6CE9;
+			packageReferences = (
+				E15A378C2CF7E1C000A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */,
+			);
 			productRefGroup = 02447A8A26D94F75004A6CE9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -150,65 +130,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0573C65CEB54A4BB02C3C891 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OctopusDemo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9930A78981D8A8E0A964A124 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F7C08396E7037F25F0AB6119 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OctopusDemo/Pods-OctopusDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		02447A8526D94F75004A6CE9 /* Sources */ = {
@@ -342,7 +263,6 @@
 		};
 		02447AAF26D94F7D004A6CE9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04E786B497520913E4659643 /* Pods-OctopusDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -365,7 +285,6 @@
 		};
 		02447AB026D94F7D004A6CE9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52D655E8EB36634981EB5888 /* Pods-OctopusDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -408,6 +327,24 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E15A378C2CF7E1C000A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../octopus;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E15A378A2CF7E15700A96F85 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Octopus;
+		};
+		E15A378D2CF7E1C000A96F85 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Octopus;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 02447A8126D94F74004A6CE9 /* Project object */;
 }

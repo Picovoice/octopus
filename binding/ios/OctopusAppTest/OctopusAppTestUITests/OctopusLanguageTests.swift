@@ -1,5 +1,5 @@
 //
-//  Copyright 2022 Picovoice Inc.
+//  Copyright 2022-2024 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -28,55 +28,34 @@ class OctopusLanguageTests: BaseTest {
         ["pt", ["porco espinho": [[0.480, 1.792, 1]]]]
     ]
 
-    var language: String = ""
-    var modelPath: String = ""
-    var keywordPaths: [String] = []
-    var testAudioPath: String = ""
-    var expectedResults: [String: [[Double]]] = [:]
-
-    override class var defaultTestSuite: XCTestSuite {
-        get {
-            let xcTestSuite = XCTestSuite(name: NSStringFromClass(self))
-            let bundle = Bundle(for: self)
-
-            for testCase in testData {
-                let suffix = (testCase[0]) as! String == "en" ? "" : "_\(testCase[0])"
-                for invocation in testInvocations {
-                    let newTestCase = OctopusLanguageTests(invocation: invocation)
-
-                    newTestCase.language = testCase[0] as! String
-                    newTestCase.modelPath = bundle.path(forResource: "octopus_params\(suffix)", ofType: "pv")!
-                    newTestCase.testAudioPath = bundle.path(forResource: "multiple_keywords\(suffix)", ofType: "wav")!
-                    newTestCase.expectedResults = testCase[1] as! [String: [[Double]]]
-                    xcTestSuite.addTest(newTestCase)
-                }
-            }
-
-            return xcTestSuite
-        }
-    }
-
     func testWrapper() throws {
+        let bundle = Bundle(for: type(of: self))
 
-        try XCTContext.runActivity(named: "(\(language))") { _ in
-            print("DEBUG MODEL PATH: \(language): \(modelPath)")
-            let octopus = try Octopus(accessKey: accessKey, modelPath: modelPath)
-            let metadata = try octopus.indexAudioFile(path: testAudioPath)
-            let matches = try octopus.search(metadata: metadata, phrases: Set(expectedResults.keys))
+        for testCase in OctopusLanguageTests.testData {
+            let suffix = (testCase[0]) as! String == "en" ? "" : "_\(testCase[0])"
+            let modelPath = bundle.path(forResource: "octopus_params\(suffix)", ofType: "pv")!
+            let testAudioPath = bundle.path(forResource: "multiple_keywords\(suffix)", ofType: "wav")!
+            let expectedResults = testCase[1] as! [String: [[Double]]]
 
-            for (phrase, expectedMatches) in expectedResults {
-                XCTAssert(matches[phrase]!.count == expectedMatches.count)
+            try XCTContext.runActivity(named: "(\(testCase[0]))") { _ in
+                let octopus = try Octopus(accessKey: accessKey, modelPath: modelPath)
+                let metadata = try octopus.indexAudioFile(path: testAudioPath)
+                let matches = try octopus.search(metadata: metadata, phrases: Set(expectedResults.keys))
 
-                let phraseMatches = matches[phrase]!
-                for i in 0...phraseMatches.count - 1 {
-                    XCTAssertEqual(phraseMatches[i].startSec, Float(expectedMatches[i][0]), accuracy: 0.01)
-                    XCTAssertEqual(phraseMatches[i].endSec, Float(expectedMatches[i][1]), accuracy: 0.01)
-                    XCTAssertEqual(phraseMatches[i].probability, Float(expectedMatches[i][2]), accuracy: 0.01)
+                for (phrase, expectedMatches) in expectedResults {
+                    XCTAssert(matches[phrase]!.count == expectedMatches.count)
+
+                    let phraseMatches = matches[phrase]!
+                    for i in 0...phraseMatches.count - 1 {
+                        XCTAssertEqual(phraseMatches[i].startSec, Float(expectedMatches[i][0]), accuracy: 0.01)
+                        XCTAssertEqual(phraseMatches[i].endSec, Float(expectedMatches[i][1]), accuracy: 0.01)
+                        XCTAssertEqual(phraseMatches[i].probability, Float(expectedMatches[i][2]), accuracy: 0.01)
+                    }
                 }
-            }
 
-            metadata.delete()
-            octopus.delete()
+                metadata.delete()
+                octopus.delete()
+            }
         }
     }
 }

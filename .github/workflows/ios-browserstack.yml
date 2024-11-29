@@ -1,19 +1,20 @@
-name: iOS Performance
+name: iOS BrowserStack Tests
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
     paths:
-      - 'lib/ios/**'
-      - 'lib/common/**'
-      - '.github/workflows/ios-perf.yml'
+      - 'binding/ios/OctopusAppTest/Podfile.lock'
+      - 'res/audio/**'
+      - '.github/workflows/ios-browserstack.yml'
+
   pull_request:
     branches: [ main, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'lib/ios/**'
-      - 'lib/common/**'
-      - '.github/workflows/ios-perf.yml'
+      - 'binding/ios/OctopusAppTest/Podfile.lock'
+      - 'res/audio/**'
+      - '.github/workflows/ios-browserstack.yml'
 
 defaults:
   run:
@@ -23,14 +24,6 @@ jobs:
   build:
     name: Run iOS Tests on BrowserStack
     runs-on: macos-latest
-
-    strategy:
-      matrix:
-        device: [ ios-perf ]
-        include:
-        - device: ios-perf
-          indexPerformanceThresholdSec: 1.5
-          searchPerformanceThresholdSec: 0.001
 
     steps:
       - name: Checkout
@@ -52,30 +45,16 @@ jobs:
       - name: Run Cocoapods
         run: pod install
 
-      - name: Inject AppID
+      - name: Inject AccessKey
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
-          PerformanceTest/PerformanceTest.swift
-
-      - name: Inject Number of Iterations
-        run: sed -i '.bak' 's:{NUM_TEST_ITERATIONS}:30:'
-          PerformanceTest/PerformanceTest.swift
-
-      - name: Inject Index Performance Threshold
-        run: sed -i '.bak'
-          '1,/{INDEX_PERFORMANCE_THRESHOLD_SEC}/s/{INDEX_PERFORMANCE_THRESHOLD_SEC}/${{ matrix.indexPerformanceThresholdSec }}/'
-          PerformanceTest/PerformanceTest.swift
-
-      - name: Inject Search Performance Threshold
-        run: sed -i '.bak'
-          '1,/{SEARCH_PERFORMANCE_THRESHOLD_SEC}/s/{SEARCH_PERFORMANCE_THRESHOLD_SEC}/${{ matrix.searchPerformanceThresholdSec }}/'
-          PerformanceTest/PerformanceTest.swift
+          OctopusAppTestUITests/BaseTest.swift
 
       - name: XCode Build
         run: xcrun xcodebuild build-for-testing
           -configuration Debug
           -workspace OctopusAppTest.xcworkspace
           -sdk iphoneos
-          -scheme PerformanceTest
+          -scheme OctopusAppTest
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
@@ -88,14 +67,14 @@ jobs:
 
       - name: Zipping Tests
         run: cd ddp/Build/Products/Debug-iphoneos/ &&
-          zip --symlinks -r PerformanceTest.zip PerformanceTest-Runner.app
+          zip --symlinks -r OctopusAppTestUITests.zip OctopusAppTestUITests-Runner.app
 
       - name: Run tests on BrowserStack
         run: python3 ../../../script/automation/browserstack.py
           --type xcuitest
           --username "${{secrets.BROWSERSTACK_USERNAME}}"
           --access_key "${{secrets.BROWSERSTACK_ACCESS_KEY}}"
-          --project_name "Octopus-iOS-Performance"
-          --devices "${{ matrix.device }}"
+          --project_name "Octopus-iOS"
+          --devices "ios-min-max"
           --app_path "ddp/Build/Products/Debug-iphoneos/OctopusAppTest.ipa"
-          --test_path "ddp/Build/Products/Debug-iphoneos/PerformanceTest.zip"
+          --test_path "ddp/Build/Products/Debug-iphoneos/OctopusAppTestUITests.zip"

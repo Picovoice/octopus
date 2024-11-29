@@ -43,5 +43,6 @@ reindex
 testapp
 wargv
 whitespaces
+xcuitest
 xcworkspace
 ytdlp

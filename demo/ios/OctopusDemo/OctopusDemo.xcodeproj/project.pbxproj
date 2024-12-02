@@ -11,6 +11,7 @@
 		02447A8F26D94F75004A6CE9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02447A8E26D94F75004A6CE9 /* ContentView.swift */; };
 		02447A9126D94F7C004A6CE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02447A9026D94F7C004A6CE9 /* Assets.xcassets */; };
 		C76A41602703B17000DB57D6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76A415F2703B17000DB57D6 /* ViewModel.swift */; };
+		E10DF5192CFE6104008D4AA0 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E10DF5182CFE6104008D4AA0 /* Octopus */; };
 		E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378A2CF7E15700A96F85 /* Octopus */; };
 		E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378D2CF7E1C000A96F85 /* Octopus */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10DF5192CFE6104008D4AA0 /* Octopus in Frameworks */,
 				E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */,
 				E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */,
 			);
@@ -109,7 +111,7 @@
 			);
 			mainGroup = 02447A8026D94F74004A6CE9;
 			packageReferences = (
-				E15A378C2CF7E1C000A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */,
+				E10DF5172CFE6104008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */,
 			);
 			productRefGroup = 02447A8A26D94F75004A6CE9 /* Products */;
 			projectDirPath = "";
@@ -329,13 +331,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E15A378C2CF7E1C000A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
+		E10DF5172CFE6104008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../octopus;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E10DF5182CFE6104008D4AA0 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Octopus;
+		};
 		E15A378A2CF7E15700A96F85 /* Octopus */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Octopus;

@@ -1,5 +1,5 @@
 //
-//  Copyright 2021-2023 Picovoice Inc.
+//  Copyright 2021-2024 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -24,6 +24,31 @@ public struct OctopusMatch {
 
 /// iOS binding for Octopus Speech-to-Index engine. It transforms audio into searchable metadata.
 public class Octopus {
+
+#if SWIFT_PACKAGE
+
+    static let resourceBundle = Bundle.module
+
+#else
+
+    static let resourceBundle: Bundle = {
+        let myBundle = Bundle(for: Octopus.self)
+
+        guard let resourceBundleURL = myBundle.url(
+                forResource: "OctopusResources", withExtension: "bundle")
+                else {
+            fatalError("OctopusResources.bundle not found")
+        }
+
+        guard let resourceBundle = Bundle(url: resourceBundleURL)
+                else {
+            fatalError("Could not open OctopusResources.bundle")
+        }
+
+        return resourceBundle
+    }()
+
+#endif
 
     /// Required audio sample rate for PCM data
     public static let pcmDataSampleRate = Int(pv_sample_rate())
@@ -50,11 +75,9 @@ public class Octopus {
         var modelPathArg = modelPath
 
         if modelPath == nil {
-            let bundle = Bundle(for: type(of: self))
-
-            modelPathArg = bundle.path(forResource: "octopus_params", ofType: "pv")
+            modelPathArg = Octopus.resourceBundle.path(forResource: "octopus_params", ofType: "pv")
             if modelPathArg == nil {
-                throw OctopusIOError("Could not retrieve default model from app bundle")
+                throw OctopusIOError("Could not find default model file in app bundle.")
             }
         }
 

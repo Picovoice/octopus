@@ -33,6 +33,9 @@
 		C757D8E828A1D08B00F391C8 /* octopus_params_it.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E128A1D08B00F391C8 /* octopus_params_it.pv */; };
 		C757D8E928A1D08B00F391C8 /* octopus_params_de.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E228A1D08B00F391C8 /* octopus_params_de.pv */; };
 		C757D8EA28A1D08B00F391C8 /* octopus_params_fr.pv in Resources */ = {isa = PBXBuildFile; fileRef = C757D8E328A1D08B00F391C8 /* octopus_params_fr.pv */; };
+		E10DF5122CFE60E5008D4AA0 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E10DF5112CFE60E5008D4AA0 /* Octopus */; };
+		E10DF5142CFE60E9008D4AA0 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E10DF5132CFE60E9008D4AA0 /* Octopus */; };
+		E10DF5162CFE60EC008D4AA0 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E10DF5152CFE60EC008D4AA0 /* Octopus */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10DF5122CFE60E5008D4AA0 /* Octopus in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10DF5142CFE60E9008D4AA0 /* Octopus in Frameworks */,
 				36696536961DE78B3E1C06FA /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10DF5162CFE60EC008D4AA0 /* Octopus in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +124,7 @@
 				1E5B7B022800D9A500F8BDDB /* PerformanceTest */,
 				1E0064C627CEEA65006FF6E9 /* OctopusAppTest */,
 				1E0064E727CEEA66006FF6E9 /* OctopusAppTestUITests */,
-				E15A378F2CF7E5DE00A96F85 /* Frameworks */,
+				E10DF5102CFE60E5008D4AA0 /* Frameworks */,
 				1E0064C527CEEA65006FF6E9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -182,7 +188,7 @@
 			path = PerformanceTest;
 			sourceTree = "<group>";
 		};
-		E15A378F2CF7E5DE00A96F85 /* Frameworks */ = {
+		E10DF5102CFE60E5008D4AA0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -278,7 +284,7 @@
 			);
 			mainGroup = 1E0064BB27CEEA65006FF6E9;
 			packageReferences = (
-				E15A37882CF7E12E00A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */,
+				E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */,
 			);
 			productRefGroup = 1E0064C527CEEA65006FF6E9 /* Products */;
 			projectDirPath = "";
@@ -708,11 +714,29 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E15A37882CF7E12E00A96F85 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
+		E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../octopus;
 		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E10DF5112CFE60E5008D4AA0 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */;
+			productName = Octopus;
+		};
+		E10DF5132CFE60E9008D4AA0 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */;
+			productName = Octopus;
+		};
+		E10DF5152CFE60EC008D4AA0 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */;
+			productName = Octopus;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1E0064BC27CEEA65006FF6E9 /* Project object */;
 }

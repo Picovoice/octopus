@@ -20,7 +20,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testIndexAndSearchFile() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -39,7 +42,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testIndexAndSearchData() throws {
         let bundle = Bundle(for: type(of: self))
-        let fileURL: URL = bundle.url(forResource: "multiple_keywords", withExtension: "wav")!
+        let fileURL: URL = bundle.url(
+            forResource: "multiple_keywords",
+            withExtension: "wav",
+            subdirectory: "test_resources/audio")!
         let audioData = try Data(contentsOf: fileURL)
         var pcm = [Int16](repeating: 0, count: (audioData.count - 44) / 2)
         _ = pcm.withUnsafeMutableBytes {
@@ -63,7 +69,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testMetadataMarshalling() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         var metadata: OctopusMetadata? = try octopus.indexAudioFile(path: audioFilePath)
@@ -90,7 +99,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testEmptySearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -111,7 +123,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testWhitespaceSearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -132,7 +147,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testNumericSearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -153,7 +171,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testHyphenInSearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -174,7 +195,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testInvalidSearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)
@@ -195,7 +219,10 @@ class OctopusAppTestUITests: BaseTest {
 
     func testSpacesInSearchPhrase() throws {
         let bundle = Bundle(for: type(of: self))
-        let audioFilePath = bundle.path(forResource: "multiple_keywords", ofType: "wav")!
+        let audioFilePath = bundle.path(
+            forResource: "multiple_keywords",
+            ofType: "wav",
+            inDirectory: "test_resources/audio")!
 
         let octopus = try Octopus(accessKey: accessKey)
         let metadata = try octopus.indexAudioFile(path: audioFilePath)

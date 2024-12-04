@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -333,7 +333,7 @@
 			);
 			mainGroup = 1E0064BB27CEEA65006FF6E9;
 			packageReferences = (
-				E10B23582CFE6CF9009CDD3D /* XCLocalSwiftPackageReference "../../../../octopus" */,
+				E1F353012D0105170069B0E6 /* XCRemoteSwiftPackageReference "octopus" */,
 			);
 			productRefGroup = 1E0064C527CEEA65006FF6E9 /* Products */;
 			projectDirPath = "";
@@ -749,15 +749,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E10B23582CFE6CF9009CDD3D /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../octopus;
-		};
 		E10DF50F2CFE60DE008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../octopus;
 		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E1F353012D0105170069B0E6 /* XCRemoteSwiftPackageReference "octopus" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/octopus/";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		E10DF5112CFE60E5008D4AA0 /* Octopus */ = {

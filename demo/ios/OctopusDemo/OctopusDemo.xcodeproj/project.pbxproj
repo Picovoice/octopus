@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		E10DF5192CFE6104008D4AA0 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E10DF5182CFE6104008D4AA0 /* Octopus */; };
 		E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378A2CF7E15700A96F85 /* Octopus */; };
 		E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E15A378D2CF7E1C000A96F85 /* Octopus */; };
+		E1F353042D0105300069B0E6 /* Octopus in Frameworks */ = {isa = PBXBuildFile; productRef = E1F353032D0105300069B0E6 /* Octopus */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1F353042D0105300069B0E6 /* Octopus in Frameworks */,
 				E10DF5192CFE6104008D4AA0 /* Octopus in Frameworks */,
 				E15A378E2CF7E1C000A96F85 /* Octopus in Frameworks */,
 				E15A378B2CF7E15700A96F85 /* Octopus in Frameworks */,
@@ -111,7 +113,7 @@
 			);
 			mainGroup = 02447A8026D94F74004A6CE9;
 			packageReferences = (
-				E10DF5172CFE6104008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */,
+				E1F353022D0105300069B0E6 /* XCRemoteSwiftPackageReference "octopus" */,
 			);
 			productRefGroup = 02447A8A26D94F75004A6CE9 /* Products */;
 			projectDirPath = "";
@@ -330,12 +332,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		E10DF5172CFE6104008D4AA0 /* XCLocalSwiftPackageReference "../../../../octopus" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../octopus;
+/* Begin XCRemoteSwiftPackageReference section */
+		E1F353022D0105300069B0E6 /* XCRemoteSwiftPackageReference "octopus" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/octopus/";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.1;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		E10DF5182CFE6104008D4AA0 /* Octopus */ = {
@@ -348,6 +354,11 @@
 		};
 		E15A378D2CF7E1C000A96F85 /* Octopus */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = Octopus;
+		};
+		E1F353032D0105300069B0E6 /* Octopus */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1F353022D0105300069B0E6 /* XCRemoteSwiftPackageReference "octopus" */;
 			productName = Octopus;
 		};
 /* End XCSwiftPackageProductDependency section */

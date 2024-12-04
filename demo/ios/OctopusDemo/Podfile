@@ -1,6 +1,0 @@
-source 'https://cdn.cocoapods.org/'
-platform :ios, '13.0'
-
-target 'OctopusDemo' do
-    pod 'Octopus-iOS', '~> 2.0.0'
-end

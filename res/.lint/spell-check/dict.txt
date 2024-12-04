@@ -43,6 +43,8 @@ reindex
 testapp
 wargv
 whitespaces
+xcframework
+xcodeproj
 xcuitest
 xcworkspace
 ytdlp

@@ -33,8 +33,16 @@ class OctopusLanguageTests: BaseTest {
 
         for testCase in OctopusLanguageTests.testData {
             let suffix = (testCase[0]) as! String == "en" ? "" : "_\(testCase[0])"
-            let modelPath = bundle.path(forResource: "octopus_params\(suffix)", ofType: "pv")!
-            let testAudioPath = bundle.path(forResource: "multiple_keywords\(suffix)", ofType: "wav")!
+
+            let testAudioPath = bundle.path(
+                forResource: "multiple_keywords\(suffix)",
+                ofType: "wav",
+                inDirectory: "test_resources/audio")!
+            let modelPath = bundle.path(
+                forResource: "octopus_params\(suffix)",
+                ofType: "pv",
+                inDirectory: "test_resources/model_files")!
+
             let expectedResults = testCase[1] as! [String: [[Double]]]
 
             try XCTContext.runActivity(named: "(\(testCase[0]))") { _ in

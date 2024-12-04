@@ -14,8 +14,15 @@ hypothesis (e.g. homophones)
 
 ## Installation
 <!-- markdown-link-check-disable -->
-The Octopus iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Octopus-iOS). To import it into your iOS project, add the following line to your Podfile:
+The Octopus iOS binding is available via [Swift Package Manager](https://www.swift.org/documentation/package-manager/) or [CocoaPods](https://cocoapods.org/pods/Octopus-iOS).
 <!-- markdown-link-check-enable -->
+
+To import the package using SPM, open up your project's Package Dependencies in XCode and add:
+```
+https://github.com/Picovoice/octopus.git
+```
+To import it into your iOS project using CocoaPods, add the following line to your Podfile:
+
 ```ruby
 pod 'Octopus-iOS'
 ```
@@ -108,4 +115,4 @@ handle.delete();
 
 ## Running Unit Tests
 
-Copy your `AccessKey` into the `accessKey` variable in [`OctopusAppTestUITests.swift`](OctopusAppTest/OctopusAppTestUITests/OctopusAppTestUITests.swift). Open `OctopusAppTest.xcworkspace` with XCode and run the tests with `Product > Test`.
+Copy your `AccessKey` into the `accessKey` variable in [`OctopusAppTestUITests.swift`](OctopusAppTest/OctopusAppTestUITests/OctopusAppTestUITests.swift). Open [`OctopusAppTest.xcodeproj`](OctopusAppTest/OctopusAppTest.xcodeproj) with XCode and run the tests with `Product > Test`.

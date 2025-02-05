@@ -55,6 +55,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Topic :: Multimedia :: Sound/Audio :: Speech"
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     keywords="Speech-to-Index, Voice Search, Keyword Spotting, Speech Recognition, Voice Recognition"
 )

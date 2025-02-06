@@ -26,7 +26,7 @@ with open(os.path.join(os.path.dirname(__file__), "requirements.txt"), "r") as f
 
 setuptools.setup(
     name="pvoctopusdemo",
-    version="2.0.0",
+    version="2.0.1",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Octopus Speech-to-Index engine demo.",
